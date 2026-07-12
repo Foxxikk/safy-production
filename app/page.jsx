@@ -120,7 +120,7 @@ export default function Home() {
       {/* REFERENCES */}
       <section className="relative bg-ink text-white pt-32 pb-6">
         <Tape
-          src="/images/tapes/tape-references.svg"
+          src="/images/tapes/tape-black.svg"
           width={1600}
           height={100}
           className="absolute -top-10 right-[-5%] w-[80%]"
