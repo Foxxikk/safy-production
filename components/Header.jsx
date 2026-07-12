@@ -3,17 +3,29 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { services } from "../lib/data";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
+  const pathname = usePathname();
+  const dark = pathname.startsWith("/reference") || pathname.startsWith("/teams");
+
+  const base = dark ? "bg-black text-white border-white/10" : "bg-white/95 text-ink border-black/5";
+  const line = dark ? "bg-white" : "bg-ink";
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-black/5">
+    <header className={`sticky top-0 z-50 backdrop-blur border-b ${base}`}>
       <div className="mx-auto max-w-7xl px-6 h-20 flex items-center justify-between">
         <Link href="/" onClick={() => setOpen(false)} aria-label="Šafy production">
-          <Image src="/images/logos/safy-logo.svg" alt="šafy" width={96} height={37} priority />
+          <Image
+            src={dark ? "/images/logos/safy-white.svg" : "/images/logos/safy-logo.svg"}
+            alt="šafy"
+            width={96}
+            height={37}
+            priority
+          />
         </Link>
 
         <nav className="hidden md:flex items-center gap-8 text-[17px]">
@@ -31,7 +43,7 @@ export default function Header() {
             </Link>
             {servicesOpen && (
               <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3">
-                <div className="bg-white shadow-xl border border-black/5 rounded-md py-3 w-72">
+                <div className={`shadow-xl border rounded-md py-3 w-72 ${dark ? "bg-black border-white/10" : "bg-white border-black/5"}`}>
                   {services.map((s) => (
                     <Link
                       key={s.slug}
@@ -54,16 +66,17 @@ export default function Header() {
           onClick={() => setOpen(!open)}
           aria-label="Menu"
         >
-          <span className={`block w-7 h-0.5 bg-ink transition-transform ${open ? "rotate-45 translate-y-2" : ""}`} />
-          <span className={`block w-7 h-0.5 bg-ink ${open ? "opacity-0" : ""}`} />
-          <span className={`block w-7 h-0.5 bg-ink transition-transform ${open ? "-rotate-45 -translate-y-2" : ""}`} />
+          <span className={`block w-7 h-0.5 transition-transform ${line} ${open ? "rotate-45 translate-y-2" : ""}`} />
+          <span className={`block w-7 h-0.5 ${line} ${open ? "opacity-0" : ""}`} />
+          <span className={`block w-7 h-0.5 transition-transform ${line} ${open ? "-rotate-45 -translate-y-2" : ""}`} />
         </button>
       </div>
 
       {open && (
-        <nav className="md:hidden border-t border-black/5 bg-white px-6 py-6 flex flex-col gap-4 text-lg">
+        <nav className={`md:hidden border-t px-6 py-6 flex flex-col gap-4 text-lg ${dark ? "bg-black border-white/10" : "bg-white border-black/5"}`}>
           <Link href="/reference" onClick={() => setOpen(false)}>Reference</Link>
           <Link href="/services" onClick={() => setOpen(false)}>Services</Link>
+          <Link href="/teams" onClick={() => setOpen(false)}>Team</Link>
           <Link href="/about-us" onClick={() => setOpen(false)}>About us</Link>
           <Link href="/contact" onClick={() => setOpen(false)}>Contact</Link>
         </nav>
