@@ -58,6 +58,7 @@ export default function Header() {
             )}
           </div>
           <Link href="/about-us" className="hover:text-brand transition-colors">About us</Link>
+          <Link href="/news" className="hover:text-brand transition-colors">News</Link>
           <Link href="/contact" className="hover:text-brand transition-colors">Contact</Link>
         </nav>
 
@@ -78,6 +79,7 @@ export default function Header() {
           <Link href="/services" onClick={() => setOpen(false)}>Services</Link>
           <Link href="/teams" onClick={() => setOpen(false)}>Team</Link>
           <Link href="/about-us" onClick={() => setOpen(false)}>About us</Link>
+          <Link href="/news" onClick={() => setOpen(false)}>News</Link>
           <Link href="/contact" onClick={() => setOpen(false)}>Contact</Link>
         </nav>
       )}

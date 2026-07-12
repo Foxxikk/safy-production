@@ -7,12 +7,19 @@ import { company } from "../lib/data";
 const links = {
   Company: [
     { label: "About us", href: "/about-us" },
+    { label: "News", href: "/news" },
     { label: "Contact", href: "/contact" },
+  ],
+  Policy: [
+    { label: "Cookie policy", href: "/cookie-policy" },
+    { label: "Privacy policy", href: "/gdpr" },
   ],
   "Šafy": [
     { label: "Team", href: "/teams" },
     { label: "Services", href: "/services" },
     { label: "References", href: "/reference" },
+    { label: "Careers", href: "/careers" },
+    { label: "Our side projects", href: "/our-projects" },
   ],
   Social: [
     { label: "Facebook", href: "https://www.facebook.com/safyproduction" },
@@ -42,7 +49,7 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="grid gap-10 md:grid-cols-4">
+        <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
           <div className="text-white/70 text-[15px] leading-relaxed">
             <p className="text-white mb-4">{c.name}</p>
             <p>
