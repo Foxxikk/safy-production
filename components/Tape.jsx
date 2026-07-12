@@ -36,15 +36,15 @@ export default function Tape({
   }, []);
 
   return (
-    <span ref={ref} className="contents" aria-hidden>
-      <Image
-        src={src}
-        alt=""
-        width={width}
-        height={height}
-        className={`pointer-events-none max-w-none ${visible ? "tape-anim" : "opacity-0"} ${className}`}
-        style={{ "--tape-from": from, "--tape-to": to, animationDelay: `${delay}s` }}
-      />
-    </span>
+    <Image
+      ref={ref}
+      src={src}
+      alt=""
+      aria-hidden
+      width={width}
+      height={height}
+      className={`pointer-events-none max-w-none ${visible ? "tape-anim" : "opacity-0"} ${className}`}
+      style={{ "--tape-from": from, "--tape-to": to, animationDelay: `${delay}s` }}
+    />
   );
 }
