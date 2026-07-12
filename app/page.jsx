@@ -28,36 +28,36 @@ export default function Home() {
           </div>
 
           {/* Tapes */}
-          <div className="pointer-events-none absolute inset-y-0 right-[-15%] left-[35%] hidden md:block" aria-hidden>
+          <div className="pointer-events-none absolute top-0 bottom-0 left-[45%] right-0 hidden md:block" aria-hidden>
             <Image
               src="/images/tapes/tape-dark.svg"
               alt=""
-              width={1200}
-              height={76}
-              className="tape-anim absolute top-[38%] left-[-5%] w-[130%] max-w-none rotate-[-18deg]"
-              style={{ "--tape-from": "translateY(60px) rotate(-14deg)", "--tape-to": "rotate(-18deg)", animationDelay: "0.1s" }}
+              width={900}
+              height={57}
+              className="tape-anim absolute top-[30%] left-[5%] w-[900px] max-w-none rotate-[-22deg] z-10"
+              style={{ "--tape-from": "translateY(60px) rotate(-18deg)", "--tape-to": "rotate(-22deg)", animationDelay: "0.1s" }}
             />
             <Image
               src="/images/tapes/tape-black.svg"
               alt=""
-              width={1200}
-              height={76}
-              className="tape-anim absolute top-[30%] right-[-30%] w-[110%] max-w-none rotate-[62deg]"
-              style={{ "--tape-from": "translateY(-60px) rotate(56deg)", "--tape-to": "rotate(62deg)", animationDelay: "0.3s" }}
+              width={800}
+              height={50}
+              className="tape-anim absolute top-[5%] right-[-30%] w-[800px] max-w-none rotate-[55deg]"
+              style={{ "--tape-from": "translateY(-60px) rotate(49deg)", "--tape-to": "rotate(55deg)", animationDelay: "0.3s" }}
             />
             <Image
               src="/images/tapes/tape-green.svg"
               alt=""
-              width={1400}
-              height={88}
-              className="tape-anim absolute top-[52%] left-[-10%] w-[140%] max-w-none rotate-[-8deg]"
-              style={{ "--tape-from": "translateY(80px) rotate(-4deg)", "--tape-to": "rotate(-8deg)", animationDelay: "0.5s" }}
+              width={1100}
+              height={69}
+              className="tape-anim absolute top-[55%] left-[-8%] w-[1100px] max-w-none rotate-[-9deg] z-20"
+              style={{ "--tape-from": "translateY(80px) rotate(-5deg)", "--tape-to": "rotate(-9deg)", animationDelay: "0.5s" }}
             />
           </div>
         </div>
-
-        <LogoMarquee />
       </section>
+
+      <LogoMarquee />
 
       {/* BELIEF */}
       <section className="mx-auto max-w-5xl px-6 py-28 md:py-40">
