@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Cta from "../../components/Cta";
+import Tape from "../../components/Tape";
 
 export const metadata = { title: "About us - Safyproduction" };
 
@@ -27,7 +28,15 @@ const team = ["t1.webp", "t2.webp", "t3.webp", "t4.webp", "t5.jpg", "t6.jpg", "t
 export default function AboutPage() {
   return (
     <>
-      <section className="mx-auto max-w-7xl px-6 pt-20 pb-24">
+      <section className="relative overflow-hidden mx-auto max-w-7xl px-6 pt-20 pb-24">
+        <Tape
+          src="/images/tapes/tape-green.svg"
+          width={1100}
+          height={69}
+          className="absolute top-24 right-[-45%] w-[85%] hidden md:block"
+          from="translateX(120px) rotate(-4deg)"
+          to="rotate(-9deg)"
+        />
         <p className="text-2xl mb-3">Welcome to</p>
         <Image src="/images/logos/safy-logo.svg" alt="šafy production" width={220} height={85} />
         <h1 className="mt-12 max-w-4xl text-2xl md:text-4xl leading-snug font-normal">

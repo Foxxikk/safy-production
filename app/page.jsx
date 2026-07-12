@@ -1,8 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
-import { services, references } from "../lib/data";
+import { services, references } from "../lib/site";
 import LogoMarquee from "../components/LogoMarquee";
 import Cta from "../components/Cta";
+import Tape from "../components/Tape";
 
 export default function Home() {
   return (
@@ -29,29 +30,32 @@ export default function Home() {
 
           {/* Tapes */}
           <div className="pointer-events-none absolute top-0 bottom-0 left-[45%] right-0 hidden md:block" aria-hidden>
-            <Image
+            <Tape
               src="/images/tapes/tape-dark.svg"
-              alt=""
               width={900}
               height={57}
-              className="tape-anim absolute top-[30%] left-[5%] w-[900px] max-w-none rotate-[-22deg] z-10"
-              style={{ "--tape-from": "translateY(60px) rotate(-18deg)", "--tape-to": "rotate(-22deg)", animationDelay: "0.1s" }}
+              className="absolute top-[30%] left-[5%] w-[900px] z-10"
+              from="translateY(60px) rotate(-18deg)"
+              to="rotate(-22deg)"
+              delay={0.1}
             />
-            <Image
+            <Tape
               src="/images/tapes/tape-black.svg"
-              alt=""
               width={800}
               height={50}
-              className="tape-anim absolute top-[5%] right-[-30%] w-[800px] max-w-none rotate-[55deg]"
-              style={{ "--tape-from": "translateY(-60px) rotate(49deg)", "--tape-to": "rotate(55deg)", animationDelay: "0.3s" }}
+              className="absolute top-[5%] right-[-30%] w-[800px]"
+              from="translateY(-60px) rotate(49deg)"
+              to="rotate(55deg)"
+              delay={0.3}
             />
-            <Image
+            <Tape
               src="/images/tapes/tape-green.svg"
-              alt=""
               width={1100}
               height={69}
-              className="tape-anim absolute top-[55%] left-[-8%] w-[1100px] max-w-none rotate-[-9deg] z-20"
-              style={{ "--tape-from": "translateY(80px) rotate(-5deg)", "--tape-to": "rotate(-9deg)", animationDelay: "0.5s" }}
+              className="absolute top-[55%] left-[-8%] w-[1100px] z-20"
+              from="translateY(80px) rotate(-5deg)"
+              to="rotate(-9deg)"
+              delay={0.5}
             />
           </div>
         </div>
@@ -66,6 +70,20 @@ export default function Home() {
           A personal approach is key to ensuring you get the most out of{" "}
           <strong>your Event experiences.</strong>
         </h2>
+      </section>
+
+      {/* VIDEO */}
+      <section className="mx-auto max-w-7xl px-6 pb-28 md:pb-40">
+        <div className="relative aspect-video overflow-hidden bg-black">
+          <iframe
+            src="https://www.youtube.com/embed/yhVtQHtIU_4?rel=0"
+            title="Šafy production — showreel"
+            className="absolute inset-0 w-full h-full"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        </div>
       </section>
 
       {/* SERVICES */}
@@ -101,13 +119,13 @@ export default function Home() {
 
       {/* REFERENCES */}
       <section className="relative bg-ink text-white pt-32 pb-6">
-        <Image
+        <Tape
           src="/images/tapes/tape-references.svg"
-          alt="šafy References"
           width={1600}
           height={100}
-          className="pointer-events-none absolute -top-10 right-[-5%] w-[80%] max-w-none rotate-[-7deg]"
-          aria-hidden
+          className="absolute -top-10 right-[-5%] w-[80%]"
+          from="translateY(50px) rotate(-3deg)"
+          to="rotate(-7deg)"
         />
         <div className="mx-auto max-w-7xl px-6">
           <Image src="/images/logos/safy-white.svg" alt="šafy" width={150} height={72} />
@@ -124,7 +142,7 @@ export default function Home() {
           {references.slice(0, 9).map((r) => (
             <Link key={r.slug} href={`/reference/${r.slug}`} className="group relative aspect-[4/3] overflow-hidden">
               <Image
-                src={r.image}
+                src={r.gallery[0]}
                 alt={r.title}
                 fill
                 sizes="(max-width: 768px) 100vw, 33vw"

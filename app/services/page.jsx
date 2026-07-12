@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { services } from "../../lib/site";
+import Tape from "../../components/Tape";
 
 export const metadata = { title: "Services - Safyproduction" };
 
@@ -8,13 +9,13 @@ export default function ServicesPage() {
   return (
     <div className="overflow-hidden">
       <section className="relative pt-24 pb-10">
-        <Image
+        <Tape
           src="/images/tapes/tape-green.svg"
-          alt=""
           width={1200}
           height={75}
-          className="pointer-events-none absolute top-10 right-[-30%] w-[75%] max-w-none rotate-[-8deg]"
-          aria-hidden
+          className="absolute top-10 right-[-30%] w-[75%]"
+          from="translateX(120px) rotate(-4deg)"
+          to="rotate(-8deg)"
         />
         <div className="mx-auto max-w-7xl px-6 relative">
           <h1 className="display-xl text-7xl md:text-9xl">Services</h1>

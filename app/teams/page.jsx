@@ -1,13 +1,22 @@
 import Image from "next/image";
 import { team } from "../../lib/content";
 import Cta from "../../components/Cta";
+import Tape from "../../components/Tape";
 
 export const metadata = { title: "Team - Safyproduction" };
 
 export default function TeamPage() {
   return (
     <>
-      <section className="bg-ink text-white">
+      <section className="relative overflow-hidden bg-ink text-white">
+        <Tape
+          src="/images/tapes/tape-green-2.svg"
+          width={1200}
+          height={75}
+          className="absolute top-6 right-[-30%] w-[75%]"
+          from="translateX(120px) rotate(-4deg)"
+          to="rotate(-8deg)"
+        />
         <div className="mx-auto max-w-7xl px-6 pt-24 pb-8">
           <Image src="/images/logos/safy-white.svg" alt="šafy" width={150} height={72} />
           <h1 className="display-xl text-6xl md:text-9xl mt-4 mb-16">Team</h1>

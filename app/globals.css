@@ -26,14 +26,14 @@ body {
   animation: marquee 40s linear infinite;
 }
 
-/* Tape drift animation in hero */
+/* Tape drift animation — signature element */
 @keyframes tape-in {
   from { opacity: 0; transform: var(--tape-from); }
   to { opacity: 1; transform: var(--tape-to); }
 }
 
 .tape-anim {
-  animation: tape-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: tape-in 1s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 /* Big display headings */
