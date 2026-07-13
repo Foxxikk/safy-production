@@ -102,7 +102,7 @@ export default function Home() {
               className="group relative aspect-[3/4] overflow-hidden bg-ink"
             >
               <Image
-                src={s.image}
+                src={s.images[0]}
                 alt={s.title}
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
