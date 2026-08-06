@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { company } from "../lib/data";
 
 const links = {
@@ -31,6 +32,9 @@ const links = {
 export default function Footer() {
   const [country, setCountry] = useState("cz");
   const c = company[country];
+  const pathname = usePathname();
+
+  if (pathname.startsWith("/safy-bx")) return null;
 
   return (
     <footer className="bg-dark text-white">

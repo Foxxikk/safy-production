@@ -30,6 +30,9 @@ export default function Header() {
   const pathname = usePathname();
   const dark = pathname.startsWith("/reference") || pathname.startsWith("/teams");
 
+  // ŠAFY BX landing má vlastní hlavičku — globální skryjeme
+  const hidden = pathname.startsWith("/safy-bx");
+
   const base = dark ? "bg-black text-white border-white/10" : "bg-white/95 text-ink border-black/5";
 
   // zavřít menu při změně stránky
@@ -44,6 +47,8 @@ export default function Header() {
       document.body.style.overflow = "";
     };
   }, [open]);
+
+  if (hidden) return null;
 
   return (
     <>
