@@ -17,7 +17,10 @@ const nextConfig = {
           destination: "/safy-bx",
         },
         {
-          source: "/:slug",
+          // Negativní podmínka je nutná: v beforeFiles se pravidla řetězí, takže
+          // bez ní by se "/" přepsané na "/safy-bx" vzápětí přepsalo na
+          // "/safy-bx/safy-bx" a skončilo 404.
+          source: "/:slug((?!safy-bx$|_next|images|api|favicon).+)",
           has: [{ type: "host", value: "safy-bx.vercel.app" }],
           destination: "/safy-bx/:slug",
         },
