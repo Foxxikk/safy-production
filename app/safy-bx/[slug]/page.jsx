@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import BxHeader from "../../../components/bx/BxHeader";
-import BxFooter from "../../../components/bx/BxFooter";
 import CaseDetail from "../../../components/bx/CaseDetail";
+import ContactForm from "../../../components/bx/ContactForm";
 import { cases } from "../../../lib/bx";
 
 export function generateStaticParams() {
@@ -30,7 +30,7 @@ export default async function BxCasePage({ params }) {
     <div className="bg-white text-ink min-h-screen">
       <BxHeader />
       <CaseDetail item={item} prev={prev} next={next} />
-      <BxFooter />
+      <ContactForm />
     </div>
   );
 }

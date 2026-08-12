@@ -7,7 +7,7 @@ import { categories } from "../../lib/bx";
 import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
 import Lightbox from "./Lightbox";
-import { Container } from "./Section";
+import { Container, Label, ArrowPill } from "./Section";
 
 export default function CaseDetail({ item, prev, next }) {
   const { lang, t } = useLang();
@@ -21,63 +21,53 @@ export default function CaseDetail({ item, prev, next }) {
 
   return (
     <>
-      <Container className="pt-8 pb-6">
+      <Container className="pt-6 pb-7">
         <Link
           href="/safy-bx"
-          className="inline-flex items-center gap-2 text-[14px] text-ink/50 hover:text-brand transition-colors"
+          className="inline-flex items-center gap-2 text-[14px] text-ink/45 hover:text-ink transition-colors"
         >
           ← {t.back}
         </Link>
       </Container>
 
-      {/* Titulek nad fotkou — jasná hierarchie */}
-      <Container className="pb-8">
-        <Reveal>
-          <p className="text-[12px] uppercase tracking-[0.22em] text-ink/35">
-            {categories[lang][item.category]}
-          </p>
-          <h1 className="display-xl mt-3 text-[clamp(2.2rem,5vw,4.2rem)] leading-[1.02] max-w-[20ch]">
-            {data.title}
-          </h1>
-          <p className="mt-3 text-ink/50 text-lg md:text-xl">{data.subtitle}</p>
-        </Reveal>
-      </Container>
-
       {/* Cover */}
-      <Container>
-        <Reveal>
-          <button
-            onClick={() => setOpen(0)}
-            className="relative block w-full aspect-[16/9] overflow-hidden bg-ink/5 cursor-zoom-in group"
-          >
-            <Image
-              src={all[0]}
-              alt={data.title}
-              fill
-              sizes="100vw"
-              className="object-cover transition-transform duration-[900ms] group-hover:scale-[1.02]"
-              priority
-            />
-          </button>
-        </Reveal>
-      </Container>
+      <div className="px-3 md:px-4">
+        <button
+          onClick={() => setOpen(0)}
+          className="relative block w-full aspect-[16/9] overflow-hidden rounded-[20px] md:rounded-[28px] bg-ink/5 cursor-zoom-in group"
+        >
+          <Image
+            src={all[0]}
+            alt={data.title}
+            fill
+            sizes="100vw"
+            className="object-cover transition-transform duration-[900ms] group-hover:scale-[1.03]"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 p-6 md:p-10 text-left">
+            <Label tone="light">{categories[lang][item.category]}</Label>
+            <h1 className="mt-4 display-xl text-white text-[clamp(2.2rem,6.5vw,5.5rem)] leading-[0.92] tracking-[-0.02em] max-w-[18ch]">
+              {data.title}
+            </h1>
+            <p className="mt-3 text-white/65 text-[16px] md:text-lg">{data.subtitle}</p>
+          </div>
+        </button>
+      </div>
 
       {/* Text */}
-      <Container className="py-16 md:py-20">
-        <div className="grid gap-y-6 md:grid-cols-12 md:gap-x-12">
-          <div className="md:col-span-4 lg:col-span-3">
+      <Container className="py-16 md:py-24">
+        <div className="grid gap-10 md:grid-cols-12">
+          <div className="md:col-span-6">
             <Reveal>
-              <p className="text-[12px] uppercase tracking-[0.22em] text-ink/35">
-                {t.brandExperience}
+              <p className="text-[clamp(1.3rem,2.4vw,1.9rem)] leading-[1.3] tracking-[-0.01em] font-medium max-w-[24ch]">
+                {data.intro}
               </p>
             </Reveal>
           </div>
-          <div className="md:col-span-8 lg:col-span-9">
-            <Reveal>
-              <p className="text-[clamp(1.15rem,1.8vw,1.45rem)] leading-[1.6] text-ink/85 max-w-[62ch]">
-                {data.intro}
-              </p>
-              <div className="mt-6 space-y-5 text-ink/65 leading-[1.75] text-[16.5px] max-w-[62ch]">
+          <div className="md:col-span-5 md:col-start-8">
+            <Reveal delay={0.08}>
+              <div className="space-y-5 text-ink/55 leading-[1.75] text-[15.5px]">
                 {data.body.map((p, i) => (
                   <p key={i}>{p}</p>
                 ))}
@@ -89,8 +79,8 @@ export default function CaseDetail({ item, prev, next }) {
 
       {/* Galerie */}
       {gallery.length > 0 && (
-        <Container>
-          <div className="grid gap-5 md:gap-6 md:grid-cols-2">
+        <div className="px-3 md:px-4">
+          <div className="grid gap-3 md:gap-4 md:grid-cols-2">
             {gallery.map((img, i) => (
               <Reveal
                 key={img}
@@ -99,7 +89,7 @@ export default function CaseDetail({ item, prev, next }) {
               >
                 <button
                   onClick={() => setOpen(i + 1)}
-                  className={`relative block w-full overflow-hidden bg-ink/5 cursor-zoom-in group ${
+                  className={`relative block w-full overflow-hidden rounded-[18px] bg-ink/5 cursor-zoom-in group ${
                     i % 3 === 0 ? "aspect-[16/9]" : "aspect-[4/3]"
                   }`}
                 >
@@ -108,35 +98,36 @@ export default function CaseDetail({ item, prev, next }) {
                     alt={`${data.title} — ${i + 1}`}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover transition-transform duration-[900ms] group-hover:scale-[1.03]"
+                    className="object-cover transition-transform duration-[900ms] group-hover:scale-[1.04]"
                   />
                 </button>
               </Reveal>
             ))}
           </div>
-        </Container>
+        </div>
       )}
 
       {/* Prev / Next */}
-      <Container className="mt-20 pb-24">
-        <div className="flex items-center justify-between gap-6 border-t border-black/[0.09] pt-10">
-          <Link href={`/safy-bx/${prev.slug}`} className="group min-w-0">
-            <span className="block text-[11px] uppercase tracking-[0.18em] text-ink/35">
-              {t.prev}
-            </span>
-            <span className="block mt-1 font-medium truncate group-hover:text-brand transition-colors">
-              ‹ {prev[lang].title}
-            </span>
+      <Container className="mt-16 pb-4">
+        {[
+          [prev, t.prev],
+          [next, t.next],
+        ].map(([p, lbl], i) => (
+          <Link
+            key={p.slug}
+            href={`/safy-bx/${p.slug}`}
+            className="group flex items-center justify-between gap-6 border-t border-black/10 py-7"
+          >
+            <div className="min-w-0">
+              <span className="text-[12px] text-ink/35">[{lbl}]</span>
+              <p className="mt-1.5 text-[clamp(1.2rem,2.4vw,1.9rem)] font-medium truncate group-hover:text-brand transition-colors">
+                {p[lang].title}
+              </p>
+            </div>
+            <ArrowPill label={p[lang].title} />
           </Link>
-          <Link href={`/safy-bx/${next.slug}`} className="group min-w-0 text-right">
-            <span className="block text-[11px] uppercase tracking-[0.18em] text-ink/35">
-              {t.next}
-            </span>
-            <span className="block mt-1 font-medium truncate group-hover:text-brand transition-colors">
-              {next[lang].title} ›
-            </span>
-          </Link>
-        </div>
+        ))}
+        <div className="border-t border-black/10" />
       </Container>
 
       <Lightbox

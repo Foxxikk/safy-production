@@ -1,8 +1,6 @@
 import BxHeader from "../../components/bx/BxHeader";
-import BxFooter from "../../components/bx/BxFooter";
 import Hero from "../../components/bx/Hero";
 import Portfolio from "../../components/bx/Portfolio";
-import { Clients } from "../../components/bx/Stats";
 import ContactForm from "../../components/bx/ContactForm";
 
 export default function BxLandingPage() {
@@ -11,9 +9,7 @@ export default function BxLandingPage() {
       <BxHeader />
       <Hero />
       <Portfolio />
-      <Clients />
       <ContactForm />
-      <BxFooter />
     </div>
   );
 }
