@@ -52,7 +52,7 @@ export default function Header() {
 
   return (
     <>
-      <header className={`sticky top-0 z-50 backdrop-blur border-b ${base}`}>
+      <header className={`site-header sticky top-0 z-50 backdrop-blur border-b ${base}`}>
         <div className="mx-auto max-w-7xl px-6 h-20 flex items-center justify-between">
           <Link href="/" aria-label="Šafy production">
             <Image

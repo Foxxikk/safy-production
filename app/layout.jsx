@@ -16,6 +16,16 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        {/* Na doméně safy-bx.* slouží kořen landing page ŠAFY BX,
+            takže globální hlavičku/patičku hlavního webu skryjeme. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "if(location.hostname.indexOf('safy-bx')===0){document.documentElement.classList.add('bx-host')}",
+          }}
+        />
+      </head>
       <body>
         <Header />
         <main>{children}</main>

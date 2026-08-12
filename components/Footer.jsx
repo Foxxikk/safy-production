@@ -37,7 +37,7 @@ export default function Footer() {
   if (pathname.startsWith("/safy-bx")) return null;
 
   return (
-    <footer className="bg-dark text-white">
+    <footer className="site-footer bg-dark text-white">
       <div className="mx-auto max-w-7xl px-6 py-16">
         <div className="flex justify-center gap-2 mb-14">
           {[["cz", "Czech"], ["sk", "Slovak"]].map(([key, label]) => (

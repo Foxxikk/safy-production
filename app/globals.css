@@ -60,3 +60,9 @@ body {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* Na doméně safy-bx.* je landing samostatná — bez menu hlavního webu */
+.bx-host .site-header,
+.bx-host .site-footer {
+  display: none !important;
+}
