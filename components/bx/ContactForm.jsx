@@ -59,9 +59,9 @@ export default function ContactForm() {
   const labelCls = "block text-[12px] text-white/40 mb-1";
 
   return (
-    <section id="contact" className="relative pt-16 md:pt-24">
+    <section id="contact" className="relative pt-16 md:pt-24 overflow-x-clip">
       {/* Páska Šafy — nahnutá, přesahuje světlou i tmavou sekci */}
-      <div className="pointer-events-none absolute inset-x-0 top-8 md:top-14 z-20">
+      <div className="pointer-events-none absolute inset-x-0 top-1 md:top-4 z-20">
         <Image
           src="/images/tapes/tape-green.svg"
           alt=""

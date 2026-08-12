@@ -66,3 +66,11 @@ body {
 .bx-host .site-footer {
   display: none !important;
 }
+
+/* Pojistka proti vodorovnému posouvání stránky
+   (overflow-x: clip místo hidden — nezavádí scroll kontejner ani neořezává svisle) */
+html,
+body {
+  overflow-x: clip;
+  max-width: 100%;
+}

@@ -16,7 +16,7 @@ export default function Hero() {
       <section className="px-3 pt-3 md:px-5 md:pt-5">
         <div className="relative h-[62vh] min-h-[380px] max-h-[720px] md:h-[78vh] w-full overflow-hidden bg-ink">
           <Image
-            src="/images/bx/jagermeister-orange-grape-2025/01.webp"
+            src="/images/bx/iqos-pop-up-store/01.webp"
             alt=""
             fill
             priority
@@ -49,16 +49,17 @@ export default function Hero() {
         </div>
       </section>
 
-      {/* ČERNÝ PÁS S LOGY */}
-      <section className="px-3 pt-3 md:px-5 md:pt-5">
-        <div className="bg-dark dark:bg-black py-5 md:py-7 overflow-hidden">
-          <div className="flex w-max animate-marquee items-center">
-            {logos.map((b, i) => (
-              <div key={`${b}-${i}`} className="mx-6 md:mx-9 shrink-0 opacity-70 brightness-0 invert">
-                <Image src={`/images/brands/${b}.png`} alt={b} width={88} height={44} />
-              </div>
-            ))}
-          </div>
+      {/* LOGA KLIENTŮ — na podkladu stránky, bez pásu; barva dle režimu */}
+      <section className="py-9 md:py-12 overflow-x-clip">
+        <div className="flex w-max animate-marquee items-center">
+          {logos.map((b, i) => (
+            <div
+              key={`${b}-${i}`}
+              className="mx-6 md:mx-9 shrink-0 grayscale opacity-45 dark:invert dark:opacity-55"
+            >
+              <Image src={`/images/brands/${b}.png`} alt={b} width={88} height={44} />
+            </div>
+          ))}
         </div>
       </section>
 
