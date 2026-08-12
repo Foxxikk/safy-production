@@ -2,18 +2,23 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { categories } from "../../lib/bx";
+import { categories, caseStats } from "@/lib/bx";
 import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
 import Lightbox from "./Lightbox";
 import { Container, Label, ArrowPill } from "./Section";
 import { TapeLink } from "./TapeTransition";
 
+// Jemné přiblížení bez „skákání“ — GPU vrstva a plynulá křivka
+const IMG_HOVER =
+  "object-cover transform-gpu will-change-transform transition-transform duration-700 ease-[cubic-bezier(.22,.61,.36,1)] group-hover:scale-[1.03]";
+
 export default function CaseDetail({ item, prev, next }) {
   const { lang, t } = useLang();
   const [open, setOpen] = useState(null);
 
   const data = item[lang];
+  const facts = caseStats[item.slug]?.[lang] || [];
   const pad = (i) => String(i).padStart(2, "0");
   const all = [];
   for (let i = 1; i <= item.images; i++) all.push(`/images/bx/${item.slug}/${pad(i)}.webp`);
@@ -30,20 +35,13 @@ export default function CaseDetail({ item, prev, next }) {
         </TapeLink>
       </Container>
 
-      {/* Cover — kompaktní, ostré rohy */}
-      <div className="px-0">
+      {/* Cover — odsazený od krajů, ostré rohy */}
+      <div className="px-3 md:px-5">
         <button
           onClick={() => setOpen(0)}
           className="relative block w-full h-[46vh] min-h-[260px] max-h-[560px] md:h-[62vh] overflow-hidden bg-ink/5 cursor-zoom-in group"
         >
-          <Image
-            src={all[0]}
-            alt={data.title}
-            fill
-            sizes="100vw"
-            className="object-cover transition-transform duration-[900ms] group-hover:scale-[1.03]"
-            priority
-          />
+          <Image src={all[0]} alt={data.title} fill sizes="100vw" className={IMG_HOVER} priority />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 p-4 md:p-8 text-left">
             <Label tone="light">{categories[lang][item.category]}</Label>
@@ -55,7 +53,7 @@ export default function CaseDetail({ item, prev, next }) {
         </button>
       </div>
 
-      {/* Text — kompaktní dvousloupec */}
+      {/* Text */}
       <Container className="py-10 md:py-16">
         <div className="grid gap-6 md:gap-10 md:grid-cols-12">
           <div className="md:col-span-6">
@@ -77,7 +75,34 @@ export default function CaseDetail({ item, prev, next }) {
         </div>
       </Container>
 
-      {/* Galerie — na mobilu vodorovné listování, na desktopu mřížka */}
+      {/* Čísla k projektu */}
+      {facts.length > 0 && (
+        <Container className="pb-12 md:pb-16">
+          <Reveal>
+            <Label>{lang === "cs" ? "Projekt v číslech" : "Project in numbers"}</Label>
+          </Reveal>
+          <div
+            className={`mt-6 md:mt-8 grid grid-cols-2 gap-x-6 gap-y-8 md:gap-x-8 ${
+              facts.length >= 4 ? "md:grid-cols-4" : "md:grid-cols-3"
+            }`}
+          >
+            {facts.map((f, i) => (
+              <Reveal key={f.label} delay={i * 0.06}>
+                <div className="border-t border-black/10 dark:border-white/15 pt-4">
+                  <div className="display-xl text-[clamp(1.5rem,3.4vw,2.6rem)] leading-none tracking-[-0.02em] text-brand">
+                    {f.value}
+                  </div>
+                  <p className="mt-2.5 text-ink/50 dark:text-white/45 text-[13.5px] md:text-[14px] leading-snug">
+                    {f.label}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </Container>
+      )}
+
+      {/* Galerie — mobil vodorovné listování, desktop mřížka */}
       {gallery.length > 0 && (
         <>
           <Container className="pb-3 flex items-center justify-between">
@@ -87,50 +112,31 @@ export default function CaseDetail({ item, prev, next }) {
             </span>
           </Container>
 
-          {/* mobil: horizontální drag */}
-          <div className="md:hidden -mx-0 overflow-x-auto no-scrollbar snap-x snap-mandatory">
-            <div className="flex gap-2 px-4 w-max">
+          <div className="md:hidden overflow-x-auto no-scrollbar snap-x snap-mandatory">
+            <div className="flex gap-2 px-3 w-max">
               {gallery.map((img, i) => (
                 <button
                   key={img}
                   onClick={() => setOpen(i + 1)}
                   className="relative w-[78vw] aspect-[4/3] shrink-0 snap-center overflow-hidden bg-ink/5"
                 >
-                  <Image
-                    src={img}
-                    alt={`${data.title} — ${i + 1}`}
-                    fill
-                    sizes="78vw"
-                    className="object-cover"
-                  />
+                  <Image src={img} alt={`${data.title} — ${i + 1}`} fill sizes="78vw" className="object-cover" />
                 </button>
               ))}
             </div>
           </div>
 
-          {/* desktop: mřížka */}
-          <div className="hidden md:block px-4 md:px-10">
+          <div className="hidden md:block px-5">
             <div className="grid gap-3 md:grid-cols-2">
               {gallery.map((img, i) => (
-                <Reveal
-                  key={img}
-                  delay={(i % 2) * 0.06}
-                  className={i % 3 === 0 ? "md:col-span-2" : ""}
-                >
+                <Reveal key={img} delay={(i % 2) * 0.06} className={i % 3 === 0 ? "md:col-span-2" : ""}>
                   <button
                     onClick={() => setOpen(i + 1)}
-                    data-cursor
                     className={`relative block w-full overflow-hidden bg-ink/5 cursor-zoom-in group ${
                       i % 3 === 0 ? "aspect-[21/9]" : "aspect-[4/3]"
                     }`}
                   >
-                    <Image
-                      src={img}
-                      alt={`${data.title} — ${i + 1}`}
-                      fill
-                      sizes="50vw"
-                      className="object-cover transition-transform duration-[900ms] group-hover:scale-[1.04]"
-                    />
+                    <Image src={img} alt={`${data.title} — ${i + 1}`} fill sizes="50vw" className={IMG_HOVER} />
                   </button>
                 </Reveal>
               ))}
@@ -139,7 +145,7 @@ export default function CaseDetail({ item, prev, next }) {
         </>
       )}
 
-      {/* Prev / Next — s náhledem další reference */}
+      {/* Prev / Next */}
       <Container className="mt-10 md:mt-14">
         {[
           [prev, t.prev],
@@ -157,7 +163,7 @@ export default function CaseDetail({ item, prev, next }) {
                   alt=""
                   fill
                   sizes="96px"
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="object-cover transform-gpu transition-transform duration-700 ease-[cubic-bezier(.22,.61,.36,1)] group-hover:scale-[1.06]"
                 />
               </span>
               <span className="min-w-0">

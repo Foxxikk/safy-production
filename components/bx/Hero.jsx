@@ -13,7 +13,7 @@ export default function Hero() {
   return (
     <>
       {/* HERO — celoplošná fotka, obří typografie, ostré rohy */}
-      <section className="px-0">
+      <section className="px-3 pt-3 md:px-5 md:pt-5">
         <div className="relative h-[62vh] min-h-[380px] max-h-[720px] md:h-[78vh] w-full overflow-hidden bg-ink">
           <Image
             src="/images/bx/jagermeister-orange-grape-2025/01.webp"
@@ -50,13 +50,15 @@ export default function Hero() {
       </section>
 
       {/* ČERNÝ PÁS S LOGY */}
-      <section className="bg-dark dark:bg-black py-5 md:py-7 overflow-hidden">
-        <div className="flex w-max animate-marquee items-center">
-          {logos.map((b, i) => (
-            <div key={`${b}-${i}`} className="mx-6 md:mx-9 shrink-0 opacity-70 brightness-0 invert">
-              <Image src={`/images/brands/${b}.png`} alt={b} width={88} height={44} />
-            </div>
-          ))}
+      <section className="px-3 pt-3 md:px-5 md:pt-5">
+        <div className="bg-dark dark:bg-black py-5 md:py-7 overflow-hidden">
+          <div className="flex w-max animate-marquee items-center">
+            {logos.map((b, i) => (
+              <div key={`${b}-${i}`} className="mx-6 md:mx-9 shrink-0 opacity-70 brightness-0 invert">
+                <Image src={`/images/brands/${b}.png`} alt={b} width={88} height={44} />
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

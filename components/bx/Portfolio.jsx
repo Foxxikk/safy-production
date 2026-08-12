@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { cases, categories } from "../../lib/bx";
+import { cases, categories } from "@/lib/bx";
 import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
 import Section, { Label, ArrowPill } from "./Section";
 import { TapeLink } from "./TapeTransition";
-import HoverCursor from "./HoverCursor";
 
 export default function Portfolio() {
   const { lang, t } = useLang();
@@ -19,8 +18,6 @@ export default function Portfolio() {
 
   return (
     <Section id="work" className="pt-6 md:pt-10">
-      <HoverCursor label={lang === "cs" ? "OTEVŘÍT" : "OPEN"} />
-
       <Reveal>
         <Label>{t.selectedWork}</Label>
         <h2 className="mt-4 md:mt-6 display-xl text-[clamp(2.2rem,7vw,5rem)] leading-[0.92] tracking-[-0.02em] dark:text-white">
@@ -55,15 +52,18 @@ export default function Portfolio() {
           const data = c[lang];
           return (
             <Reveal key={c.slug} delay={(i % 2) * 0.06}>
-              <TapeLink href={`/safy-bx/${c.slug}`} className="group block" data-cursor>
+              <TapeLink href={`/safy-bx/${c.slug}`} className="group block">
                 <div className="relative aspect-[4/3] overflow-hidden bg-ink/5 dark:bg-white/5">
+                  {/* Jemné přiblížení bez „skákání“: transform-gpu + delší plynulá křivka */}
                   <Image
                     src={`/images/bx/${c.slug}/01.webp`}
                     alt={data.title}
                     fill
                     sizes="(max-width: 640px) 100vw, 46vw"
-                    className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.05]"
+                    className="object-cover transform-gpu will-change-transform transition-transform duration-700 ease-[cubic-bezier(.22,.61,.36,1)] group-hover:scale-[1.03]"
                   />
+                  {/* Jemné ztmavení místo plovoucího tlačítka u kurzoru */}
+                  <span className="absolute inset-0 bg-ink/0 group-hover:bg-ink/10 transition-colors duration-500" />
                   <span className="absolute left-0 top-0 bg-white dark:bg-ink text-ink dark:text-white px-3 py-1.5 text-[11px] md:text-[12px]">
                     {cats[c.category]}
                   </span>
