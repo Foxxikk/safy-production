@@ -5,7 +5,7 @@ import ContactForm from "../../components/bx/ContactForm";
 
 export default function BxLandingPage() {
   return (
-    <div className="bg-white text-ink min-h-screen">
+    <div className="bg-white dark:bg-dark text-ink dark:text-white min-h-screen">
       <BxHeader />
       <Hero />
       <Portfolio />

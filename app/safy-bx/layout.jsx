@@ -1,4 +1,5 @@
 import { LangProvider } from "../../components/bx/LangContext";
+import { ThemeProvider } from "../../components/bx/ThemeContext";
 import TapeTransition from "../../components/bx/TapeTransition";
 
 export const metadata = {
@@ -9,8 +10,10 @@ export const metadata = {
 
 export default function BxLayout({ children }) {
   return (
-    <LangProvider>
-      <TapeTransition>{children}</TapeTransition>
-    </LangProvider>
+    <ThemeProvider>
+      <LangProvider>
+        <TapeTransition>{children}</TapeTransition>
+      </LangProvider>
+    </ThemeProvider>
   );
 }

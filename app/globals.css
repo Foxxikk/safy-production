@@ -42,3 +42,21 @@ body {
   line-height: 0.95;
   letter-spacing: -0.02em;
 }
+
+/* ——— Dark mode (class strategy, Tailwind 4) ——— */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Plynulý přechod mezi světlým a tmavým režimem */
+.bx-theme,
+.bx-theme * {
+  transition: background-color 0.35s ease, border-color 0.35s ease, color 0.25s ease;
+}
+
+/* Skrytí posuvníku u horizontálních galerií */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

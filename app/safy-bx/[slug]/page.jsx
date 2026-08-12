@@ -27,7 +27,7 @@ export default async function BxCasePage({ params }) {
   const next = cases[(idx + 1) % cases.length];
 
   return (
-    <div className="bg-white text-ink min-h-screen">
+    <div className="bg-white dark:bg-dark text-ink dark:text-white min-h-screen">
       <BxHeader />
       <CaseDetail item={item} prev={prev} next={next} />
       <ContactForm />

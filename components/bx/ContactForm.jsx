@@ -59,27 +59,29 @@ export default function ContactForm() {
   const labelCls = "block text-[12px] text-white/40 mb-1";
 
   return (
-    <section id="contact" className="px-3 md:px-4 pb-3 md:pb-4 pt-10">
-      <div className="rounded-[20px] md:rounded-[28px] bg-dark text-white overflow-hidden">
-        {/* Páska Šafy jako oddělovač */}
-        <div className="relative h-14 md:h-16 overflow-hidden">
-          <Image
-            src="/images/tapes/tape-green.svg"
-            alt=""
-            aria-hidden
-            width={2400}
-            height={75}
-            className="absolute left-1/2 top-1/2 w-[135%] max-w-none -translate-x-1/2 -translate-y-1/2 -rotate-2"
-          />
+    <section id="contact" className="pt-8 md:pt-10">
+      <div className="bg-dark dark:bg-black text-white overflow-hidden">
+        {/* Brandový proužek — rovný, bez uriznuteho textu */}
+        <div className="bg-brand text-ink overflow-hidden py-2.5 md:py-3">
+          <div className="flex w-max animate-marquee items-center whitespace-nowrap">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <span
+                key={i}
+                className="mx-5 text-[12px] md:text-[13px] font-medium tracking-[0.18em] uppercase"
+              >
+                We are Šafy <span className="mx-2 opacity-50">✕</span> Brand experience
+              </span>
+            ))}
+          </div>
         </div>
 
-        <Container className="py-16 md:py-20">
-          <div className="grid gap-14 md:grid-cols-12">
+        <Container className="py-11 md:py-18">
+          <div className="grid gap-10 md:gap-14 md:grid-cols-12">
             {/* Levá strana — velký claim */}
             <div className="md:col-span-5">
               <Reveal>
                 <Label tone="light">{lang === "cs" ? "Kontakt" : "Contact"}</Label>
-                <h2 className="mt-6 text-[clamp(2rem,4.4vw,3.4rem)] font-medium leading-[1.08] tracking-[-0.015em]">
+                <h2 className="mt-5 text-[clamp(1.7rem,4.4vw,3.2rem)] font-medium leading-[1.08] tracking-[-0.015em]">
                   {t.ctaTitle}
                 </h2>
                 <p className="mt-6 text-white/50 leading-relaxed max-w-[34ch] text-[15.5px]">
@@ -92,7 +94,7 @@ export default function ContactForm() {
                   <span className="text-[17px] border-b border-brand pb-0.5">
                     info@safyproduction.cz
                   </span>
-                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/25 group-hover:bg-white group-hover:text-ink transition-colors">
+                  <span className="inline-flex h-9 w-9 items-center justify-center border border-white/25 group-hover:bg-white group-hover:text-ink transition-colors">
                     →
                   </span>
                 </a>
@@ -187,10 +189,10 @@ export default function ContactForm() {
 
                   <button
                     type="submit"
-                    className="mt-9 inline-flex items-center gap-3 rounded-full bg-white text-ink pl-7 pr-2 py-2 font-medium hover:bg-brand transition-colors"
+                    className="mt-8 inline-flex items-center gap-3 bg-white text-ink pl-6 pr-1.5 py-2 font-medium hover:bg-brand transition-colors"
                   >
                     {t.formSubmit}
-                    <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-ink text-white">
+                    <span className="inline-flex h-9 w-9 items-center justify-center bg-ink text-white">
                       →
                     </span>
                   </button>
@@ -201,7 +203,7 @@ export default function ContactForm() {
           </div>
 
           {/* Patička uvnitř černého bloku */}
-          <div className="mt-20 grid gap-8 border-t border-white/10 pt-10 md:grid-cols-4 text-white/45 text-[14.5px]">
+          <div className="mt-12 md:mt-16 grid gap-6 md:gap-8 border-t border-white/10 pt-8 md:pt-10 md:grid-cols-4 text-white/45 text-[13.5px] md:text-[14.5px]">
             <div>
               <Image src="/images/logos/safy-white.svg" alt="šafy" width={86} height={34} />
               <p className="mt-3 text-[12px] text-brand">[ŠAFY BX]</p>
