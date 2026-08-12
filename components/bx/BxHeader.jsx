@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { useLang } from "./LangContext";
+import { TapeLink } from "./TapeTransition";
 
 export default function BxHeader() {
   const { lang, setLang } = useLang();
@@ -10,10 +10,10 @@ export default function BxHeader() {
   return (
     <header className="sticky top-0 z-40 bg-white/85 backdrop-blur-md">
       <div className="mx-auto w-full max-w-[1440px] px-5 md:px-10 h-[72px] flex items-center justify-between">
-        <Link href="/safy-bx" aria-label="Šafy production" className="flex items-center gap-3">
+        <TapeLink href="/safy-bx" aria-label="Šafy production" className="flex items-center gap-3">
           <Image src="/images/logos/safy-logo.svg" alt="šafy" width={82} height={32} priority />
           <span className="hidden sm:block text-[12px] text-ink/45">[BX]</span>
-        </Link>
+        </TapeLink>
 
         <div className="flex items-center gap-5">
           <div className="flex items-center text-[13px]">

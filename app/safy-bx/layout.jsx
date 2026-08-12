@@ -1,4 +1,5 @@
 import { LangProvider } from "../../components/bx/LangContext";
+import TapeTransition from "../../components/bx/TapeTransition";
 
 export const metadata = {
   title: "ŠAFY BX — Brand experience marketing",
@@ -7,5 +8,9 @@ export const metadata = {
 };
 
 export default function BxLayout({ children }) {
-  return <LangProvider>{children}</LangProvider>;
+  return (
+    <LangProvider>
+      <TapeTransition>{children}</TapeTransition>
+    </LangProvider>
+  );
 }

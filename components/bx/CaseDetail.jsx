@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { categories } from "../../lib/bx";
 import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
 import Lightbox from "./Lightbox";
 import { Container, Label, ArrowPill } from "./Section";
+import { TapeLink } from "./TapeTransition";
 
 export default function CaseDetail({ item, prev, next }) {
   const { lang, t } = useLang();
@@ -22,12 +22,12 @@ export default function CaseDetail({ item, prev, next }) {
   return (
     <>
       <Container className="pt-6 pb-7">
-        <Link
+        <TapeLink
           href="/safy-bx"
           className="inline-flex items-center gap-2 text-[14px] text-ink/45 hover:text-ink transition-colors"
         >
           ← {t.back}
-        </Link>
+        </TapeLink>
       </Container>
 
       {/* Cover */}
@@ -113,7 +113,7 @@ export default function CaseDetail({ item, prev, next }) {
           [prev, t.prev],
           [next, t.next],
         ].map(([p, lbl], i) => (
-          <Link
+          <TapeLink
             key={p.slug}
             href={`/safy-bx/${p.slug}`}
             className="group flex items-center justify-between gap-6 border-t border-black/10 py-7"
@@ -125,7 +125,7 @@ export default function CaseDetail({ item, prev, next }) {
               </p>
             </div>
             <ArrowPill label={p[lang].title} />
-          </Link>
+          </TapeLink>
         ))}
         <div className="border-t border-black/10" />
       </Container>

@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { cases, categories } from "../../lib/bx";
 import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
 import Section, { Label, ArrowPill } from "./Section";
+import { TapeLink } from "./TapeTransition";
 
 export default function Portfolio() {
   const { lang, t } = useLang();
@@ -52,7 +52,7 @@ export default function Portfolio() {
           const data = c[lang];
           return (
             <Reveal key={c.slug} delay={(i % 2) * 0.06}>
-              <Link href={`/safy-bx/${c.slug}`} className="group block">
+              <TapeLink href={`/safy-bx/${c.slug}`} className="group block">
                 <div className="relative aspect-[4/3] overflow-hidden rounded-[18px] bg-ink/5">
                   <Image
                     src={`/images/bx/${c.slug}/01.webp`}
@@ -75,7 +75,7 @@ export default function Portfolio() {
                   </div>
                   <ArrowPill label={data.title} />
                 </div>
-              </Link>
+              </TapeLink>
             </Reveal>
           );
         })}
