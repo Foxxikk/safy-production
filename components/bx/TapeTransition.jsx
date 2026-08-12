@@ -16,10 +16,12 @@ const COVER_MS = 520; // pásky zakrývají obrazovku
 const HOLD_MS = 120; // krátká pauza v zákrytu
 const REVEAL_MS = 620; // odjezd pásek
 
+// Pouze pásky "WE ARE ŠAFY ✕ Creative event agency" (tape-green / tape-dark).
+// Pásky tape-black a tape-green-2 nesou text "References" — na BX nepatří.
 const tapes = [
-  { src: "/images/tapes/tape-green.svg", top: "6%", rotate: -7, delay: 0 },
-  { src: "/images/tapes/tape-black.svg", top: "38%", rotate: 5, delay: 0.07 },
-  { src: "/images/tapes/tape-green-2.svg", top: "70%", rotate: -4, delay: 0.14 },
+  { src: "/images/tapes/tape-green.svg", top: "4%", rotate: -7, delay: 0 },
+  { src: "/images/tapes/tape-dark.svg", top: "37%", rotate: 5, delay: 0.07 },
+  { src: "/images/tapes/tape-green.svg", top: "70%", rotate: -4, delay: 0.14 },
 ];
 
 export default function TapeTransition({ children }) {
