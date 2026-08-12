@@ -1,18 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import Tape from "../Tape";
-import { bxIntro, pillars } from "../../lib/bx";
+import { bxIntro, pillars, stats } from "../../lib/bx";
 import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
+import Section, { Container } from "./Section";
 
 export default function Hero() {
   const { lang, t } = useLang();
 
   return (
     <>
-      {/* Hero s fotkou */}
-      <section className="relative h-[78vh] min-h-[520px] w-full overflow-hidden bg-ink">
+      {/* Hero — celoplošná fotka s titulem */}
+      <section className="relative h-[72vh] min-h-[480px] max-h-[760px] w-full overflow-hidden bg-ink">
         <Image
           src="/images/bx/jagermeister-orange-grape-2025/01.webp"
           alt=""
@@ -21,52 +21,66 @@ export default function Hero() {
           sizes="100vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/25" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
 
-        <div className="absolute inset-0 flex items-end">
-          <div className="mx-auto max-w-[1500px] w-full px-6 md:px-10 pb-14 md:pb-20">
+        <div className="absolute inset-x-0 bottom-0">
+          <Container className="pb-12 md:pb-16">
             <Reveal>
-              <p className="text-sm uppercase tracking-[0.25em] text-white/70 mb-5">
+              <p className="text-[12px] uppercase tracking-[0.22em] text-white/60 mb-4">
                 {t.heroLead}
               </p>
-              <h1 className="display-xl text-white text-6xl md:text-8xl lg:text-9xl leading-[0.92]">
+              <h1 className="display-xl text-white text-[clamp(3.2rem,9vw,8rem)] leading-[0.9]">
                 ŠAFY <span className="text-brand">BX</span>
               </h1>
-              <p className="mt-5 text-white/85 text-xl md:text-2xl font-light">{t.tagline}</p>
+              <p className="mt-4 text-white/80 text-lg md:text-xl font-light">{t.tagline}</p>
             </Reveal>
-          </div>
+          </Container>
         </div>
       </section>
 
-      {/* Úvodní text */}
-      <section className="relative mx-auto max-w-[1500px] px-6 md:px-10 pt-20 md:pt-24 pb-16 overflow-hidden">
-        <Tape
-          src="/images/tapes/tape-green-2.svg"
-          width={1200}
-          height={75}
-          className="absolute top-10 right-[-28%] w-[62%] hidden lg:block"
-          from="translateX(120px) rotate(-3deg)"
-          to="rotate(-7deg)"
-        />
+      {/* Úvod */}
+      <Section label="01 — ŠAFY BX" divider={false} className="pt-16 md:pt-24 pb-4 md:pb-6">
         <Reveal>
-          <p className="max-w-4xl text-xl md:text-[26px] leading-relaxed text-ink/85">
+          <p className="text-[clamp(1.25rem,2.1vw,1.7rem)] leading-[1.55] text-ink/85 max-w-[62ch]">
             {bxIntro[lang]}
           </p>
         </Reveal>
-      </section>
+      </Section>
 
       {/* Pilíře */}
-      <section className="mx-auto max-w-[1500px] px-6 md:px-10 pb-24">
-        <div className="grid gap-x-10 gap-y-12 md:grid-cols-4 border-t border-black/10 pt-12">
+      <Section
+        label="02 — Co děláme"
+        title={lang === "cs" ? "Čtyři pilíře" : "Four pillars"}
+        className="pt-10 md:pt-14"
+      >
+        <div className="grid gap-x-14 gap-y-10 sm:grid-cols-2">
           {pillars[lang].map((p, i) => (
-            <Reveal key={p.title} delay={i * 0.09}>
-              <span className="block text-sm font-mono text-brand mb-4">0{i + 1}</span>
-              <h3 className="text-xl font-bold mb-3 leading-snug">{p.title}</h3>
-              <p className="text-ink/65 leading-relaxed text-[15px]">{p.text}</p>
+            <Reveal key={p.title} delay={(i % 2) * 0.08}>
+              <div className="border-t border-black/[0.09] pt-6 h-full">
+                <span className="block text-[13px] font-mono text-brand mb-3">0{i + 1}</span>
+                <h3 className="text-[22px] font-bold mb-3 leading-snug">{p.title}</h3>
+                <p className="text-ink/65 leading-[1.7] text-[16px] max-w-[46ch]">{p.text}</p>
+              </div>
             </Reveal>
           ))}
         </div>
-      </section>
+      </Section>
+
+      {/* Čísla — na bílé, bez cizího černého pásu */}
+      <Section label="03 — Čísla" title={t.statsTitle}>
+        <div className="grid grid-cols-2 gap-x-10 gap-y-10 md:grid-cols-4">
+          {stats[lang].map((s, i) => (
+            <Reveal key={s.label} delay={i * 0.07}>
+              <div className="border-t border-black/[0.09] pt-6">
+                <div className="display-xl text-[clamp(2.2rem,4vw,3.4rem)] leading-none">
+                  {s.value}
+                </div>
+                <p className="mt-3 text-ink/50 text-[15px] leading-snug">{s.label}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </Section>
     </>
   );
 }

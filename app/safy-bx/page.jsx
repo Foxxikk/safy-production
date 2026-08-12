@@ -2,7 +2,7 @@ import BxHeader from "../../components/bx/BxHeader";
 import BxFooter from "../../components/bx/BxFooter";
 import Hero from "../../components/bx/Hero";
 import Portfolio from "../../components/bx/Portfolio";
-import { Stats, Clients } from "../../components/bx/Stats";
+import { Clients } from "../../components/bx/Stats";
 import ContactForm from "../../components/bx/ContactForm";
 
 export default function BxLandingPage() {
@@ -10,7 +10,6 @@ export default function BxLandingPage() {
     <div className="bg-white text-ink min-h-screen">
       <BxHeader />
       <Hero />
-      <Stats />
       <Portfolio />
       <Clients />
       <ContactForm />
