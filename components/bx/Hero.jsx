@@ -72,7 +72,7 @@ export default function Hero() {
           {stats[lang].map((s, i) => (
             <Reveal key={s.label} delay={i * 0.07}>
               <div className="border-t border-black/[0.09] pt-6">
-                <div className="display-xl text-[clamp(2.2rem,4vw,3.4rem)] leading-none">
+                <div className="display-xl text-[clamp(1.8rem,2.9vw,2.7rem)] leading-none whitespace-nowrap">
                   {s.value}
                 </div>
                 <p className="mt-3 text-ink/50 text-[15px] leading-snug">{s.label}</p>

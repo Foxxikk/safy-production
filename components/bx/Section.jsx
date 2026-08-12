@@ -35,7 +35,7 @@ export default function Section({
                   <p className="text-[12px] uppercase tracking-[0.22em] text-ink/35">{label}</p>
                 )}
                 {title && (
-                  <h2 className="display-xl mt-3 text-[clamp(1.9rem,3.4vw,3rem)] leading-[1.05]">
+                  <h2 className="display-xl mt-3 text-[clamp(1.6rem,2.3vw,2.3rem)] leading-[1.12] text-balance">
                     {title}
                   </h2>
                 )}
