@@ -1,6 +1,6 @@
-import { references, refCategories } from "../../lib/site";
+import { references, refCategories } from "@/lib/site";
 import ReferenceGrid from "./ReferenceGrid";
-import Tape from "../../components/Tape";
+import Tape from "@/components/Tape";
 
 export const metadata = { title: "References - Safyproduction" };
 

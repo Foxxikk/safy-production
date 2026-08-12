@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
-import { services } from "../../lib/site";
-import Tape from "../../components/Tape";
+import { services } from "@/lib/site";
+import Tape from "@/components/Tape";
 
 export const metadata = { title: "Services - Safyproduction" };
 

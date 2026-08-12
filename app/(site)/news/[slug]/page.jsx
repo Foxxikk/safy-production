@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { news } from "../../../lib/news";
+import { news } from "@/lib/news";
 
 export function generateStaticParams() {
   return news.map((n) => ({ slug: n.slug }));

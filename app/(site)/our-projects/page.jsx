@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Tape from "../../components/Tape";
+import Tape from "@/components/Tape";
 
 export const metadata = { title: "Our Projects - Safyproduction" };
 

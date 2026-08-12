@@ -1,6 +1,6 @@
-import { LangProvider } from "../../components/bx/LangContext";
-import { ThemeProvider } from "../../components/bx/ThemeContext";
-import TapeTransition from "../../components/bx/TapeTransition";
+import { LangProvider } from "@/components/bx/LangContext";
+import { ThemeProvider } from "@/components/bx/ThemeContext";
+import TapeTransition from "@/components/bx/TapeTransition";
 
 export const metadata = {
   title: "ŠAFY BX — Brand experience marketing",

@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { team } from "../../lib/content";
-import Cta from "../../components/Cta";
-import Tape from "../../components/Tape";
+import { team } from "@/lib/content";
+import Cta from "@/components/Cta";
+import Tape from "@/components/Tape";
 
 export const metadata = { title: "Team - Safyproduction" };
 

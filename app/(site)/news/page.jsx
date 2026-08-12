@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
-import { news } from "../../lib/news";
-import Tape from "../../components/Tape";
+import { news } from "@/lib/news";
+import Tape from "@/components/Tape";
 
 export const metadata = {
   title: "News - Safyproduction",

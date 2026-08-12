@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
-import BxHeader from "../../../components/bx/BxHeader";
-import CaseDetail from "../../../components/bx/CaseDetail";
-import ContactForm from "../../../components/bx/ContactForm";
-import { cases } from "../../../lib/bx";
+import BxHeader from "@/components/bx/BxHeader";
+import CaseDetail from "@/components/bx/CaseDetail";
+import ContactForm from "@/components/bx/ContactForm";
+import { cases } from "@/lib/bx";
 
 export function generateStaticParams() {
   return cases.map((c) => ({ slug: c.slug }));

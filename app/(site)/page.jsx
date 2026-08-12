@@ -1,9 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
-import { services, references } from "../lib/site";
-import LogoMarquee from "../components/LogoMarquee";
-import Cta from "../components/Cta";
-import Tape from "../components/Tape";
+import { services, references } from "@/lib/site";
+import LogoMarquee from "@/components/LogoMarquee";
+import Cta from "@/components/Cta";
+import Tape from "@/components/Tape";
 
 export default function Home() {
   return (

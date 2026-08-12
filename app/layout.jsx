@@ -4,8 +4,6 @@ import "@fontsource/roboto/latin-ext-500.css";
 import "@fontsource/roboto/latin-ext-700.css";
 import "@fontsource/roboto/latin-ext-900.css";
 import "./globals.css";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 
 export const metadata = {
   title: "Safy production - Creative event agency",
@@ -16,21 +14,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <head>
-        {/* Na doméně safy-bx.* slouží kořen landing page ŠAFY BX,
-            takže globální hlavičku/patičku hlavního webu skryjeme. */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html:
-              "if(location.hostname.indexOf('safy-bx')===0){document.documentElement.classList.add('bx-host')}",
-          }}
-        />
-      </head>
-      <body>
-        <Header />
-        <main>{children}</main>
-        <Footer />
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

@@ -1,6 +1,6 @@
 import Image from "next/image";
-import Cta from "../../components/Cta";
-import Tape from "../../components/Tape";
+import Cta from "@/components/Cta";
+import Tape from "@/components/Tape";
 
 export const metadata = { title: "About us - Safyproduction" };
 

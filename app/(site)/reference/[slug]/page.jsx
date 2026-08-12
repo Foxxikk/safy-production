@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { references } from "../../../lib/site";
+import { references } from "@/lib/site";
 
 export function generateStaticParams() {
   return references.map((r) => ({ slug: r.slug }));

@@ -1,4 +1,4 @@
-import Tape from "../../components/Tape";
+import Tape from "@/components/Tape";
 
 export const metadata = { title: "GDPR - Safyproduction" };
 
