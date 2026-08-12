@@ -61,19 +61,19 @@ export default function ContactForm() {
   return (
     <section id="contact" className="relative pt-16 md:pt-24">
       {/* Páska Šafy — nahnutá, přesahuje světlou i tmavou sekci */}
-      <div className="pointer-events-none absolute inset-x-0 top-8 md:top-14 z-20 overflow-hidden">
+      <div className="pointer-events-none absolute inset-x-0 top-8 md:top-14 z-20">
         <Image
           src="/images/tapes/tape-green.svg"
           alt=""
           aria-hidden
           width={2400}
           height={75}
-          className="w-[116%] max-w-none -ml-[8%] -rotate-[2.5deg]"
+          className="w-[124%] max-w-none -ml-[12%] -rotate-[2.5deg]"
         />
       </div>
 
       <div className="px-3 md:px-5">
-        <div className="bg-dark dark:bg-black text-white overflow-hidden pt-20 md:pt-28">
+        <div className="bg-dark dark:bg-black text-white pt-20 md:pt-28">
         <Container className="py-11 md:py-18">
           <div className="grid gap-10 md:gap-14 md:grid-cols-12">
             {/* Levá strana — velký claim */}

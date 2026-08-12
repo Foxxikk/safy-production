@@ -9,9 +9,9 @@ import Lightbox from "./Lightbox";
 import { Container, Label, ArrowPill } from "./Section";
 import { TapeLink } from "./TapeTransition";
 
-// Jemné přiblížení bez „skákání“ — GPU vrstva a plynulá křivka
-const IMG_HOVER =
-  "object-cover transform-gpu will-change-transform transition-transform duration-700 ease-[cubic-bezier(.22,.61,.36,1)] group-hover:scale-[1.03]";
+// Fotky se při hoveru NEpřeškálovávají — jakékoli scale u velkých fotek
+// způsobovalo cukání. Reakci na hover řeší jen jemné ztmavení (viz overlay níže).
+const IMG_HOVER = "object-cover";
 
 export default function CaseDetail({ item, prev, next }) {
   const { lang, t } = useLang();
@@ -163,7 +163,7 @@ export default function CaseDetail({ item, prev, next }) {
                   alt=""
                   fill
                   sizes="96px"
-                  className="object-cover transform-gpu transition-transform duration-700 ease-[cubic-bezier(.22,.61,.36,1)] group-hover:scale-[1.06]"
+                  className="object-cover"
                 />
               </span>
               <span className="min-w-0">

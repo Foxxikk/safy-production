@@ -54,13 +54,13 @@ export default function Portfolio() {
             <Reveal key={c.slug} delay={(i % 2) * 0.06}>
               <TapeLink href={`/safy-bx/${c.slug}`} className="group block">
                 <div className="relative aspect-[4/3] overflow-hidden bg-ink/5 dark:bg-white/5">
-                  {/* Jemné přiblížení bez „skákání“: transform-gpu + delší plynulá křivka */}
+                  {/* Bez přeškálování — scale u velkých fotek působilo cukání */}
                   <Image
                     src={`/images/bx/${c.slug}/01.webp`}
                     alt={data.title}
                     fill
                     sizes="(max-width: 640px) 100vw, 46vw"
-                    className="object-cover transform-gpu will-change-transform transition-transform duration-700 ease-[cubic-bezier(.22,.61,.36,1)] group-hover:scale-[1.03]"
+                    className="object-cover"
                   />
                   {/* Jemné ztmavení místo plovoucího tlačítka u kurzoru */}
                   <span className="absolute inset-0 bg-ink/0 group-hover:bg-ink/10 transition-colors duration-500" />
