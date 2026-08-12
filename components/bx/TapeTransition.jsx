@@ -5,30 +5,48 @@ import { useRouter, usePathname } from "next/navigation";
 
 /**
  * Přechod mezi stránkami ve stylu Šafy.
- * Diagonální pásky "WE ARE ŠAFY" postupně zakryjí CELOU obrazovku,
- * v zákrytu proběhne navigace a pásky odjedou pryč.
+ * Diagonální pásky "WE ARE ŠAFY" zakryjí celou obrazovku, v zákrytu proběhne
+ * navigace a pásky odjedou dál stejným směrem.
  *
- * Pásky jsou CSS background (repeat-x) místo <img> — levnější na kompozici,
- * animuje se jen transform (translate3d) => běží na GPU, bez sekání.
+ * Směr se řídí navigací: hlouběji (na detail) = zleva doprava,
+ * zpět na přehled = zprava doleva. Uživatel tak podvědomě cítí, kam jde.
+ *
+ * Animuje se jen transform (translate3d) => běží na GPU, bez sekání.
  */
+
+// ——— Ladicí parametry na jednom místě ———
+export const TAPE_CONFIG = {
+  stripes: 8, // počet pásek
+  stagger: 34, // ms mezi nástupem jednotlivých pásek
+  move: 520, // ms pohybu jedné pásky
+  hold: 140, // ms pauzy v plném zákrytu (tady se mění stránka)
+  rotate: -7, // náklon pásek ve stupních
+  easing: "cubic-bezier(.83,0,.17,1)",
+};
+
+const { stripes: STRIPES, stagger: STAGGER, move: MOVE, hold: HOLD, rotate: ROT, easing: EASE } =
+  TAPE_CONFIG;
+
+const COVER_MS = MOVE + STAGGER * (STRIPES - 1);
+
+// Obě pásky nesou "WE ARE ŠAFY ✕ Creative event agency".
+// (tape-black.svg a tape-green-2.svg nesou text "References" — na BX nepatří.)
+const SRC = ["/images/tapes/tape-green.svg", "/images/tapes/tape-dark.svg"];
+
+/** Kam v hierarchii odkaz vede — hlouběji, nebo zpět. */
+function directionFor(from, to) {
+  const depth = (p) => p.split("/").filter(Boolean).length;
+  return depth(to) >= depth(from) ? 1 : -1; // 1 = doprava, -1 = doleva
+}
 
 const TapeCtx = createContext({ navigate: () => {} });
 export const useTapeNav = () => useContext(TapeCtx);
-
-const STRIPES = 7;
-const STAGGER = 55; // ms mezi pásky
-const MOVE = 780; // ms trvání pohybu jedné pásky
-const COVER_MS = MOVE + STAGGER * (STRIPES - 1); // vše zakryto
-const HOLD_MS = 220; // pauza v zákrytu (tady se mění stránka)
-
-// Střídavě zelená / tmavá — obě nesou "WE ARE ŠAFY ✕ Creative event agency".
-// (tape-black.svg a tape-green-2.svg nesou text "References" — na BX nepatří.)
-const SRC = ["/images/tapes/tape-green.svg", "/images/tapes/tape-dark.svg"];
 
 export default function TapeTransition({ children }) {
   const router = useRouter();
   const pathname = usePathname();
   const [phase, setPhase] = useState("idle"); // idle | covering | revealing
+  const [dir, setDir] = useState(1);
   const targetRef = useRef(null);
   const timers = useRef([]);
 
@@ -55,20 +73,21 @@ export default function TapeTransition({ children }) {
       }
 
       targetRef.current = href;
+      setDir(directionFor(pathname, href));
       clear();
 
-      // start až v dalším snímku — layer se stihne vytvořit, animace nezadrhne
+      // start až v dalším snímku — GPU vrstva se stihne vytvořit
       requestAnimationFrame(() => requestAnimationFrame(() => setPhase("covering")));
 
-      // navigace až když je vše zakryté (případný lag schová páska)
+      // navigace až v plném zákrytu (případný lag schová páska)
       timers.current.push(
         setTimeout(() => {
           router.push(targetRef.current);
           window.scrollTo(0, 0);
-        }, COVER_MS + 40)
+        }, COVER_MS + 30)
       );
-      timers.current.push(setTimeout(() => setPhase("revealing"), COVER_MS + HOLD_MS));
-      timers.current.push(setTimeout(() => setPhase("idle"), COVER_MS + HOLD_MS + COVER_MS));
+      timers.current.push(setTimeout(() => setPhase("revealing"), COVER_MS + HOLD));
+      timers.current.push(setTimeout(() => setPhase("idle"), COVER_MS + HOLD + COVER_MS));
     },
     [router, pathname]
   );
@@ -84,7 +103,7 @@ export default function TapeTransition({ children }) {
         className="pointer-events-none fixed inset-0 z-[200] overflow-hidden"
         style={{ visibility: active ? "visible" : "hidden" }}
       >
-        {/* Otočený kontejner — pásky jsou uvnitř rovnoběžné a bez mezer */}
+        {/* Otočený kontejner — pásky uvnitř jsou rovnoběžné a bez mezer */}
         <div
           className="absolute"
           style={{
@@ -92,16 +111,16 @@ export default function TapeTransition({ children }) {
             left: "-30%",
             width: "160%",
             height: "160%",
-            transform: "rotate(-7deg)",
+            transform: `rotate(${ROT}deg)`,
             display: "flex",
             flexDirection: "column",
           }}
         >
           {Array.from({ length: STRIPES }).map((_, i) => {
             const covering = phase === "covering";
-            // zleva dovnitř, pak dál doprava ven
-            const x = covering ? "0%" : phase === "revealing" ? "112%" : "-112%";
-            // při odkrývání jde stagger odspodu, ať to nevypadá mechanicky
+            const off = 112 * dir; // odkud přiletí / kam odletí
+            const x = covering ? "0%" : phase === "revealing" ? `${off}%` : `${-off}%`;
+            // při odkrývání jde vlna opačně, ať to nepůsobí mechanicky
             const delay = (covering ? i : STRIPES - 1 - i) * STAGGER;
             return (
               <div
@@ -113,7 +132,7 @@ export default function TapeTransition({ children }) {
                   backgroundRepeat: "repeat-x",
                   backgroundSize: "auto 100%",
                   transform: `translate3d(${x}, 0, 0)`,
-                  transition: `transform ${MOVE}ms cubic-bezier(.85,0,.15,1) ${delay}ms`,
+                  transition: `transform ${MOVE}ms ${EASE} ${delay}ms`,
                   willChange: "transform",
                   backfaceVisibility: "hidden",
                 }}
