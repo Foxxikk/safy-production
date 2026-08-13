@@ -5,7 +5,7 @@ import Image from "next/image";
 import { cases, categories } from "@/lib/bx";
 import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
-import Section, { Label, ArrowPill } from "./Section";
+import Section, { Label } from "./Section";
 import { TapeLink } from "./TapeTransition";
 
 export default function Portfolio() {
@@ -47,7 +47,7 @@ export default function Portfolio() {
         </div>
       </Reveal>
 
-      <div className="mt-8 md:mt-12 grid gap-x-5 gap-y-9 md:gap-y-12 sm:grid-cols-2">
+      <div className="mt-8 md:mt-12 grid gap-x-4 gap-y-8 md:gap-x-5 md:gap-y-10 sm:grid-cols-2 xl:grid-cols-3">
         {shown.map((c, i) => {
           const data = c[lang];
           return (
@@ -59,26 +59,23 @@ export default function Portfolio() {
                     src={`/images/bx/${c.slug}/01.webp`}
                     alt={data.title}
                     fill
-                    sizes="(max-width: 640px) 100vw, 46vw"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1280px) 46vw, 31vw"
                     className="object-cover"
                   />
-                  {/* Jemné ztmavení místo plovoucího tlačítka u kurzoru */}
+                  {/* Jemné ztmavení — žádné štítky ani tlačítka přes fotku */}
                   <span className="absolute inset-0 bg-ink/0 group-hover:bg-ink/10 transition-colors duration-500" />
-                  <span className="absolute left-0 top-0 bg-white dark:bg-ink text-ink dark:text-white px-3 py-1.5 text-[11px] md:text-[12px]">
-                    {cats[c.category]}
-                  </span>
                 </div>
 
-                <div className="mt-3.5 md:mt-5 flex items-start justify-between gap-4">
-                  <div className="min-w-0">
-                    <h3 className="text-[clamp(1.15rem,2.1vw,1.7rem)] font-medium leading-tight group-hover:text-brand transition-colors dark:text-white">
-                      {data.title}
-                    </h3>
-                    <p className="mt-1 text-ink/45 dark:text-white/40 text-[13.5px] md:text-[15px]">
-                      {data.subtitle}
-                    </p>
-                  </div>
-                  <ArrowPill label={data.title} className="hidden sm:inline-flex" />
+                <div className="mt-3 md:mt-4">
+                  <p className="text-[11px] uppercase tracking-[0.14em] text-ink/35 dark:text-white/35">
+                    {cats[c.category]}
+                  </p>
+                  <h3 className="mt-1.5 text-[16px] md:text-[18px] font-medium leading-snug group-hover:text-brand transition-colors dark:text-white">
+                    {data.title}
+                  </h3>
+                  <p className="mt-0.5 text-ink/45 dark:text-white/40 text-[13.5px] md:text-[14px]">
+                    {data.subtitle}
+                  </p>
                 </div>
               </TapeLink>
             </Reveal>

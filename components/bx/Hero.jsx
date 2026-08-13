@@ -68,6 +68,16 @@ export default function Hero() {
         </Container>
       </section>
 
+    </>
+  );
+}
+
+/** Co děláme + čísla — zobrazuje se AŽ pod referencemi. */
+export function About() {
+  const { lang, t } = useLang();
+
+  return (
+    <>
       {/* PILÍŘE */}
       <Section className="pt-6 md:pt-10">
         <Reveal>
