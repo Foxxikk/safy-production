@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { isAuthed } from "@/lib/adminAuth";
-import { getLeads, saveLeads } from "@/lib/bxLeads";
+import { getLeads, updateLeads } from "@/lib/bxLeads";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 async function guard() {
   return (await isAuthed()) ? null : NextResponse.json({ error: "unauthorized" }, { status: 401 });
@@ -20,23 +21,10 @@ export async function PATCH(req) {
   if (no) return no;
 
   const { action, ids } = await req.json();
-  const set = new Set(Array.isArray(ids) ? ids : [ids]);
-  let list = await getLeads();
-
-  if (action === "delete") {
-    list = list.filter((l) => !set.has(l.id));
-  } else {
-    list = list.map((l) =>
-      set.has(l.id)
-        ? {
-            ...l,
-            read: action === "read" ? true : action === "unread" ? false : l.read,
-            archived:
-              action === "archive" ? true : action === "unarchive" ? false : l.archived,
-          }
-        : l
-    );
+  const allowed = ["read", "unread", "archive", "unarchive", "delete"];
+  if (!allowed.includes(action)) {
+    return NextResponse.json({ error: "bad action" }, { status: 400 });
   }
 
-  return NextResponse.json({ leads: await saveLeads(list) });
+  return NextResponse.json({ leads: await updateLeads(ids, action) });
 }
