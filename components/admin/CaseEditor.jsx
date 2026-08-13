@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { prepareImages, MAX_SIDE } from "@/lib/imagePrep";
 import { Badge, Button, Card, EmptyState, Field, IconButton, Select, TextArea, TextInput, Toggle } from "./ui";
 import {
   IconArrowLeft,
@@ -17,6 +18,8 @@ export default function CaseEditor({ item, categories, onBack, onChange, slugify
   const [lang, setLang] = useState("cs");
   const [uploading, setUploading] = useState(false);
   const [dropping, setDropping] = useState(false);
+  const [progress, setProgress] = useState(null);
+  const [lastPrep, setLastPrep] = useState(null);
   const fileRef = useRef(null);
   const dragFrom = useRef(null);
 
@@ -35,25 +38,44 @@ export default function CaseEditor({ item, categories, onBack, onChange, slugify
   const setFacts = (next) => onChange({ facts: { ...item.facts, [lang]: next } });
 
   // ——— Fotky ———
+  // Velké originály z foťáku zmenšíme a převedeme na webp ještě v prohlížeči,
+  // takže se nahrává rovnou hotový soubor pro web.
   const upload = async (files) => {
     if (!files?.length) return;
     setUploading(true);
+    setProgress({ done: 0, total: files.length, phase: "Připravuji fotky…" });
+
+    const { results, before, after, savedPct } = await prepareImages(files);
+
     const urls = [];
-    for (const f of files) {
+    for (let i = 0; i < results.length; i++) {
+      setProgress({ done: i, total: results.length, phase: "Nahrávám…" });
       const fd = new FormData();
-      fd.append("file", f);
+      fd.append("file", results[i].file);
       fd.append("slug", item.slug || "misc");
       const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
       if (res.ok) {
-        const d = await res.json();
-        urls.push(d.url);
+        urls.push((await res.json()).url);
       } else {
         const d = await res.json().catch(() => ({}));
-        alert(d.error || "Nahrání se nezdařilo.");
+        alert(`${results[i].orig.name}: ${d.error || "nahrání se nezdařilo"}`);
       }
     }
+
     if (urls.length) onChange({ images: [...(item.images || []), ...urls] });
     setUploading(false);
+    setProgress(null);
+    setLastPrep(
+      urls.length
+        ? {
+            count: urls.length,
+            before,
+            after,
+            savedPct,
+            detail: results.map((r) => `${r.orig.name}: ${r.note}`),
+          }
+        : null
+    );
     if (fileRef.current) fileRef.current.value = "";
   };
 
@@ -262,7 +284,7 @@ export default function CaseEditor({ item, categories, onBack, onChange, slugify
 
           <Card
             title={`Fotky (${images.length})`}
-            description="První je titulní. Pořadí změníte přetažením."
+            description={`První je titulní, pořadí změníte přetažením. Velké fotky se samy zmenší na ${MAX_SIDE} px a převedou na webp.`}
             action={
               <Button
                 size="sm"
@@ -282,6 +304,45 @@ export default function CaseEditor({ item, categories, onBack, onChange, slugify
               hidden
               onChange={(e) => upload([...e.target.files])}
             />
+
+            {progress && (
+              <div className="mb-3 border border-ink/10 bg-ink/[0.02] px-3 py-2.5">
+                <p className="text-[13px]">
+                  {progress.phase}{" "}
+                  <span className="text-ink/45 tabular-nums">
+                    {progress.done}/{progress.total}
+                  </span>
+                </p>
+                <div className="mt-2 h-1 bg-ink/10">
+                  <div
+                    className="h-full bg-ink transition-all"
+                    style={{ width: `${(progress.done / progress.total) * 100}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {lastPrep && !uploading && (
+              <div className="mb-3 border border-ink/10 bg-ink/[0.02] px-3 py-2.5">
+                <p className="text-[13px]">
+                  Nahráno {lastPrep.count}{" "}
+                  {lastPrep.count === 1 ? "fotka" : lastPrep.count < 5 ? "fotky" : "fotek"}
+                  {lastPrep.savedPct > 0 && (
+                    <span className="text-ink/55">
+                      {" "}
+                      — zmenšeno o {lastPrep.savedPct} % ({(lastPrep.before / 1048576).toFixed(1)} →{" "}
+                      {(lastPrep.after / 1048576).toFixed(1)} MB)
+                    </span>
+                  )}
+                </p>
+                <button
+                  onClick={() => setLastPrep(null)}
+                  className="mt-1 text-[12px] text-ink/40 hover:text-ink"
+                >
+                  Skrýt
+                </button>
+              </div>
+            )}
 
             {images.length === 0 ? (
               <div
@@ -303,9 +364,30 @@ export default function CaseEditor({ item, categories, onBack, onChange, slugify
                 <p className="mt-3 text-[13.5px] text-ink/50">
                   Přetáhněte fotky sem nebo je vyberte tlačítkem.
                 </p>
+                <p className="mt-1.5 text-[12px] text-ink/35">
+                  Velké fotky se automaticky zmenší na {MAX_SIDE} px a převedou na webp.
+                </p>
               </div>
             ) : (
-              <div className="grid grid-cols-3 gap-2">
+              <div
+                onDragOver={(e) => {
+                  if (e.dataTransfer.types.includes("Files")) {
+                    e.preventDefault();
+                    setDropping(true);
+                  }
+                }}
+                onDragLeave={() => setDropping(false)}
+                onDrop={(e) => {
+                  const files = [...e.dataTransfer.files].filter((f) => f.type.startsWith("image/"));
+                  if (!files.length) return;
+                  e.preventDefault();
+                  setDropping(false);
+                  upload(files);
+                }}
+                className={`grid grid-cols-3 gap-2 transition-colors ${
+                  dropping ? "outline outline-2 outline-offset-4 outline-ink/40" : ""
+                }`}
+              >
                 {images.map((src, i) => (
                   <div
                     key={src + i}

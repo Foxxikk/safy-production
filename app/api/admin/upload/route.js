@@ -21,8 +21,13 @@ export async function POST(req) {
   if (!file.type?.startsWith("image/")) {
     return NextResponse.json({ error: "Nahrát lze jen obrázek." }, { status: 400 });
   }
-  if (file.size > 8 * 1024 * 1024) {
-    return NextResponse.json({ error: "Obrázek je větší než 8 MB." }, { status: 400 });
+  // Admin fotky zmenšuje už v prohlížeči; tenhle limit je jen pojistka pro
+  // formáty, které prohlížeč neotevře (např. HEIC z iPhonu).
+  if (file.size > 25 * 1024 * 1024) {
+    return NextResponse.json(
+      { error: "Obrázek má přes 25 MB. Uložte ho prosím jako JPG a zkuste to znovu." },
+      { status: 400 }
+    );
   }
 
   const ext = (file.name?.split(".").pop() || "jpg").toLowerCase();
