@@ -138,25 +138,29 @@ export default function TextsEditor({ data, update }) {
               <div className="space-y-2">
                 {stats.map((s, i) => (
                   <div key={i} className="flex gap-2">
-                    <TextInput
-                      className="w-28 shrink-0 font-medium"
-                      placeholder="300+"
-                      value={s.value}
-                      onChange={(e) => {
-                        const n = [...stats];
-                        n[i] = { ...n[i], value: e.target.value };
-                        setStats(n);
-                      }}
-                    />
-                    <TextInput
-                      placeholder="eventových instalací"
-                      value={s.label}
-                      onChange={(e) => {
-                        const n = [...stats];
-                        n[i] = { ...n[i], label: e.target.value };
-                        setStats(n);
-                      }}
-                    />
+                    <div className="w-24 shrink-0">
+                      <TextInput
+                        className="font-medium"
+                        placeholder="300+"
+                        value={s.value}
+                        onChange={(e) => {
+                          const n = [...stats];
+                          n[i] = { ...n[i], value: e.target.value };
+                          setStats(n);
+                        }}
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <TextInput
+                        placeholder="eventových instalací"
+                        value={s.label}
+                        onChange={(e) => {
+                          const n = [...stats];
+                          n[i] = { ...n[i], label: e.target.value };
+                          setStats(n);
+                        }}
+                      />
+                    </div>
                     <IconButton
                       icon={IconClose}
                       label="Smazat číslo"

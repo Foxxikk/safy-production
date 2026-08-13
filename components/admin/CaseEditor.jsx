@@ -196,25 +196,29 @@ export default function CaseEditor({ item, categories, onBack, onChange, slugify
               <div className="space-y-2">
                 {facts.map((f, i) => (
                   <div key={i} className="flex gap-2">
-                    <TextInput
-                      className="sm:w-40 shrink-0 font-medium"
-                      placeholder="80 kg"
-                      value={f.value}
-                      onChange={(e) => {
-                        const n = [...facts];
-                        n[i] = { ...n[i], value: e.target.value };
-                        setFacts(n);
-                      }}
-                    />
-                    <TextInput
-                      placeholder="nosnost konstrukce"
-                      value={f.label}
-                      onChange={(e) => {
-                        const n = [...facts];
-                        n[i] = { ...n[i], label: e.target.value };
-                        setFacts(n);
-                      }}
-                    />
+                    <div className="w-28 sm:w-40 shrink-0">
+                      <TextInput
+                        className="font-medium"
+                        placeholder="80 kg"
+                        value={f.value}
+                        onChange={(e) => {
+                          const n = [...facts];
+                          n[i] = { ...n[i], value: e.target.value };
+                          setFacts(n);
+                        }}
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <TextInput
+                        placeholder="nosnost konstrukce"
+                        value={f.label}
+                        onChange={(e) => {
+                          const n = [...facts];
+                          n[i] = { ...n[i], label: e.target.value };
+                          setFacts(n);
+                        }}
+                      />
+                    </div>
                     <IconButton
                       icon={IconClose}
                       label="Smazat číslo"
