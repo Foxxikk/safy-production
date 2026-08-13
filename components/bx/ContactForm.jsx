@@ -61,10 +61,11 @@ export default function ContactForm({ intro = {}, settings = {} }) {
     }
   };
 
-  // Formulář sedí na světlé ploše, aby se v tmavé sekci neztrácel.
+  // Formulář zůstává v tmavé paletě, ale pole mají vlastní plochu a rámeček,
+  // takže je poznat, kam se píše.
   const field =
-    "w-full border border-ink/15 bg-white px-3.5 py-2.5 text-[15.5px] text-ink outline-none transition-colors placeholder:text-ink/30 focus:border-ink focus:ring-2 focus:ring-ink/10";
-  const labelCls = "block text-[12.5px] font-medium text-ink/60 mb-1.5";
+    "w-full border border-white/20 bg-white/[0.06] px-3.5 py-2.5 text-[15.5px] text-white outline-none transition-colors placeholder:text-white/35 hover:border-white/35 focus:border-white/70 focus:bg-white/[0.11] [&>option]:text-ink";
+  const labelCls = "block text-[12.5px] text-white/55 mb-1.5";
 
   return (
     <section id="contact" className="relative pt-16 md:pt-24 overflow-x-clip">
@@ -107,15 +108,19 @@ export default function ContactForm({ intro = {}, settings = {} }) {
             <div className="md:col-span-6 md:col-start-7">
               <Reveal delay={0.08}>
                 {state === "sent" ? (
-                  <div className="bg-white text-ink p-8 md:p-10">
+                  <div className="border border-white/15 bg-white/[0.04] p-8 md:p-10">
                     <p className="text-[clamp(1.3rem,2.6vw,1.9rem)] font-medium leading-tight">
                       {t.formSent}
                     </p>
-                    <p className="mt-3 text-ink/55 text-[15px]">{t.formSentNote}</p>
+                    <p className="mt-3 text-white/55 text-[15px]">{t.formSentNote}</p>
                   </div>
                 ) : (
-                  <form onSubmit={submit} noValidate className="bg-white text-ink p-6 md:p-8">
-                    <p className="text-[15px] font-medium mb-5">
+                  <form
+                    onSubmit={submit}
+                    noValidate
+                    className="border border-white/15 bg-white/[0.04] p-6 md:p-8"
+                  >
+                    <p className="text-[12px] uppercase tracking-[0.16em] text-white/45 mb-5">
                       {lang === "cs" ? "Nezávazná poptávka" : "Enquiry"}
                     </p>
                     {/* Honeypot — skryté pole pro roboty */}
@@ -213,19 +218,19 @@ export default function ContactForm({ intro = {}, settings = {} }) {
                       </div>
                     </div>
 
-                    {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
+                    {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
 
                     <button
                       type="submit"
                       disabled={state === "sending"}
-                      className="mt-6 inline-flex items-center gap-3 bg-ink text-white pl-6 pr-1.5 py-2 font-medium hover:bg-ink/85 transition-colors disabled:opacity-50"
+                      className="mt-6 inline-flex items-center gap-3 bg-white text-ink pl-6 pr-1.5 py-2 font-medium hover:bg-white/85 transition-colors disabled:opacity-50"
                     >
                       {state === "sending" ? t.formSending : t.formSubmit}
-                      <span className="inline-flex h-9 w-9 items-center justify-center bg-white text-ink">
+                      <span className="inline-flex h-9 w-9 items-center justify-center bg-ink text-white">
                         →
                       </span>
                     </button>
-                    <p className="mt-3 text-[12.5px] text-ink/40">{t.formNote}</p>
+                    <p className="mt-3 text-[12.5px] text-white/35">{t.formNote}</p>
                   </form>
                 )}
               </Reveal>
