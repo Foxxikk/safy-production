@@ -51,7 +51,7 @@ export default function HoverCursor({ label = "OTEVŘÍT" }) {
         transition: "opacity .25s ease, scale .25s cubic-bezier(.34,1.56,.64,1)",
       }}
     >
-      <span className="inline-flex items-center gap-2 bg-brand text-ink text-[12px] font-medium tracking-[0.08em] px-4 py-2.5">
+      <span className="inline-flex items-center gap-2 bg-ink text-white dark:bg-white dark:text-ink text-[12px] font-medium tracking-[0.08em] px-4 py-2.5">
         {label} →
       </span>
     </div>

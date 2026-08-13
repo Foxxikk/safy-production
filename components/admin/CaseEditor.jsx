@@ -1,22 +1,30 @@
 "use client";
 
 import { useRef, useState } from "react";
-
-const inputCls =
-  "w-full border border-ink/15 bg-white px-3.5 py-2.5 text-[14.5px] outline-none focus:border-ink transition-colors";
-const labelCls = "block text-[12.5px] text-ink/55 mb-1.5";
+import { Badge, Button, Card, EmptyState, Field, IconButton, Select, TextArea, TextInput, Toggle } from "./ui";
+import {
+  IconArrowLeft,
+  IconClose,
+  IconExternal,
+  IconImage,
+  IconPlus,
+  IconStar,
+  IconTrash,
+  IconUpload,
+} from "./Icons";
 
 export default function CaseEditor({ item, categories, onBack, onChange, slugify }) {
   const [lang, setLang] = useState("cs");
   const [uploading, setUploading] = useState(false);
+  const [dropping, setDropping] = useState(false);
   const fileRef = useRef(null);
   const dragFrom = useRef(null);
 
   const L = item[lang] || { title: "", subtitle: "", intro: "", body: [] };
   const facts = item.facts?.[lang] || [];
+  const LANG = lang.toUpperCase();
 
-  const setLangField = (field, value) =>
-    onChange({ [lang]: { ...L, [field]: value } });
+  const setLangField = (field, value) => onChange({ [lang]: { ...L, [field]: value } });
 
   const setBody = (i, value) => {
     const body = [...(L.body || [])];
@@ -59,209 +67,209 @@ export default function CaseEditor({ item, categories, onBack, onChange, slugify
   const removeImage = (i) =>
     onChange({ images: (item.images || []).filter((_, n) => n !== i) });
 
+  const images = item.images || [];
+
   return (
-    <div>
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-        <button
-          onClick={onBack}
-          className="text-[14px] text-ink/55 hover:text-ink transition-colors"
-        >
-          ← Zpět na seznam
-        </button>
-        <div className="flex items-center gap-1 text-[13px]">
-          {["cs", "en"].map((l) => (
-            <button
-              key={l}
-              onClick={() => setLang(l)}
-              className={`px-3 py-1.5 uppercase transition-colors ${
-                lang === l ? "bg-ink text-white" : "text-ink/50 hover:text-ink"
-              }`}
-            >
-              {l}
-            </button>
-          ))}
+    <div className="max-w-[1100px]">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <Button icon={IconArrowLeft} variant="ghost" size="sm" onClick={onBack} className="-ml-3">
+          Zpět na seznam
+        </Button>
+
+        <div className="flex items-center gap-2">
+          <span className="text-[12.5px] text-ink/45 hidden sm:inline">Jazyk obsahu</span>
+          <div className="inline-flex border border-ink/15 bg-white p-0.5">
+            {["cs", "en"].map((l) => (
+              <button
+                key={l}
+                onClick={() => setLang(l)}
+                className={`px-3 h-8 text-[13px] font-medium uppercase transition-colors ${
+                  lang === l ? "bg-ink text-white" : "text-ink/50 hover:text-ink"
+                }`}
+              >
+                {l}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        {/* Levý sloupec — texty */}
+      <div className="grid gap-5 lg:grid-cols-3">
+        {/* ——— Texty ——— */}
         <div className="lg:col-span-2 space-y-5">
-          <div className="bg-white border border-ink/10 p-5">
+          <Card title="Základní údaje" description={`Texty se ukládají zvlášť pro každý jazyk (teď ${LANG}).`}>
             <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <label className={labelCls}>Název ({lang.toUpperCase()})</label>
-                <input
-                  className={inputCls}
+              <Field label={`Název (${LANG})`}>
+                <TextInput
                   value={L.title || ""}
+                  placeholder="Např. IQOS Festival Zone"
                   onChange={(e) => {
                     setLangField("title", e.target.value);
                     if (lang === "cs" && !item.slug) onChange({ slug: slugify(e.target.value) });
                   }}
                 />
-              </div>
-              <div>
-                <label className={labelCls}>Podtitulek ({lang.toUpperCase()})</label>
-                <input
-                  className={inputCls}
+              </Field>
+              <Field label={`Podtitulek (${LANG})`} hint="Jedna věta pod názvem ve výpisu.">
+                <TextInput
                   value={L.subtitle || ""}
+                  placeholder="Víc než promo — celodenní zážitek"
                   onChange={(e) => setLangField("subtitle", e.target.value)}
                 />
-              </div>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2 mt-4">
-              <div>
-                <label className={labelCls}>Adresa (slug)</label>
-                <input
-                  className={inputCls}
+              </Field>
+              <Field label="Adresa stránky" hint={`/safy-bx/${item.slug || "…"}`}>
+                <TextInput
                   value={item.slug || ""}
                   onChange={(e) => onChange({ slug: slugify(e.target.value) })}
                 />
-                <p className="mt-1 text-[12px] text-ink/40">
-                  /safy-bx/{item.slug || "…"}
-                </p>
-              </div>
-              <div>
-                <label className={labelCls}>Kategorie</label>
-                <select
-                  className={inputCls}
-                  value={item.category}
-                  onChange={(e) => onChange({ category: e.target.value })}
-                >
+              </Field>
+              <Field label="Kategorie" hint="Podle ní se reference filtruje na webu.">
+                <Select value={item.category} onChange={(e) => onChange({ category: e.target.value })}>
                   {Object.entries(categories?.cs || {}).map(([k, v]) => (
                     <option key={k} value={k}>
                       {v}
                     </option>
                   ))}
-                </select>
-              </div>
+                </Select>
+              </Field>
             </div>
 
-            <div className="mt-4">
-              <label className={labelCls}>Úvodní odstavec ({lang.toUpperCase()})</label>
-              <textarea
-                rows={3}
-                className={inputCls}
+            <Field
+              label={`Úvodní odstavec (${LANG})`}
+              hint="Výrazný text hned pod fotkou. Ideálně dvě věty."
+              className="mt-4"
+            >
+              <TextArea
                 value={L.intro || ""}
                 onChange={(e) => setLangField("intro", e.target.value)}
               />
-            </div>
-          </div>
+            </Field>
+          </Card>
 
-          {/* Odstavce */}
-          <div className="bg-white border border-ink/10 p-5">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-medium">Text ({lang.toUpperCase()})</h3>
-              <button
-                onClick={() => setLangField("body", [...(L.body || []), ""])}
-                className="text-[13px] border border-ink/15 px-3 py-1.5 hover:border-ink"
-              >
-                + Odstavec
-              </button>
-            </div>
-            <div className="space-y-3">
-              {(L.body || []).map((p, i) => (
-                <div key={i} className="flex gap-2">
-                  <textarea
-                    rows={3}
-                    className={inputCls}
-                    value={p}
-                    onChange={(e) => setBody(i, e.target.value)}
-                  />
-                  <button
-                    onClick={() =>
-                      setLangField("body", L.body.filter((_, n) => n !== i))
-                    }
-                    className="text-ink/30 hover:text-red-600 px-1 shrink-0"
-                    title="Smazat odstavec"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-              {(L.body || []).length === 0 && (
-                <p className="text-[13px] text-ink/40">Zatím žádný odstavec.</p>
-              )}
-            </div>
-          </div>
+          <Card
+            title={`Popis projektu (${LANG})`}
+            description="Odstavce vpravo vedle úvodního textu."
+            action={
+              <Button size="sm" icon={IconPlus} onClick={() => setLangField("body", [...(L.body || []), ""])}>
+                Odstavec
+              </Button>
+            }
+          >
+            {(L.body || []).length === 0 ? (
+              <p className="text-[13.5px] text-ink/40">
+                Zatím žádný odstavec. Přidejte první tlačítkem nahoře.
+              </p>
+            ) : (
+              <div className="space-y-3">
+                {(L.body || []).map((p, i) => (
+                  <div key={i} className="flex gap-2">
+                    <span className="w-5 pt-3 text-[12px] text-ink/25 tabular-nums shrink-0">
+                      {i + 1}
+                    </span>
+                    <TextArea value={p} onChange={(e) => setBody(i, e.target.value)} />
+                    <IconButton
+                      icon={IconClose}
+                      label="Smazat odstavec"
+                      danger
+                      className="mt-1"
+                      onClick={() => setLangField("body", L.body.filter((_, n) => n !== i))}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </Card>
 
-          {/* Projekt v číslech */}
-          <div className="bg-white border border-ink/10 p-5">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-medium">Projekt v číslech ({lang.toUpperCase()})</h3>
-              <button
-                onClick={() => setFacts([...facts, { value: "", label: "" }])}
-                className="text-[13px] border border-ink/15 px-3 py-1.5 hover:border-ink"
-              >
-                + Číslo
-              </button>
-            </div>
-            <div className="space-y-2">
-              {facts.map((f, i) => (
-                <div key={i} className="flex gap-2">
-                  <input
-                    className={`${inputCls} sm:w-40`}
-                    placeholder="80 kg"
-                    value={f.value}
-                    onChange={(e) => {
-                      const n = [...facts];
-                      n[i] = { ...n[i], value: e.target.value };
-                      setFacts(n);
-                    }}
-                  />
-                  <input
-                    className={inputCls}
-                    placeholder="popis čísla"
-                    value={f.label}
-                    onChange={(e) => {
-                      const n = [...facts];
-                      n[i] = { ...n[i], label: e.target.value };
-                      setFacts(n);
-                    }}
-                  />
-                  <button
-                    onClick={() => setFacts(facts.filter((_, n) => n !== i))}
-                    className="text-ink/30 hover:text-red-600 px-1 shrink-0"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-              {facts.length === 0 && (
-                <p className="text-[13px] text-ink/40">Zatím žádná čísla.</p>
-              )}
-            </div>
-          </div>
+          <Card
+            title={`Projekt v číslech (${LANG})`}
+            description="Tři až čtyři čísla vypadají nejlíp."
+            action={
+              <Button size="sm" icon={IconPlus} onClick={() => setFacts([...facts, { value: "", label: "" }])}>
+                Číslo
+              </Button>
+            }
+          >
+            {facts.length === 0 ? (
+              <p className="text-[13.5px] text-ink/40">
+                Zatím žádná čísla. Např. „80 kg“ a „nosnost konstrukce“.
+              </p>
+            ) : (
+              <div className="space-y-2">
+                {facts.map((f, i) => (
+                  <div key={i} className="flex gap-2">
+                    <TextInput
+                      className="sm:w-40 shrink-0 font-medium"
+                      placeholder="80 kg"
+                      value={f.value}
+                      onChange={(e) => {
+                        const n = [...facts];
+                        n[i] = { ...n[i], value: e.target.value };
+                        setFacts(n);
+                      }}
+                    />
+                    <TextInput
+                      placeholder="nosnost konstrukce"
+                      value={f.label}
+                      onChange={(e) => {
+                        const n = [...facts];
+                        n[i] = { ...n[i], label: e.target.value };
+                        setFacts(n);
+                      }}
+                    />
+                    <IconButton
+                      icon={IconClose}
+                      label="Smazat číslo"
+                      danger
+                      onClick={() => setFacts(facts.filter((_, n) => n !== i))}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </Card>
         </div>
 
-        {/* Pravý sloupec — stav a fotky */}
+        {/* ——— Stav a fotky ——— */}
         <div className="space-y-5">
-          <div className="bg-white border border-ink/10 p-5">
-            <label className="flex items-center gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={Boolean(item.published)}
-                onChange={(e) => onChange({ published: e.target.checked })}
-                className="h-4 w-4 accent-[#79d97c]"
-              />
-              <span className="text-[14.5px]">Publikováno na webu</span>
-            </label>
-            <p className="mt-2 text-[12.5px] text-ink/45">
-              Skryté reference se na webu nezobrazí ani nepůjdou otevřít.
-            </p>
-          </div>
+          <Card title="Viditelnost">
+            <Toggle
+              checked={Boolean(item.published)}
+              onChange={(v) => onChange({ published: v })}
+              label={item.published ? "Publikováno na webu" : "Skryto"}
+              description={
+                item.published
+                  ? "Reference je vidět ve výpisu i na vlastní stránce."
+                  : "Reference se na webu nezobrazí a nepůjde otevřít."
+              }
+            />
+            {item.slug && item.published && (
+              <Button
+                as="a"
+                href={`/safy-bx/${item.slug}`}
+                target="_blank"
+                rel="noreferrer"
+                icon={IconExternal}
+                size="sm"
+                className="mt-4 w-full"
+              >
+                Otevřít na webu
+              </Button>
+            )}
+          </Card>
 
-          <div className="bg-white border border-ink/10 p-5">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-medium">Fotky ({item.images?.length || 0})</h3>
-              <button
+          <Card
+            title={`Fotky (${images.length})`}
+            description="První je titulní. Pořadí změníte přetažením."
+            action={
+              <Button
+                size="sm"
+                icon={IconUpload}
                 onClick={() => fileRef.current?.click()}
                 disabled={uploading}
-                className="text-[13px] border border-ink/15 px-3 py-1.5 hover:border-ink disabled:opacity-50"
               >
-                {uploading ? "Nahrávám…" : "+ Nahrát"}
-              </button>
-            </div>
+                {uploading ? "Nahrávám…" : "Nahrát"}
+              </Button>
+            }
+          >
             <input
               ref={fileRef}
               type="file"
@@ -271,59 +279,64 @@ export default function CaseEditor({ item, categories, onBack, onChange, slugify
               onChange={(e) => upload([...e.target.files])}
             />
 
-            <p className="text-[12.5px] text-ink/45 mb-3">
-              První fotka je titulní. Pořadí změníte přetažením.
-            </p>
-
-            <div className="grid grid-cols-3 gap-2">
-              {(item.images || []).map((src, i) => (
-                <div
-                  key={src + i}
-                  draggable
-                  onDragStart={() => (dragFrom.current = i)}
-                  onDragOver={(e) => {
-                    e.preventDefault();
-                    if (dragFrom.current !== null && dragFrom.current !== i) {
-                      moveImage(dragFrom.current, i);
-                      dragFrom.current = i;
-                    }
-                  }}
-                  onDragEnd={() => (dragFrom.current = null)}
-                  className="relative group cursor-grab active:cursor-grabbing"
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={src} alt="" className="aspect-[4/3] w-full object-cover bg-ink/5" />
-                  {i === 0 && (
-                    <span className="absolute left-0 top-0 bg-brand text-ink text-[10px] px-1.5 py-0.5">
-                      titulní
-                    </span>
-                  )}
-                  <button
-                    onClick={() => removeImage(i)}
-                    className="absolute right-0 top-0 bg-white/90 text-ink/60 hover:text-red-600 text-[12px] w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity"
-                    title="Odebrat"
+            {images.length === 0 ? (
+              <div
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setDropping(true);
+                }}
+                onDragLeave={() => setDropping(false)}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  setDropping(false);
+                  upload([...e.dataTransfer.files].filter((f) => f.type.startsWith("image/")));
+                }}
+                className={`border border-dashed py-10 px-4 text-center transition-colors ${
+                  dropping ? "border-ink bg-ink/[0.03]" : "border-ink/20"
+                }`}
+              >
+                <IconImage size={22} className="mx-auto text-ink/25" />
+                <p className="mt-3 text-[13.5px] text-ink/50">
+                  Přetáhněte fotky sem nebo je vyberte tlačítkem.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-3 gap-2">
+                {images.map((src, i) => (
+                  <div
+                    key={src + i}
+                    draggable
+                    onDragStart={() => (dragFrom.current = i)}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      if (dragFrom.current !== null && dragFrom.current !== i) {
+                        moveImage(dragFrom.current, i);
+                        dragFrom.current = i;
+                      }
+                    }}
+                    onDragEnd={() => (dragFrom.current = null)}
+                    className="relative group cursor-grab active:cursor-grabbing"
                   >
-                    ✕
-                  </button>
-                </div>
-              ))}
-            </div>
-
-            {(item.images || []).length === 0 && (
-              <p className="text-[13px] text-ink/40">Zatím žádné fotky.</p>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={src} alt="" className="aspect-[4/3] w-full object-cover bg-ink/5" />
+                    {i === 0 && (
+                      <span className="absolute left-0 top-0 inline-flex items-center gap-1 bg-ink text-white text-[10px] px-1.5 py-1">
+                        <IconStar size={10} />
+                        titulní
+                      </span>
+                    )}
+                    <button
+                      onClick={() => removeImage(i)}
+                      title="Odebrat fotku"
+                      className="absolute right-0 top-0 grid h-6 w-6 place-items-center bg-white/90 text-ink/60 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <IconTrash size={13} />
+                    </button>
+                  </div>
+                ))}
+              </div>
             )}
-          </div>
-
-          {item.slug && item.published && (
-            <a
-              href={`/safy-bx/${item.slug}`}
-              target="_blank"
-              rel="noreferrer"
-              className="block text-center border border-ink/15 py-2.5 text-[14px] hover:border-ink transition-colors"
-            >
-              Otevřít na webu ↗
-            </a>
-          )}
+          </Card>
         </div>
       </div>
     </div>

@@ -214,7 +214,7 @@ export default function ContactForm({ intro = {}, settings = {} }) {
                     <button
                       type="submit"
                       disabled={state === "sending"}
-                      className="mt-8 inline-flex items-center gap-3 bg-white text-ink pl-6 pr-1.5 py-2 font-medium hover:bg-brand transition-colors disabled:opacity-50"
+                      className="mt-8 inline-flex items-center gap-3 bg-white text-ink pl-6 pr-1.5 py-2 font-medium hover:bg-white/80 transition-colors disabled:opacity-50"
                     >
                       {state === "sending" ? t.formSending : t.formSubmit}
                       <span className="inline-flex h-9 w-9 items-center justify-center bg-ink text-white">

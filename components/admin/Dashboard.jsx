@@ -1,16 +1,30 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Button, Card, EmptyState } from "./ui";
+import {
+  IconAlert,
+  IconImage,
+  IconInbox,
+  IconPlus,
+  IconProjects,
+  IconSettings,
+  IconText,
+  IconCheck,
+} from "./Icons";
 
-const Stat = ({ value, label, note }) => (
-  <div className="bg-white border border-ink/10 p-5">
-    <div className="text-[30px] leading-none font-medium tabular-nums">{value}</div>
+const Stat = ({ icon: Icon, value, label, note }) => (
+  <div className="bg-white border border-ink/[0.09] p-5">
+    <span className="inline-grid h-8 w-8 place-items-center border border-ink/10 text-ink/35">
+      <Icon size={16} />
+    </span>
+    <div className="mt-4 text-[28px] leading-none font-semibold tabular-nums">{value}</div>
     <p className="mt-2 text-[13.5px]">{label}</p>
     {note && <p className="text-[12.5px] text-ink/40 mt-0.5">{note}</p>}
   </div>
 );
 
-export default function Dashboard({ data, savedAt, go }) {
+export default function Dashboard({ data, savedAt, go, onAddCase }) {
   const [leads, setLeads] = useState(null);
 
   useEffect(() => {
@@ -22,96 +36,135 @@ export default function Dashboard({ data, savedAt, go }) {
 
   const cases = data.cases || [];
   const published = cases.filter((c) => c.published !== false);
+  const hidden = cases.length - published.length;
   const noPhoto = cases.filter((c) => !c.images?.length);
   const noEn = cases.filter((c) => !c.en?.title?.trim());
   const unread = (leads || []).filter((l) => !l.read && !l.archived);
   const recent = (leads || []).filter((l) => !l.archived).slice(0, 5);
+  const issues = [
+    noPhoto.length && {
+      text: `${noPhoto.length} ${noPhoto.length === 1 ? "reference nemá" : "referencí nemá"} fotku`,
+      detail: noPhoto.map((c) => c.cs?.title || c.slug).slice(0, 3).join(", "),
+    },
+    noEn.length && {
+      text: `${noEn.length} ${noEn.length === 1 ? "reference nemá" : "referencí nemá"} anglický název`,
+      detail: noEn.map((c) => c.cs?.title || c.slug).slice(0, 3).join(", "),
+    },
+  ].filter(Boolean);
 
   return (
-    <div className="max-w-[980px]">
+    <div className="max-w-[1000px] space-y-5">
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Stat
+          icon={IconProjects}
           value={published.length}
           label="Publikovaných referencí"
-          note={cases.length - published.length > 0 ? `${cases.length - published.length} skrytých` : "Vše publikováno"}
+          note={hidden > 0 ? `${hidden} skrytých` : "Vše publikováno"}
         />
         <Stat
-          value={leads === null ? "…" : unread.length}
+          icon={IconInbox}
+          value={leads === null ? "—" : unread.length}
           label="Nepřečtených poptávek"
-          note={leads === null ? "" : `${leads.length} celkem`}
+          note={leads === null ? "Načítám…" : `${leads.length} celkem`}
         />
         <Stat
+          icon={IconImage}
           value={cases.reduce((n, c) => n + (c.images?.length || 0), 0)}
           label="Fotek v galeriích"
         />
         <Stat
+          icon={IconCheck}
           value={savedAt ? new Date(savedAt).toLocaleDateString("cs-CZ") : "—"}
           label="Naposledy publikováno"
-          note={savedAt ? new Date(savedAt).toLocaleTimeString("cs-CZ", { hour: "2-digit", minute: "2-digit" }) : "Zatím neuloženo"}
+          note={
+            savedAt
+              ? new Date(savedAt).toLocaleTimeString("cs-CZ", { hour: "2-digit", minute: "2-digit" })
+              : "Zatím neuloženo"
+          }
         />
       </div>
 
-      {/* Co je potřeba dořešit */}
-      {(noPhoto.length > 0 || noEn.length > 0) && (
-        <section className="mt-5 bg-white border border-ink/10 p-6">
-          <h2 className="text-[17px] font-medium">Vyžaduje pozornost</h2>
-          <ul className="mt-3 space-y-2 text-[14px]">
-            {noPhoto.length > 0 && (
-              <li className="flex items-center justify-between gap-4 border-b border-ink/[0.07] pb-2">
-                <span>
-                  <strong className="font-medium">{noPhoto.length}</strong> referencí je bez fotky
-                  <span className="text-ink/45"> — {noPhoto.map((c) => c.cs?.title || c.slug).slice(0, 3).join(", ")}</span>
+      {/* Rychlé akce */}
+      <Card title="Rychlé akce">
+        <div className="flex flex-wrap gap-2">
+          <Button variant="primary" icon={IconPlus} onClick={onAddCase}>
+            Nová reference
+          </Button>
+          <Button icon={IconInbox} onClick={() => go("leads")}>
+            Poptávky
+            {unread.length > 0 && <span className="text-ink/45">({unread.length})</span>}
+          </Button>
+          <Button icon={IconText} onClick={() => go("texts")}>
+            Texty webu
+          </Button>
+          <Button icon={IconSettings} onClick={() => go("settings")}>
+            Nastavení
+          </Button>
+        </div>
+      </Card>
+
+      {issues.length > 0 && (
+        <Card title="Vyžaduje pozornost" description="Drobnosti, které stojí za doplnění.">
+          <ul className="space-y-3">
+            {issues.map((it) => (
+              <li key={it.text} className="flex items-start justify-between gap-4">
+                <span className="flex items-start gap-2.5 text-[14px]">
+                  <IconAlert size={16} className="mt-0.5 text-amber-500" />
+                  <span>
+                    {it.text}
+                    {it.detail && <span className="block text-[12.5px] text-ink/40">{it.detail}</span>}
+                  </span>
                 </span>
-                <button onClick={() => go("cases")} className="shrink-0 text-ink/50 hover:text-ink underline underline-offset-4">
+                <Button size="sm" onClick={() => go("cases")}>
                   Otevřít
-                </button>
+                </Button>
               </li>
-            )}
-            {noEn.length > 0 && (
-              <li className="flex items-center justify-between gap-4">
-                <span>
-                  <strong className="font-medium">{noEn.length}</strong> referencí nemá anglický název
-                </span>
-                <button onClick={() => go("cases")} className="shrink-0 text-ink/50 hover:text-ink underline underline-offset-4">
-                  Otevřít
-                </button>
-              </li>
-            )}
+            ))}
           </ul>
-        </section>
+        </Card>
       )}
 
-      {/* Poslední poptávky */}
-      <section className="mt-5 bg-white border border-ink/10 p-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-[17px] font-medium">Poslední poptávky</h2>
-          <button onClick={() => go("leads")} className="text-[13.5px] text-ink/50 hover:text-ink underline underline-offset-4">
+      <Card
+        title="Poslední poptávky"
+        action={
+          <Button size="sm" onClick={() => go("leads")}>
             Zobrazit všechny
-          </button>
-        </div>
+          </Button>
+        }
+      >
         {leads === null ? (
-          <p className="text-ink/40 text-[14px] mt-4">Načítám…</p>
+          <p className="text-ink/40 text-[14px]">Načítám…</p>
         ) : recent.length === 0 ? (
-          <p className="text-ink/45 text-[14px] mt-4">
-            Zatím žádné. Poptávky z formuláře na webu se objeví tady.
-          </p>
+          <EmptyState
+            icon={IconInbox}
+            title="Zatím žádné poptávky"
+            description="Až někdo odešle formulář na webu, objeví se tady."
+          />
         ) : (
-          <ul className="mt-4 divide-y divide-ink/[0.07]">
+          <ul className="divide-y divide-ink/[0.07] -my-1">
             {recent.map((l) => (
-              <li key={l.id} className="flex items-center gap-3 py-2.5 text-[14px]">
-                <span className={`h-2 w-2 shrink-0 rounded-full ${l.read ? "border border-ink/20" : "bg-brand"}`} />
-                <span className="min-w-0 flex-1 truncate">
-                  {l.name}
-                  {l.company && <span className="text-ink/45"> · {l.company}</span>}
-                </span>
-                <span className="shrink-0 text-[12.5px] text-ink/40">
-                  {new Date(l.createdAt).toLocaleDateString("cs-CZ")}
-                </span>
+              <li key={l.id}>
+                <button
+                  onClick={() => go("leads")}
+                  className="w-full flex items-center gap-3 py-2.5 text-[14px] text-left hover:text-ink/70 transition-colors"
+                >
+                  <span
+                    className={`h-1.5 w-1.5 shrink-0 ${l.read ? "bg-ink/15" : "bg-ink"}`}
+                    title={l.read ? "Přečteno" : "Nepřečteno"}
+                  />
+                  <span className="min-w-0 flex-1 truncate">
+                    <span className={l.read ? "" : "font-medium"}>{l.name}</span>
+                    {l.company && <span className="text-ink/45"> · {l.company}</span>}
+                  </span>
+                  <span className="shrink-0 text-[12.5px] text-ink/40">
+                    {new Date(l.createdAt).toLocaleDateString("cs-CZ")}
+                  </span>
+                </button>
               </li>
             ))}
           </ul>
         )}
-      </section>
+      </Card>
     </div>
   );
 }

@@ -26,7 +26,7 @@ export default function BxFooter() {
         <div className="grid gap-10 md:grid-cols-3 text-white/55 text-[15px] leading-relaxed">
           <div>
             <Image src="/images/logos/safy-white.svg" alt="šafy" width={92} height={36} />
-            <p className="mt-4 text-[12px] uppercase tracking-[0.22em] text-brand">ŠAFY BX</p>
+            <p className="mt-4 text-[12px] uppercase tracking-[0.22em] text-white/40">ŠAFY BX</p>
           </div>
           <div>
             <p className="text-white mb-2">Šafy production s.r.o.</p>
@@ -36,11 +36,11 @@ export default function BxFooter() {
           <div>
             <a
               href="mailto:info@safyproduction.cz"
-              className="block hover:text-brand transition-colors"
+              className="block hover:text-white transition-colors"
             >
               info@safyproduction.cz
             </a>
-            <Link href="/" className="block mt-3 hover:text-brand transition-colors">
+            <Link href="/" className="block mt-3 hover:text-white transition-colors">
               {lang === "cs" ? "Hlavní web Šafy →" : "Main Šafy website →"}
             </Link>
           </div>

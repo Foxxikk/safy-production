@@ -1,6 +1,19 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { Badge, Button, EmptyState, IconButton } from "./ui";
+import {
+  IconArchive,
+  IconArrowLeft,
+  IconDownload,
+  IconEye,
+  IconEyeOff,
+  IconInbox,
+  IconMail,
+  IconPhone,
+  IconRefresh,
+  IconTrash,
+} from "./Icons";
 
 const fmt = (iso) =>
   new Date(iso).toLocaleString("cs-CZ", {
@@ -11,9 +24,17 @@ const fmt = (iso) =>
     minute: "2-digit",
   });
 
+const relative = (iso) => {
+  const diff = (Date.now() - new Date(iso)) / 1000;
+  if (diff < 3600) return `před ${Math.max(1, Math.round(diff / 60))} min`;
+  if (diff < 86400) return `před ${Math.round(diff / 3600)} h`;
+  if (diff < 172800) return "včera";
+  return new Date(iso).toLocaleDateString("cs-CZ");
+};
+
 export default function Leads({ onCount }) {
   const [leads, setLeads] = useState(null);
-  const [filter, setFilter] = useState("inbox"); // inbox | unread | archived
+  const [filter, setFilter] = useState("inbox");
   const [openId, setOpenId] = useState(null);
   const [busy, setBusy] = useState(false);
 
@@ -46,19 +67,25 @@ export default function Leads({ onCount }) {
     }
   };
 
-  const shown = useMemo(() => {
-    const l = leads || [];
-    if (filter === "archived") return l.filter((x) => x.archived);
-    if (filter === "unread") return l.filter((x) => !x.read && !x.archived);
-    return l.filter((x) => !x.archived);
-  }, [leads, filter]);
+  const all = leads || [];
+  const counts = {
+    inbox: all.filter((x) => !x.archived).length,
+    unread: all.filter((x) => !x.read && !x.archived).length,
+    archived: all.filter((x) => x.archived).length,
+  };
 
-  const open = (leads || []).find((l) => l.id === openId) || null;
+  const shown = useMemo(() => {
+    if (filter === "archived") return all.filter((x) => x.archived);
+    if (filter === "unread") return all.filter((x) => !x.read && !x.archived);
+    return all.filter((x) => !x.archived);
+  }, [all, filter]);
+
+  const open = all.find((l) => l.id === openId) || null;
 
   const exportCsv = () => {
     const rows = [
       ["Datum", "Jméno", "Firma", "E-mail", "Telefon", "Typ", "Rozpočet", "Zpráva"],
-      ...(leads || []).map((l) => [
+      ...all.map((l) => [
         fmt(l.createdAt),
         l.name,
         l.company,
@@ -80,86 +107,109 @@ export default function Leads({ onCount }) {
     URL.revokeObjectURL(url);
   };
 
-  if (leads === null) return <p className="text-ink/45 py-10">Načítám poptávky…</p>;
+  if (leads === null) {
+    return <p className="text-ink/40 py-10 text-[14px]">Načítám poptávky…</p>;
+  }
 
-  // ——— Detail poptávky ———
+  // ——— Detail ———
   if (open) {
+    const rows = [
+      { label: "E-mail", value: open.email, href: `mailto:${open.email}` },
+      { label: "Telefon", value: open.phone, href: open.phone ? `tel:${open.phone}` : null },
+      { label: "Typ projektu", value: open.type },
+      { label: "Orientační rozpočet", value: open.budget },
+      { label: "Jazyk formuláře", value: open.lang === "en" ? "Angličtina" : "Čeština" },
+      { label: "Odesláno ze stránky", value: open.source },
+    ];
+
     return (
-      <div className="max-w-[820px]">
-        <button
-          onClick={() => setOpenId(null)}
-          className="text-[13.5px] text-ink/50 hover:text-ink mb-5"
-        >
-          ← Zpět na seznam
-        </button>
+      <div className="max-w-[760px]">
+        <Button icon={IconArrowLeft} variant="ghost" size="sm" onClick={() => setOpenId(null)} className="mb-4 -ml-3">
+          Zpět na seznam
+        </Button>
 
-        <div className="bg-white border border-ink/10 p-6 md:p-8">
-          <div className="flex flex-wrap items-start justify-between gap-4">
+        <div className="bg-white border border-ink/[0.09]">
+          <header className="flex flex-wrap items-start justify-between gap-4 px-6 py-5 border-b border-ink/[0.07]">
             <div>
-              <h2 className="text-[22px] font-medium">{open.name}</h2>
+              <div className="flex items-center gap-2.5">
+                <h2 className="text-[20px] font-semibold leading-tight">{open.name}</h2>
+                {open.archived && <Badge>Archiv</Badge>}
+              </div>
               {open.company && <p className="text-ink/55 mt-0.5">{open.company}</p>}
-              <p className="text-[13px] text-ink/40 mt-2">{fmt(open.createdAt)}</p>
+              <p className="text-[12.5px] text-ink/40 mt-1.5">
+                {fmt(open.createdAt)} · {relative(open.createdAt)}
+              </p>
             </div>
-            <a
-              href={`mailto:${open.email}?subject=${encodeURIComponent(
-                "ŠAFY BX — vaše poptávka"
-              )}`}
-              className="bg-ink text-white px-4 py-2 text-[14px] hover:bg-ink/85 transition-colors"
+            <Button
+              as="a"
+              variant="primary"
+              icon={IconMail}
+              href={`mailto:${open.email}?subject=${encodeURIComponent("ŠAFY BX — vaše poptávka")}`}
             >
-              Odpovědět e-mailem
-            </a>
-          </div>
+              Odpovědět
+            </Button>
+          </header>
 
-          <dl className="mt-7 grid gap-x-8 gap-y-4 sm:grid-cols-2 text-[14.5px]">
-            {[
-              ["E-mail", <a key="e" href={`mailto:${open.email}`} className="underline underline-offset-4">{open.email}</a>],
-              ["Telefon", open.phone ? <a key="p" href={`tel:${open.phone}`} className="underline underline-offset-4">{open.phone}</a> : "—"],
-              ["Typ projektu", open.type || "—"],
-              ["Rozpočet", open.budget || "—"],
-              ["Jazyk", open.lang === "en" ? "Angličtina" : "Čeština"],
-              ["Odesláno ze stránky", open.source || "—"],
-            ].map(([k, v]) => (
-              <div key={k}>
-                <dt className="text-[12px] text-ink/40 mb-0.5">{k}</dt>
-                <dd>{v}</dd>
+          <dl className="px-6 py-5 grid gap-x-8 gap-y-4 sm:grid-cols-2 text-[14.5px]">
+            {rows.map((r) => (
+              <div key={r.label}>
+                <dt className="text-[12px] text-ink/40 mb-0.5">{r.label}</dt>
+                <dd>
+                  {r.value ? (
+                    r.href ? (
+                      <a href={r.href} className="inline-flex items-center gap-1.5 hover:text-ink/60 underline underline-offset-4 decoration-ink/20">
+                        {r.label === "Telefon" ? <IconPhone size={14} /> : <IconMail size={14} />}
+                        {r.value}
+                      </a>
+                    ) : (
+                      r.value
+                    )
+                  ) : (
+                    <span className="text-ink/30">neuvedeno</span>
+                  )}
+                </dd>
               </div>
             ))}
           </dl>
 
           {open.message && (
-            <div className="mt-7 border-t border-ink/10 pt-5">
+            <div className="px-6 py-5 border-t border-ink/[0.07]">
               <p className="text-[12px] text-ink/40 mb-2">Zpráva</p>
               <p className="whitespace-pre-wrap leading-relaxed text-[15px]">{open.message}</p>
             </div>
           )}
 
-          <div className="mt-8 flex flex-wrap gap-2 border-t border-ink/10 pt-5">
-            <button
-              onClick={() => act(open.read ? "unread" : "read", open.id)}
+          <footer className="flex flex-wrap gap-2 px-6 py-4 border-t border-ink/[0.07] bg-ink/[0.015]">
+            <Button
+              size="sm"
+              icon={open.read ? IconEyeOff : IconEye}
               disabled={busy}
-              className="border border-ink/15 px-3.5 py-2 text-[13.5px] hover:border-ink transition-colors"
+              onClick={() => act(open.read ? "unread" : "read", open.id)}
             >
               {open.read ? "Označit jako nepřečtené" : "Označit jako přečtené"}
-            </button>
-            <button
-              onClick={() => act(open.archived ? "unarchive" : "archive", open.id)}
+            </Button>
+            <Button
+              size="sm"
+              icon={IconArchive}
               disabled={busy}
-              className="border border-ink/15 px-3.5 py-2 text-[13.5px] hover:border-ink transition-colors"
+              onClick={() => act(open.archived ? "unarchive" : "archive", open.id)}
             >
               {open.archived ? "Vrátit z archivu" : "Archivovat"}
-            </button>
-            <button
+            </Button>
+            <Button
+              size="sm"
+              variant="danger"
+              icon={IconTrash}
+              disabled={busy}
               onClick={() => {
                 if (!confirm("Opravdu smazat tuto poptávku?")) return;
                 act("delete", open.id);
                 setOpenId(null);
               }}
-              disabled={busy}
-              className="text-[13.5px] text-ink/40 hover:text-red-600 px-2"
             >
               Smazat
-            </button>
-          </div>
+            </Button>
+          </footer>
         </div>
       </div>
     );
@@ -167,84 +217,107 @@ export default function Leads({ onCount }) {
 
   // ——— Seznam ———
   return (
-    <>
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
-        <div className="flex gap-1">
+    <div className="max-w-[1000px]">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <div className="inline-flex border border-ink/15 bg-white p-0.5">
           {[
-            ["inbox", "Doručené"],
-            ["unread", "Nepřečtené"],
-            ["archived", "Archiv"],
-          ].map(([k, label]) => (
+            ["inbox", "Doručené", counts.inbox],
+            ["unread", "Nepřečtené", counts.unread],
+            ["archived", "Archiv", counts.archived],
+          ].map(([k, label, count]) => (
             <button
               key={k}
               onClick={() => setFilter(k)}
-              className={`px-3.5 py-2 text-[13.5px] transition-colors ${
-                filter === k ? "bg-ink text-white" : "text-ink/55 hover:text-ink"
+              className={`px-3.5 h-8 text-[13px] font-medium transition-colors ${
+                filter === k ? "bg-ink text-white" : "text-ink/50 hover:text-ink"
               }`}
             >
               {label}
+              <span className={`ml-1.5 tabular-nums ${filter === k ? "text-white/50" : "text-ink/30"}`}>
+                {count}
+              </span>
             </button>
           ))}
         </div>
         <div className="flex items-center gap-2">
-          <button
-            onClick={load}
-            className="border border-ink/15 px-3.5 py-2 text-[13.5px] hover:border-ink transition-colors"
-          >
+          <Button size="sm" icon={IconRefresh} onClick={load}>
             Obnovit
-          </button>
-          <button
-            onClick={exportCsv}
-            disabled={!leads.length}
-            className="border border-ink/15 px-3.5 py-2 text-[13.5px] hover:border-ink transition-colors disabled:opacity-40"
-          >
+          </Button>
+          <Button size="sm" icon={IconDownload} onClick={exportCsv} disabled={!all.length}>
             Export CSV
-          </button>
+          </Button>
         </div>
       </div>
 
       {shown.length === 0 ? (
-        <div className="border border-dashed border-ink/15 py-16 text-center text-ink/45">
-          <p>Zatím tu nic není.</p>
-          <p className="text-[13px] mt-1">
-            Poptávky z formuláře na webu se objeví tady.
-          </p>
-        </div>
+        <EmptyState
+          icon={IconInbox}
+          title={
+            filter === "archived"
+              ? "Archiv je prázdný"
+              : filter === "unread"
+              ? "Vše je přečtené"
+              : "Zatím žádné poptávky"
+          }
+          description={
+            filter === "inbox"
+              ? "Až někdo odešle formulář na webu, objeví se tady i s kontaktem a rozpočtem."
+              : undefined
+          }
+        />
       ) : (
-        <ul className="space-y-2">
-          {shown.map((l) => (
-            <li key={l.id}>
+        <div className="bg-white border border-ink/[0.09]">
+          {shown.map((l, n) => (
+            <div
+              key={l.id}
+              className={`group flex items-center gap-3 transition-colors hover:bg-ink/[0.02] ${
+                n > 0 ? "border-t border-ink/[0.07]" : ""
+              }`}
+            >
               <button
                 onClick={() => {
                   setOpenId(l.id);
                   if (!l.read) act("read", l.id);
                 }}
-                className="w-full flex items-center gap-4 bg-white border border-ink/10 px-4 py-3.5 text-left hover:border-ink/30 transition-colors"
+                className="flex-1 min-w-0 flex items-center gap-3 pl-4 py-3 text-left"
               >
                 <span
-                  className={`h-2 w-2 shrink-0 rounded-full ${
-                    l.read ? "bg-transparent border border-ink/20" : "bg-brand"
-                  }`}
+                  className={`h-1.5 w-1.5 shrink-0 ${l.read ? "bg-ink/15" : "bg-ink"}`}
+                  title={l.read ? "Přečteno" : "Nepřečteno"}
                 />
                 <span className="min-w-0 flex-1">
-                  <span className={`block truncate ${l.read ? "" : "font-medium"}`}>
-                    {l.name}
-                    {l.company && <span className="text-ink/45"> · {l.company}</span>}
+                  <span className="flex items-center gap-2">
+                    <span className={`truncate ${l.read ? "" : "font-semibold"}`}>{l.name}</span>
+                    {l.company && <span className="text-ink/45 truncate">· {l.company}</span>}
                   </span>
-                  <span className="block text-[13px] text-ink/45 truncate">
-                    {l.type || "Bez typu"}
-                    {l.budget && ` · ${l.budget}`}
-                    {l.message && ` · ${l.message.slice(0, 70)}`}
+                  <span className="block text-[13px] text-ink/45 truncate mt-0.5">
+                    {[l.type, l.budget, l.message].filter(Boolean).join(" · ").slice(0, 110) ||
+                      "Bez dalších údajů"}
                   </span>
                 </span>
                 <span className="hidden sm:block text-[12.5px] text-ink/40 shrink-0 tabular-nums">
-                  {fmt(l.createdAt)}
+                  {relative(l.createdAt)}
                 </span>
               </button>
-            </li>
+              <div className="flex items-center pr-2 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+                <IconButton
+                  icon={IconArchive}
+                  label={l.archived ? "Vrátit z archivu" : "Archivovat"}
+                  onClick={() => act(l.archived ? "unarchive" : "archive", l.id)}
+                />
+                <IconButton
+                  icon={IconTrash}
+                  label="Smazat"
+                  danger
+                  onClick={() => {
+                    if (confirm("Opravdu smazat tuto poptávku?")) act("delete", l.id);
+                  }}
+                />
+              </div>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
-    </>
+    </div>
   );
 }

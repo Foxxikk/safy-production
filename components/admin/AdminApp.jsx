@@ -6,6 +6,28 @@ import TextsEditor from "./TextsEditor";
 import SettingsEditor from "./SettingsEditor";
 import Dashboard from "./Dashboard";
 import Leads from "./Leads";
+import { Badge, Button, EmptyState, IconButton, TextInput } from "./ui";
+import {
+  IconCheck,
+  IconClose,
+  IconCopy,
+  IconDashboard,
+  IconEdit,
+  IconExternal,
+  IconEye,
+  IconEyeOff,
+  IconGrip,
+  IconImage,
+  IconInbox,
+  IconLogout,
+  IconMenu,
+  IconPlus,
+  IconProjects,
+  IconSearch,
+  IconSettings,
+  IconText,
+  IconTrash,
+} from "./Icons";
 
 const emptyCase = () => ({
   id: `case-${Date.now()}`,
@@ -27,16 +49,16 @@ const slugify = (s) =>
     .replace(/(^-|-$)/g, "");
 
 const NAV = [
-  { key: "dashboard", label: "Přehled", icon: "◫" },
-  { key: "cases", label: "Reference", icon: "▤" },
-  { key: "leads", label: "Poptávky", icon: "✉" },
-  { key: "texts", label: "Texty webu", icon: "¶" },
-  { key: "settings", label: "Nastavení", icon: "⚙" },
+  { key: "dashboard", label: "Přehled", icon: IconDashboard },
+  { key: "cases", label: "Reference", icon: IconProjects },
+  { key: "leads", label: "Poptávky", icon: IconInbox },
+  { key: "texts", label: "Texty webu", icon: IconText },
+  { key: "settings", label: "Nastavení", icon: IconSettings },
 ];
 
 const TITLES = {
   dashboard: ["Přehled", "Souhrn obsahu a poptávek."],
-  cases: ["Reference", "Projekty na webu — pořadí měníte přetažením."],
+  cases: ["Reference", "Projekty na webu. Pořadí změníte přetažením řádku."],
   leads: ["Poptávky", "Zprávy z kontaktního formuláře."],
   texts: ["Texty webu", "Úvodní text, pilíře a statistiky."],
   settings: ["Nastavení", "Kontakty, SEO a zobrazení webu."],
@@ -50,7 +72,7 @@ export default function AdminApp({ initialData }) {
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
   const [savedAt, setSavedAt] = useState(initialData.updatedAt);
-  const [toast, setToast] = useState("");
+  const [toast, setToast] = useState(null);
   const [unread, setUnread] = useState(null);
   const [navOpen, setNavOpen] = useState(false);
   const dragFrom = useRef(null);
@@ -60,12 +82,11 @@ export default function AdminApp({ initialData }) {
     setDirty(true);
   }, []);
 
-  const flash = (msg) => {
-    setToast(msg);
-    setTimeout(() => setToast(""), 2600);
+  const flash = (message, tone = "ok") => {
+    setToast({ message, tone });
+    setTimeout(() => setToast(null), 2800);
   };
 
-  // Počet nepřečtených poptávek do bočního menu
   useEffect(() => {
     fetch("/api/admin/leads")
       .then((r) => (r.ok ? r.json() : { leads: [] }))
@@ -73,7 +94,6 @@ export default function AdminApp({ initialData }) {
       .catch(() => setUnread(0));
   }, []);
 
-  // Varování při odchodu s neuloženými změnami
   useEffect(() => {
     const h = (e) => {
       if (!dirty) return;
@@ -96,13 +116,12 @@ export default function AdminApp({ initialData }) {
       const d = await res.json();
       setSavedAt(d.updatedAt);
       setDirty(false);
-      flash("Uloženo a publikováno");
+      flash("Změny jsou publikované na webu");
     } else {
-      flash("Uložení se nezdařilo");
+      flash("Uložení se nezdařilo, zkuste to prosím znovu", "error");
     }
   };
 
-  // Ctrl/Cmd+S
   useEffect(() => {
     const h = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s") {
@@ -155,10 +174,11 @@ export default function AdminApp({ initialData }) {
       d.cases.forEach((x, n) => (x.order = n));
       return d;
     });
+    setTab("cases");
     setEditingId(c.id);
   };
 
-  const duplicate = (id) =>
+  const duplicate = (id) => {
     update((d) => {
       const i = d.cases.findIndex((c) => c.id === id);
       const copy = structuredClone(d.cases[i]);
@@ -170,6 +190,8 @@ export default function AdminApp({ initialData }) {
       d.cases.forEach((x, n) => (x.order = n));
       return d;
     });
+    flash("Kopie vytvořena — najdete ji hned pod originálem");
+  };
 
   const remove = (id) => {
     const c = cases.find((x) => x.id === id);
@@ -200,19 +222,27 @@ export default function AdminApp({ initialData }) {
   const [title, subtitle] = TITLES[tab] || ["", ""];
 
   return (
-    <div className="min-h-screen bg-[#f6f6f5] lg:flex">
+    <div className="min-h-screen bg-[#f7f7f6] lg:flex">
       {/* ——— Boční menu ——— */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-[248px] bg-ink text-white flex flex-col transition-transform lg:translate-x-0 lg:static lg:shrink-0 ${
+        className={`fixed inset-y-0 left-0 z-40 w-[244px] bg-white border-r border-ink/[0.09] flex flex-col transition-transform duration-200 lg:translate-x-0 lg:static lg:shrink-0 ${
           navOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="px-5 h-16 flex items-center border-b border-white/10">
-          <span className="font-medium tracking-tight">ŠAFY BX</span>
-          <span className="ml-2 text-[11px] tracking-[0.16em] text-white/35">ADMIN</span>
+        <div className="px-5 h-[60px] flex items-center justify-between border-b border-ink/[0.07]">
+          <span className="flex items-baseline gap-2">
+            <span className="font-semibold tracking-tight">ŠAFY BX</span>
+            <span className="text-[10px] tracking-[0.16em] text-ink/35">ADMIN</span>
+          </span>
+          <IconButton
+            icon={IconClose}
+            label="Zavřít menu"
+            onClick={() => setNavOpen(false)}
+            className="lg:hidden"
+          />
         </div>
 
-        <nav className="flex-1 py-3">
+        <nav className="flex-1 p-2.5 space-y-0.5">
           {NAV.map((n) => {
             const active = tab === n.key;
             const badge = n.key === "leads" && unread ? unread : null;
@@ -220,22 +250,21 @@ export default function AdminApp({ initialData }) {
               <button
                 key={n.key}
                 onClick={() => goTo(n.key)}
-                className={`w-full flex items-center gap-3 px-5 py-2.5 text-[14.5px] text-left transition-colors ${
-                  active ? "bg-white/10 text-white" : "text-white/55 hover:text-white hover:bg-white/5"
+                className={`w-full flex items-center gap-3 px-3 h-10 text-[14px] text-left transition-colors ${
+                  active
+                    ? "bg-ink text-white font-medium"
+                    : "text-ink/65 hover:text-ink hover:bg-ink/[0.05]"
                 }`}
               >
-                <span
-                  aria-hidden
-                  className={`w-4 text-center text-[13px] ${active ? "text-brand" : "text-white/30"}`}
-                >
-                  {n.icon}
-                </span>
+                <n.icon size={17} className={active ? "" : "text-ink/40"} />
                 <span className="flex-1">{n.label}</span>
                 {n.key === "cases" && (
-                  <span className="text-[12px] text-white/30 tabular-nums">{cases.length}</span>
+                  <span className={`text-[12px] tabular-nums ${active ? "text-white/50" : "text-ink/30"}`}>
+                    {cases.length}
+                  </span>
                 )}
                 {badge && (
-                  <span className="bg-brand text-ink text-[11px] font-medium px-1.5 py-0.5 tabular-nums">
+                  <span className="min-w-[20px] h-5 grid place-items-center bg-ink text-white text-[11px] font-semibold tabular-nums px-1.5">
                     {badge}
                   </span>
                 )}
@@ -244,22 +273,24 @@ export default function AdminApp({ initialData }) {
           })}
         </nav>
 
-        <div className="p-4 border-t border-white/10 space-y-2">
+        <div className="p-2.5 border-t border-ink/[0.07] space-y-0.5">
           <a
             href="/safy-bx"
             target="_blank"
             rel="noreferrer"
-            className="block text-[13.5px] text-white/55 hover:text-white transition-colors"
+            className="flex items-center gap-3 px-3 h-10 text-[13.5px] text-ink/55 hover:text-ink hover:bg-ink/[0.05] transition-colors"
           >
-            Zobrazit web ↗
+            <IconExternal size={16} className="text-ink/35" />
+            Zobrazit web
           </a>
           <button
             onClick={async () => {
               await fetch("/api/admin/logout", { method: "POST" });
               window.location.reload();
             }}
-            className="block text-[13.5px] text-white/40 hover:text-white transition-colors"
+            className="w-full flex items-center gap-3 px-3 h-10 text-[13.5px] text-ink/55 hover:text-ink hover:bg-ink/[0.05] transition-colors"
           >
+            <IconLogout size={16} className="text-ink/35" />
             Odhlásit se
           </button>
         </div>
@@ -269,53 +300,58 @@ export default function AdminApp({ initialData }) {
         <button
           aria-label="Zavřít menu"
           onClick={() => setNavOpen(false)}
-          className="fixed inset-0 z-30 bg-black/40 lg:hidden"
+          className="fixed inset-0 z-30 bg-ink/30 lg:hidden"
         />
       )}
 
       {/* ——— Obsah ——— */}
       <div className="flex-1 min-w-0">
-        <header className="sticky top-0 z-20 bg-[#f6f6f5]/95 backdrop-blur border-b border-ink/10">
-          <div className="px-4 md:px-8 h-16 flex items-center justify-between gap-4">
+        <header className="sticky top-0 z-20 bg-[#f7f7f6]/90 backdrop-blur-md border-b border-ink/[0.08]">
+          <div className="px-4 md:px-7 h-[60px] flex items-center justify-between gap-4">
             <div className="flex items-center gap-3 min-w-0">
-              <button
+              <IconButton
+                icon={IconMenu}
+                label="Menu"
                 onClick={() => setNavOpen(true)}
-                aria-label="Menu"
-                className="lg:hidden h-9 w-9 border border-ink/15 grid place-items-center"
-              >
-                ☰
-              </button>
+                className="lg:hidden border border-ink/15"
+              />
               <div className="min-w-0">
-                <h1 className="text-[17px] font-medium truncate">
-                  {editing ? "Úprava reference" : title}
+                <h1 className="text-[16px] font-semibold truncate leading-tight">
+                  {editing ? editing.cs?.title || "Nová reference" : title}
                 </h1>
                 <p className="text-[12.5px] text-ink/45 truncate hidden sm:block">
-                  {editing ? editing.cs?.title || "Nová reference" : subtitle}
+                  {editing ? "Úprava reference" : subtitle}
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-3 shrink-0">
-              <span className="hidden md:block text-[12.5px] text-ink/45">
-                {dirty
-                  ? "Neuložené změny"
-                  : savedAt
-                  ? `Uloženo ${new Date(savedAt).toLocaleString("cs-CZ")}`
-                  : "Zatím neuloženo"}
+              <span className="hidden md:flex items-center gap-1.5 text-[12.5px] text-ink/45">
+                {dirty ? (
+                  <>
+                    <span className="h-1.5 w-1.5 bg-amber-500" />
+                    Neuložené změny
+                  </>
+                ) : savedAt ? (
+                  <>
+                    <IconCheck size={13} className="text-ink/35" />
+                    Uloženo {new Date(savedAt).toLocaleString("cs-CZ")}
+                  </>
+                ) : (
+                  "Zatím neuloženo"
+                )}
               </span>
-              <button
-                onClick={save}
-                disabled={!dirty || saving}
-                className="bg-ink text-white px-4 md:px-5 py-2 text-[14px] font-medium hover:bg-ink/85 transition-colors disabled:opacity-30"
-              >
-                {saving ? "Ukládám…" : "Uložit a publikovat"}
-              </button>
+              <Button variant="primary" onClick={save} disabled={!dirty || saving}>
+                {saving ? "Ukládám…" : "Publikovat změny"}
+              </Button>
             </div>
           </div>
         </header>
 
-        <main className="px-4 md:px-8 py-6 md:py-8">
-          {tab === "dashboard" && <Dashboard data={data} savedAt={savedAt} go={goTo} />}
+        <main className="px-4 md:px-7 py-6 md:py-7">
+          {tab === "dashboard" && (
+            <Dashboard data={data} savedAt={savedAt} go={goTo} onAddCase={addCase} />
+          )}
 
           {tab === "leads" && <Leads onCount={setUnread} />}
 
@@ -324,106 +360,132 @@ export default function AdminApp({ initialData }) {
           {tab === "settings" && <SettingsEditor data={data} update={update} />}
 
           {tab === "cases" && !editing && (
-            <>
-              <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
-                <input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Hledat referenci…"
-                  className="w-full sm:w-72 border border-ink/15 bg-white px-4 py-2.5 text-[14px] outline-none focus:border-ink"
-                />
-                <button
-                  onClick={addCase}
-                  className="bg-white border border-ink/20 px-5 py-2.5 text-[14px] font-medium hover:border-ink transition-colors"
-                >
-                  + Nová reference
-                </button>
+            <div className="max-w-[1100px]">
+              <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                <div className="relative w-full sm:w-80">
+                  <IconSearch
+                    size={16}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-ink/30 pointer-events-none"
+                  />
+                  <TextInput
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Hledat podle názvu nebo adresy…"
+                    className="pl-9"
+                  />
+                </div>
+                <Button variant="primary" icon={IconPlus} onClick={addCase}>
+                  Nová reference
+                </Button>
               </div>
 
-              <ul className="space-y-2">
-                {shown.map((c) => {
-                  const realIndex = cases.findIndex((x) => x.id === c.id);
-                  return (
-                    <li
-                      key={c.id}
-                      draggable={!query}
-                      onDragStart={onDragStart(realIndex)}
-                      onDragOver={onDragOver(realIndex)}
-                      onDragEnd={onDragEnd}
-                      className="flex items-center gap-3 bg-white border border-ink/10 px-3 py-3 hover:border-ink/25 transition-colors"
-                    >
-                      <span
-                        className={`select-none text-ink/25 px-1 ${
-                          query ? "opacity-30" : "cursor-grab active:cursor-grabbing"
+              {shown.length === 0 ? (
+                <EmptyState
+                  icon={IconSearch}
+                  title={query ? "Nic jsme nenašli" : "Zatím tu není žádná reference"}
+                  description={
+                    query
+                      ? "Zkuste jiné slovo, nebo hledání zrušte."
+                      : "Přidejte první projekt a objeví se na webu."
+                  }
+                  action={
+                    query ? (
+                      <Button onClick={() => setQuery("")}>Zrušit hledání</Button>
+                    ) : (
+                      <Button variant="primary" icon={IconPlus} onClick={addCase}>
+                        Nová reference
+                      </Button>
+                    )
+                  }
+                />
+              ) : (
+                <div className="bg-white border border-ink/[0.09]">
+                  {shown.map((c, n) => {
+                    const realIndex = cases.findIndex((x) => x.id === c.id);
+                    return (
+                      <div
+                        key={c.id}
+                        draggable={!query}
+                        onDragStart={onDragStart(realIndex)}
+                        onDragOver={onDragOver(realIndex)}
+                        onDragEnd={onDragEnd}
+                        className={`group flex items-center gap-3 px-3 py-2.5 transition-colors hover:bg-ink/[0.02] ${
+                          n > 0 ? "border-t border-ink/[0.07]" : ""
                         }`}
-                        title={query ? "Pro řazení zrušte hledání" : "Přetáhněte pro změnu pořadí"}
                       >
-                        ⠿
-                      </span>
-                      <span className="w-7 text-[12px] text-ink/35 tabular-nums">
-                        {String(realIndex + 1).padStart(2, "0")}
-                      </span>
-
-                      {c.images?.[0] ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={c.images[0]}
-                          alt=""
-                          className="h-12 w-16 object-cover bg-ink/5 shrink-0"
-                        />
-                      ) : (
-                        <span className="h-12 w-16 bg-ink/5 shrink-0 grid place-items-center text-[11px] text-ink/30">
-                          bez fotky
+                        <span
+                          className={`text-ink/20 ${
+                            query
+                              ? "opacity-25"
+                              : "cursor-grab active:cursor-grabbing group-hover:text-ink/45"
+                          }`}
+                          title={query ? "Pro řazení zrušte hledání" : "Přetáhněte pro změnu pořadí"}
+                        >
+                          <IconGrip size={16} />
                         </span>
-                      )}
+                        <span className="w-5 text-[12px] text-ink/30 tabular-nums text-right">
+                          {realIndex + 1}
+                        </span>
 
-                      <div className="min-w-0 flex-1">
-                        <p className="font-medium truncate">
-                          {c.cs?.title || <span className="text-ink/35">Bez názvu</span>}
-                        </p>
-                        <p className="text-[12.5px] text-ink/45 truncate">
-                          /{c.slug || "—"} · {c.images?.length || 0} fotek
-                        </p>
+                        {c.images?.[0] ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={c.images[0]}
+                            alt=""
+                            className="h-11 w-16 object-cover bg-ink/5 shrink-0"
+                          />
+                        ) : (
+                          <span className="h-11 w-16 bg-ink/[0.04] shrink-0 grid place-items-center text-ink/20">
+                            <IconImage size={16} />
+                          </span>
+                        )}
+
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium truncate text-[14.5px]">
+                            {c.cs?.title || <span className="text-ink/30">Bez názvu</span>}
+                          </p>
+                          <p className="text-[12.5px] text-ink/40 truncate">
+                            /{c.slug || "bez adresy"} · {c.images?.length || 0} fotek
+                          </p>
+                        </div>
+
+                        <button
+                          onClick={() => togglePublish(c.id)}
+                          title={c.published ? "Skrýt z webu" : "Publikovat na web"}
+                          className="shrink-0"
+                        >
+                          <Badge tone={c.published ? "solid" : "muted"}>
+                            {c.published ? <IconEye size={13} /> : <IconEyeOff size={13} />}
+                            <span className="hidden sm:inline">
+                              {c.published ? "Publikováno" : "Skryto"}
+                            </span>
+                          </Badge>
+                        </button>
+
+                        <div className="flex items-center shrink-0">
+                          <IconButton
+                            icon={IconEdit}
+                            label="Upravit"
+                            onClick={() => setEditingId(c.id)}
+                          />
+                          <IconButton
+                            icon={IconCopy}
+                            label="Duplikovat"
+                            onClick={() => duplicate(c.id)}
+                          />
+                          <IconButton
+                            icon={IconTrash}
+                            label="Smazat"
+                            danger
+                            onClick={() => remove(c.id)}
+                          />
+                        </div>
                       </div>
-
-                      <button
-                        onClick={() => togglePublish(c.id)}
-                        className={`text-[12px] px-2.5 py-1 border transition-colors ${
-                          c.published
-                            ? "border-ink/25 bg-ink/[0.06] text-ink"
-                            : "border-ink/15 text-ink/40"
-                        }`}
-                        title="Publikováno na webu?"
-                      >
-                        {c.published ? "Publikováno" : "Skryto"}
-                      </button>
-                      <button
-                        onClick={() => setEditingId(c.id)}
-                        className="text-[13px] px-3 py-1.5 border border-ink/15 hover:border-ink transition-colors"
-                      >
-                        Upravit
-                      </button>
-                      <button
-                        onClick={() => duplicate(c.id)}
-                        className="text-[13px] text-ink/45 hover:text-ink px-1"
-                        title="Duplikovat"
-                      >
-                        ⧉
-                      </button>
-                      <button
-                        onClick={() => remove(c.id)}
-                        className="text-[13px] text-ink/35 hover:text-red-600 px-1"
-                        title="Smazat"
-                      >
-                        ✕
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-
-              {shown.length === 0 && <p className="text-ink/45 py-10 text-center">Nic nenalezeno.</p>}
-            </>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           )}
 
           {tab === "cases" && editing && (
@@ -445,8 +507,13 @@ export default function AdminApp({ initialData }) {
       </div>
 
       {toast && (
-        <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 bg-ink text-white px-5 py-3 text-[14px] shadow-lg">
-          {toast}
+        <div
+          className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2.5 px-4 py-3 text-[14px] shadow-xl ${
+            toast.tone === "error" ? "bg-red-600 text-white" : "bg-ink text-white"
+          }`}
+        >
+          <IconCheck size={16} />
+          {toast.message}
         </div>
       )}
     </div>

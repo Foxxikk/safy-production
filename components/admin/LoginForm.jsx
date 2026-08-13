@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { Button, Field, TextInput } from "./ui";
+import { IconLock } from "./Icons";
 
 export default function LoginForm() {
   const [password, setPassword] = useState("");
@@ -26,30 +28,37 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6">
-      <form onSubmit={submit} className="w-full max-w-sm">
-        <p className="text-[12px] tracking-[0.2em] text-ink/40">[ŠAFY BX]</p>
-        <h1 className="mt-3 text-2xl font-medium">Administrace</h1>
-        <label className="mt-8 block text-[13px] text-ink/60" htmlFor="pw">
-          Heslo
-        </label>
-        <input
-          id="pw"
-          type="password"
-          autoFocus
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="mt-1.5 w-full border border-ink/15 bg-white px-4 py-3 outline-none focus:border-ink transition-colors"
-        />
-        {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
-        <button
-          type="submit"
-          disabled={busy}
-          className="mt-6 w-full bg-ink text-white py-3 font-medium hover:bg-brand hover:text-ink transition-colors disabled:opacity-50"
-        >
-          {busy ? "Přihlašuji…" : "Přihlásit se"}
-        </button>
-      </form>
+    <div className="min-h-screen bg-[#f7f7f6] flex items-center justify-center px-6">
+      <div className="w-full max-w-[380px]">
+        <div className="bg-white border border-ink/[0.09] p-8">
+          <span className="inline-grid h-10 w-10 place-items-center border border-ink/10 text-ink/40">
+            <IconLock size={18} />
+          </span>
+          <h1 className="mt-5 text-[22px] font-semibold leading-tight">ŠAFY BX</h1>
+          <p className="text-[13.5px] text-ink/45 mt-1">Administrace webu</p>
+
+          <form onSubmit={submit} className="mt-7">
+            <Field label="Heslo" error={error || null}>
+              <TextInput
+                id="pw"
+                type="password"
+                autoFocus
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Field>
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={busy || !password}
+              className="mt-5 w-full"
+            >
+              {busy ? "Přihlašuji…" : "Přihlásit se"}
+            </Button>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

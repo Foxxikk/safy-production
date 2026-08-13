@@ -166,7 +166,7 @@ export default function CaseDetail({ item, prev, next, categories = {} }) {
               </span>
               <span className="min-w-0">
                 <span className="block text-[11px] text-ink/35 dark:text-white/35">[{lbl}]</span>
-                <span className="block mt-0.5 text-[clamp(1rem,2.2vw,1.6rem)] font-medium truncate group-hover:text-brand transition-colors dark:text-white">
+                <span className="block mt-0.5 text-[clamp(1rem,2.2vw,1.6rem)] font-medium truncate group-hover:text-ink/55 dark:group-hover:text-white/60 transition-colors dark:text-white">
                   {p[lang].title}
                 </span>
               </span>

@@ -66,7 +66,7 @@ export default function BxHeader() {
 
           <a
             href="#contact"
-            className="group inline-flex items-center gap-2 bg-ink dark:bg-white text-white dark:text-ink pl-4 md:pl-5 pr-1.5 py-1.5 text-[13px] md:text-[14px] hover:bg-brand hover:text-ink transition-colors"
+            className="group inline-flex items-center gap-2 bg-ink dark:bg-white text-white dark:text-ink pl-4 md:pl-5 pr-1.5 py-1.5 text-[13px] md:text-[14px] hover:bg-ink/80 dark:hover:bg-white/80 transition-colors"
           >
             {lang === "cs" ? "Poptávka" : "Enquiry"}
             <span className="inline-flex h-7 w-7 items-center justify-center bg-white dark:bg-ink text-ink dark:text-white group-hover:bg-ink group-hover:text-white dark:group-hover:bg-ink transition-colors">
