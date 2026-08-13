@@ -36,41 +36,37 @@ export default function Hero() {
             </p>
           </Reveal>
 
-          <Reveal delay={0.12}>
-            <h1 className="mt-10 md:mt-16 text-[clamp(1.7rem,5vw,4rem)] leading-[1.08] tracking-[-0.02em] font-medium max-w-[20ch] dark:text-white">
-              {lang === "cs" ? (
-                <>
-                  Značka, kterou si lidé osahají,{" "}
-                  <span className="text-ink/30 dark:text-white/30">se pamatuje jinak.</span>
-                </>
-              ) : (
-                <>
-                  A brand people can touch{" "}
-                  <span className="text-ink/30 dark:text-white/30">is remembered differently.</span>
-                </>
-              )}
-            </h1>
-          </Reveal>
+          {/* Claim a text vedle sebe, ne pod sebou */}
+          <div className="mt-10 md:mt-16 grid gap-8 md:gap-12 md:grid-cols-12 md:items-start">
+            <div className="md:col-span-7">
+              <Reveal delay={0.12}>
+                <h1 className="text-[clamp(1.7rem,4.4vw,3.6rem)] leading-[1.08] tracking-[-0.02em] font-medium max-w-[16ch] dark:text-white">
+                  {lang === "cs" ? (
+                    <>
+                      Značka, kterou si lidé osahají,{" "}
+                      <span className="text-ink/30 dark:text-white/30">se pamatuje jinak.</span>
+                    </>
+                  ) : (
+                    <>
+                      A brand people can touch{" "}
+                      <span className="text-ink/30 dark:text-white/30">is remembered differently.</span>
+                    </>
+                  )}
+                </h1>
+              </Reveal>
+            </div>
+
+            <div className="md:col-span-5">
+              <Reveal delay={0.18}>
+                <Label>{lang === "cs" ? "Kdo jsme" : "Who we are"}</Label>
+                <p className="mt-4 text-ink/65 dark:text-white/55 leading-[1.75] text-[15px] md:text-[16px]">
+                  {bxIntro[lang]}
+                </p>
+              </Reveal>
+            </div>
+          </div>
         </Container>
       </section>
-
-      {/* KDO JSME */}
-      <Section className="pt-2 md:pt-6 pb-6 md:pb-10">
-        <div className="grid gap-6 md:gap-10 md:grid-cols-12">
-          <div className="md:col-span-3">
-            <Reveal>
-              <Label>{lang === "cs" ? "Kdo jsme" : "Who we are"}</Label>
-            </Reveal>
-          </div>
-          <div className="md:col-span-8 md:col-start-5">
-            <Reveal delay={0.06}>
-              <p className="text-ink/65 dark:text-white/55 leading-[1.75] text-[15.5px] md:text-[17px] max-w-[62ch]">
-                {bxIntro[lang]}
-              </p>
-            </Reveal>
-          </div>
-        </div>
-      </Section>
 
       {/* PILÍŘE */}
       <Section className="pt-6 md:pt-10">
