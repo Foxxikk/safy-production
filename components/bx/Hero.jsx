@@ -1,93 +1,70 @@
 "use client";
 
 import Image from "next/image";
-import { bxIntro, pillars, stats, clientLogos } from "../../lib/bx";
+import { bxIntro, pillars, stats } from "@/lib/bx";
 import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
 import Section, { Container, Label } from "./Section";
 
 export default function Hero() {
   const { lang, t } = useLang();
-  const logos = [...clientLogos, ...clientLogos];
 
   return (
     <>
-      {/* HERO — celoplošná fotka, obří typografie, ostré rohy */}
-      <section className="px-3 pt-3 md:px-5 md:pt-5">
-        <div className="relative h-[62vh] min-h-[380px] max-h-[720px] md:h-[78vh] w-full overflow-hidden bg-ink">
-          <Image
-            src="/images/bx/iqos-pop-up-store/01.webp"
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/45" />
+      {/* ÚVOD — čistá bílá plocha, černé logo Šafy. Žádná fotka, žádná lišta. */}
+      <section className="pt-14 md:pt-24 pb-10 md:pb-16">
+        <Container>
+          <Reveal>
+            <div className="flex items-end gap-4 md:gap-6">
+              <Image
+                src="/images/logos/safy-logo.svg"
+                alt="šafy"
+                width={340}
+                height={132}
+                priority
+                className="w-[150px] md:w-[260px] h-auto dark:invert"
+              />
+              <span className="display-xl text-[clamp(2.4rem,7vw,5.5rem)] leading-[0.8] tracking-[-0.03em] text-brand pb-1 md:pb-2">
+                BX
+              </span>
+            </div>
+          </Reveal>
 
-          <div className="absolute inset-x-0 top-0 p-4 md:p-8 flex justify-between">
-            <Label tone="light">Brand experience marketing</Label>
-            <Label tone="light" className="hidden sm:block">
-              CZ &amp; SK · od 2010
-            </Label>
-          </div>
+          <Reveal delay={0.06}>
+            <p className="mt-6 md:mt-8 text-[12px] md:text-[13px] uppercase tracking-[0.24em] text-ink/45 dark:text-white/45">
+              Brand experience marketing
+            </p>
+          </Reveal>
 
-          <div className="absolute inset-x-0 bottom-0 p-4 md:p-8">
+          <Reveal delay={0.12}>
+            <h1 className="mt-10 md:mt-16 text-[clamp(1.7rem,5vw,4rem)] leading-[1.08] tracking-[-0.02em] font-medium max-w-[20ch] dark:text-white">
+              {lang === "cs" ? (
+                <>
+                  Značka, kterou si lidé osahají,{" "}
+                  <span className="text-ink/30 dark:text-white/30">se pamatuje jinak.</span>
+                </>
+              ) : (
+                <>
+                  A brand people can touch{" "}
+                  <span className="text-ink/30 dark:text-white/30">is remembered differently.</span>
+                </>
+              )}
+            </h1>
+          </Reveal>
+        </Container>
+      </section>
+
+      {/* KDO JSME */}
+      <Section className="pt-2 md:pt-6 pb-6 md:pb-10">
+        <div className="grid gap-6 md:gap-10 md:grid-cols-12">
+          <div className="md:col-span-3">
             <Reveal>
-              <div className="flex flex-wrap items-end justify-between gap-4 md:gap-6">
-                <h1 className="display-xl text-white text-[clamp(3rem,13vw,10rem)] leading-[0.84] tracking-[-0.02em]">
-                  ŠAFY <span className="text-brand">BX</span>
-                </h1>
-                <p className="max-w-[30ch] text-white/75 text-[13.5px] md:text-[15px] leading-relaxed md:pb-3">
-                  {lang === "cs"
-                    ? "Kreativní strategie, interaktivní instalace a vlastní fyzická výroba — zážitky pro značky v reálném prostoru."
-                    : "Creative strategy, interactive installations and our own fabrication — brand experiences in real space."}
-                </p>
-              </div>
+              <Label>{lang === "cs" ? "Kdo jsme" : "Who we are"}</Label>
             </Reveal>
           </div>
-        </div>
-      </section>
-
-      {/* LOGA KLIENTŮ — na podkladu stránky, bez pásu; barva dle režimu */}
-      <section className="py-9 md:py-12 overflow-x-clip">
-        <div className="flex w-max animate-marquee items-center">
-          {logos.map((b, i) => (
-            <div
-              key={`${b}-${i}`}
-              className="mx-6 md:mx-9 shrink-0 grayscale opacity-45 dark:invert dark:opacity-55"
-            >
-              <Image src={`/images/brands/${b}.png`} alt={b} width={88} height={44} />
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* STATEMENT */}
-      <Section className="pt-14 md:pt-24 pb-6 md:pb-10">
-        <Reveal>
-          <Label>{lang === "cs" ? "Kdo jsme" : "Who we are"}</Label>
-        </Reveal>
-        <Reveal delay={0.05}>
-          <p className="mt-5 md:mt-7 text-[clamp(1.45rem,4.2vw,3.2rem)] leading-[1.15] tracking-[-0.01em] max-w-[22ch] font-medium dark:text-white">
-            {lang === "cs" ? (
-              <>
-                Fyzická přítomnost značky je stejně důležitá jako{" "}
-                <span className="text-ink/35 dark:text-white/35">její prezentace online.</span>
-              </>
-            ) : (
-              <>
-                A brand&apos;s physical presence matters as much as{" "}
-                <span className="text-ink/35 dark:text-white/35">its presence online.</span>
-              </>
-            )}
-          </p>
-        </Reveal>
-
-        <div className="mt-8 md:mt-12 grid gap-10 md:grid-cols-12">
-          <div className="md:col-span-5 md:col-start-8">
-            <Reveal delay={0.1}>
-              <p className="text-ink/60 dark:text-white/55 leading-[1.7] text-[15px] md:text-[16px]">
+          <div className="md:col-span-8 md:col-start-5">
+            <Reveal delay={0.06}>
+              <p className="text-ink/65 dark:text-white/55 leading-[1.75] text-[15.5px] md:text-[17px] max-w-[62ch]">
                 {bxIntro[lang]}
               </p>
             </Reveal>
@@ -96,7 +73,7 @@ export default function Hero() {
       </Section>
 
       {/* PILÍŘE */}
-      <Section className="pt-4 md:pt-8">
+      <Section className="pt-6 md:pt-10">
         <Reveal>
           <Label>{lang === "cs" ? "Co děláme" : "What we do"}</Label>
         </Reveal>
