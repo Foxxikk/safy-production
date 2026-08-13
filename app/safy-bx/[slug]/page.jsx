@@ -17,7 +17,7 @@ export async function generateMetadata({ params }) {
   const data = await getSiteData();
   const c = publishedCases(data).find((x) => x.slug === slug);
   return {
-    title: c ? `${c.cs.title} — ŠAFY BX` : "ŠAFY BX",
+    title: c ? `${c.cs.title} — ŠAFY BX` : data.settings?.seoTitle || "ŠAFY BX",
     description: c ? (c.cs.intro || "").slice(0, 160) : undefined,
   };
 }
@@ -37,7 +37,7 @@ export default async function BxCasePage({ params }) {
     <div className="bg-white dark:bg-dark text-ink dark:text-white min-h-screen">
       <BxHeader />
       <CaseDetail item={item} prev={prev} next={next} categories={data.categories} />
-      <ContactForm />
+      <ContactForm settings={data.settings} />
     </div>
   );
 }

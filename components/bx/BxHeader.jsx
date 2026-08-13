@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useLang } from "./LangContext";
 import { useTheme } from "./ThemeContext";
 import { TapeLink } from "./TapeTransition";
@@ -11,13 +12,19 @@ export default function BxHeader() {
   return (
     <header className="sticky top-0 z-40 bg-white/85 dark:bg-dark/85 backdrop-blur-md">
       <div className="mx-auto w-full max-w-[1440px] px-4 md:px-10 h-16 md:h-[72px] flex items-center justify-between">
-        {/* Bez loga — velké logo je hned pod hlavičkou v úvodu */}
-        <TapeLink
-          href="/safy-bx"
-          aria-label="ŠAFY BX"
-          className="text-[12px] tracking-[0.2em] text-ink/50 dark:text-white/50 hover:text-ink dark:hover:text-white transition-colors"
-        >
-          [ŠAFY BX]
+        {/* Logo v hlavičce — jediný výskyt na stránce */}
+        <TapeLink href="/safy-bx" aria-label="ŠAFY BX" className="flex items-end gap-2">
+          <Image
+            src="/images/logos/safy-logo.svg"
+            alt="šafy"
+            width={340}
+            height={132}
+            priority
+            className="w-[92px] md:w-[112px] h-auto dark:invert"
+          />
+          <span className="display-xl text-[19px] md:text-[23px] leading-[1] tracking-[-0.02em] text-ink dark:text-white pb-[3px]">
+            BX
+          </span>
         </TapeLink>
 
         <div className="flex items-center gap-3 md:gap-5">

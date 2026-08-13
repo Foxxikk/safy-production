@@ -17,45 +17,52 @@ const budgets = {
   en: ["up to 500k CZK", "500k – 1.5M CZK", "1.5M CZK+", "not sure yet"],
 };
 
-export default function ContactForm() {
+const isEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim());
+
+export default function ContactForm({ intro = {}, settings = {} }) {
   const { lang, t } = useLang();
   const [form, setForm] = useState({
     name: "",
     company: "",
     email: "",
+    phone: "",
     type: "",
     budget: "",
     message: "",
+    website: "", // honeypot
   });
+  const [state, setState] = useState("idle"); // idle | sending | sent | error
   const [error, setError] = useState("");
+
+  const email = settings.email || "info@safyproduction.cz";
+  const emailCasting = settings.emailCasting || "casting@safyproduction.cz";
 
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    if (!form.name.trim() || !form.email.trim()) {
+    if (!form.name.trim() || !isEmail(form.email)) {
       setError(t.required);
       return;
     }
     setError("");
-    const subject = `ŠAFY BX — poptávka: ${form.company || form.name}`;
-    const body = [
-      `${t.formName}: ${form.name}`,
-      `${t.formCompany}: ${form.company}`,
-      `${t.formEmail}: ${form.email}`,
-      `${t.formType}: ${form.type}`,
-      `${t.formBudget}: ${form.budget}`,
-      "",
-      `${t.formMessage}:`,
-      form.message,
-    ].join("\n");
-    window.location.href = `mailto:info@safyproduction.cz?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
+    setState("sending");
+    try {
+      const res = await fetch("/api/bx/enquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, lang, source: window.location.pathname }),
+      });
+      if (!res.ok) throw new Error("send failed");
+      setState("sent");
+    } catch {
+      setState("error");
+      setError(t.formFail);
+    }
   };
 
   const field =
-    "w-full border-b border-white/20 bg-transparent py-3 text-[15.5px] text-white outline-none focus:border-brand transition-colors placeholder:text-white/30 [&>option]:text-ink";
+    "w-full border-b border-white/20 bg-transparent py-3 text-[15.5px] text-white outline-none focus:border-white transition-colors placeholder:text-white/30 [&>option]:text-ink";
   const labelCls = "block text-[12px] text-white/40 mb-1";
 
   return (
@@ -86,13 +93,8 @@ export default function ContactForm() {
                 <p className="mt-6 text-white/50 leading-relaxed max-w-[34ch] text-[15.5px]">
                   {t.ctaText}
                 </p>
-                <a
-                  href="mailto:info@safyproduction.cz"
-                  className="mt-8 inline-flex items-center gap-3 group"
-                >
-                  <span className="text-[17px] border-b border-white/40 pb-0.5">
-                    info@safyproduction.cz
-                  </span>
+                <a href={`mailto:${email}`} className="mt-8 inline-flex items-center gap-3 group">
+                  <span className="text-[17px] border-b border-white/40 pb-0.5">{email}</span>
                   <span className="inline-flex h-9 w-9 items-center justify-center border border-white/25 group-hover:bg-white group-hover:text-ink transition-colors">
                     →
                   </span>
@@ -103,103 +105,144 @@ export default function ContactForm() {
             {/* Formulář */}
             <div className="md:col-span-6 md:col-start-7">
               <Reveal delay={0.08}>
-                <form onSubmit={submit}>
-                  <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
-                    <div>
-                      <label className={labelCls} htmlFor="bx-name">
-                        {t.formName} *
-                      </label>
-                      <input
-                        id="bx-name"
-                        className={field}
-                        value={form.name}
-                        onChange={set("name")}
-                      />
-                    </div>
-                    <div>
-                      <label className={labelCls} htmlFor="bx-company">
-                        {t.formCompany}
-                      </label>
-                      <input
-                        id="bx-company"
-                        className={field}
-                        value={form.company}
-                        onChange={set("company")}
-                      />
-                    </div>
-                    <div>
-                      <label className={labelCls} htmlFor="bx-email">
-                        {t.formEmail} *
-                      </label>
-                      <input
-                        id="bx-email"
-                        type="email"
-                        className={field}
-                        value={form.email}
-                        onChange={set("email")}
-                      />
-                    </div>
-                    <div>
-                      <label className={labelCls} htmlFor="bx-type">
-                        {t.formType}
-                      </label>
-                      <select
-                        id="bx-type"
-                        className={field}
-                        value={form.type}
-                        onChange={set("type")}
-                      >
-                        <option value="">—</option>
-                        {types[lang].map((x) => (
-                          <option key={x}>{x}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className={labelCls} htmlFor="bx-budget">
-                        {t.formBudget}
-                      </label>
-                      <select
-                        id="bx-budget"
-                        className={field}
-                        value={form.budget}
-                        onChange={set("budget")}
-                      >
-                        <option value="">—</option>
-                        {budgets[lang].map((x) => (
-                          <option key={x}>{x}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className={labelCls} htmlFor="bx-msg">
-                        {t.formMessage}
-                      </label>
-                      <input
-                        id="bx-msg"
-                        className={field}
-                        value={form.message}
-                        onChange={set("message")}
-                      />
-                    </div>
+                {state === "sent" ? (
+                  <div className="border border-white/15 p-8 md:p-10">
+                    <p className="text-[clamp(1.3rem,2.6vw,1.9rem)] font-medium leading-tight">
+                      {t.formSent}
+                    </p>
+                    <p className="mt-3 text-white/50 text-[15px]">{t.formSentNote}</p>
                   </div>
+                ) : (
+                  <form onSubmit={submit} noValidate>
+                    {/* Honeypot — skryté pole pro roboty */}
+                    <input
+                      type="text"
+                      name="website"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      aria-hidden="true"
+                      value={form.website}
+                      onChange={set("website")}
+                      className="absolute -left-[9999px] h-0 w-0 opacity-0"
+                    />
 
-                  {error && <p className="mt-5 text-sm text-red-400">{error}</p>}
+                    <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
+                      <div>
+                        <label className={labelCls} htmlFor="bx-name">
+                          {t.formName} *
+                        </label>
+                        <input id="bx-name" className={field} value={form.name} onChange={set("name")} />
+                      </div>
+                      <div>
+                        <label className={labelCls} htmlFor="bx-company">
+                          {t.formCompany}
+                        </label>
+                        <input
+                          id="bx-company"
+                          className={field}
+                          value={form.company}
+                          onChange={set("company")}
+                        />
+                      </div>
+                      <div>
+                        <label className={labelCls} htmlFor="bx-email">
+                          {t.formEmail} *
+                        </label>
+                        <input
+                          id="bx-email"
+                          type="email"
+                          className={field}
+                          value={form.email}
+                          onChange={set("email")}
+                        />
+                      </div>
+                      <div>
+                        <label className={labelCls} htmlFor="bx-phone">
+                          {t.formPhone}
+                        </label>
+                        <input
+                          id="bx-phone"
+                          type="tel"
+                          className={field}
+                          value={form.phone}
+                          onChange={set("phone")}
+                        />
+                      </div>
+                      <div>
+                        <label className={labelCls} htmlFor="bx-type">
+                          {t.formType}
+                        </label>
+                        <select id="bx-type" className={field} value={form.type} onChange={set("type")}>
+                          <option value="">—</option>
+                          {types[lang].map((x) => (
+                            <option key={x}>{x}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className={labelCls} htmlFor="bx-budget">
+                          {t.formBudget}
+                        </label>
+                        <select
+                          id="bx-budget"
+                          className={field}
+                          value={form.budget}
+                          onChange={set("budget")}
+                        >
+                          <option value="">—</option>
+                          {budgets[lang].map((x) => (
+                            <option key={x}>{x}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="sm:col-span-2">
+                        <label className={labelCls} htmlFor="bx-msg">
+                          {t.formMessage}
+                        </label>
+                        <textarea
+                          id="bx-msg"
+                          rows={3}
+                          className={`${field} resize-none`}
+                          value={form.message}
+                          onChange={set("message")}
+                        />
+                      </div>
+                    </div>
 
-                  <button
-                    type="submit"
-                    className="mt-8 inline-flex items-center gap-3 bg-white text-ink pl-6 pr-1.5 py-2 font-medium hover:bg-brand transition-colors"
-                  >
-                    {t.formSubmit}
-                    <span className="inline-flex h-9 w-9 items-center justify-center bg-ink text-white">
-                      →
-                    </span>
-                  </button>
-                  <p className="mt-3 text-[12.5px] text-white/30">{t.formNote}</p>
-                </form>
+                    {error && <p className="mt-5 text-sm text-red-400">{error}</p>}
+
+                    <button
+                      type="submit"
+                      disabled={state === "sending"}
+                      className="mt-8 inline-flex items-center gap-3 bg-white text-ink pl-6 pr-1.5 py-2 font-medium hover:bg-brand transition-colors disabled:opacity-50"
+                    >
+                      {state === "sending" ? t.formSending : t.formSubmit}
+                      <span className="inline-flex h-9 w-9 items-center justify-center bg-ink text-white">
+                        →
+                      </span>
+                    </button>
+                    <p className="mt-3 text-[12.5px] text-white/30">{t.formNote}</p>
+                  </form>
+                )}
               </Reveal>
             </div>
           </div>
+
+          {/* O divizi — popisný text patří sem dolů, ne na začátek stránky */}
+          {intro[lang] && (
+            <div className="mt-14 md:mt-20 border-t border-white/10 pt-8 md:pt-10">
+              <Reveal>
+                <div className="grid gap-4 md:gap-10 md:grid-cols-12">
+                  <div className="md:col-span-3">
+                    <Label tone="light">{lang === "cs" ? "O divizi" : "About the division"}</Label>
+                  </div>
+                  <p className="md:col-span-9 text-white/55 leading-[1.7] text-[14.5px] md:text-[16px] max-w-[78ch]">
+                    {intro[lang]}
+                  </p>
+                </div>
+              </Reveal>
+            </div>
+          )}
 
           {/* Patička uvnitř černého bloku */}
           <div className="mt-12 md:mt-16 grid gap-6 md:gap-8 border-t border-white/10 pt-8 md:pt-10 md:grid-cols-4 text-white/45 text-[13.5px] md:text-[14.5px]">
@@ -208,20 +251,30 @@ export default function ContactForm() {
               <p className="mt-3 text-[12px] text-white/40">[ŠAFY BX]</p>
             </div>
             <div>
-              <p className="text-white mb-1.5">Šafy production s.r.o.</p>
-              <p>Údolní 212/1, 147 00, Praha 4</p>
-              <p>IČO: 24769444</p>
+              <p className="text-white mb-1.5">{settings.company || "Šafy production s.r.o."}</p>
+              <p>{settings.address || "Údolní 212/1, 147 00, Praha 4"}</p>
+              {settings.ico && <p>IČO: {settings.ico}</p>}
             </div>
             <div>
-              <a href="mailto:info@safyproduction.cz" className="block hover:text-brand transition-colors">
-                info@safyproduction.cz
+              <a href={`mailto:${email}`} className="block hover:text-white transition-colors">
+                {email}
               </a>
-              <a href="mailto:casting@safyproduction.cz" className="block hover:text-brand transition-colors">
-                casting@safyproduction.cz
-              </a>
+              {emailCasting && (
+                <a
+                  href={`mailto:${emailCasting}`}
+                  className="block hover:text-white transition-colors"
+                >
+                  {emailCasting}
+                </a>
+              )}
+              {settings.phone && (
+                <a href={`tel:${settings.phone.replace(/\s/g, "")}`} className="block hover:text-white transition-colors">
+                  {settings.phone}
+                </a>
+              )}
             </div>
             <div className="md:text-right">
-              <Link href="/" className="hover:text-brand transition-colors">
+              <Link href="/" className="hover:text-white transition-colors">
                 {lang === "cs" ? "Hlavní web Šafy →" : "Main Šafy website →"}
               </Link>
               <p className="mt-3 text-white/25 text-[12.5px]">
