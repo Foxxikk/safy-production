@@ -34,7 +34,7 @@ export default function Hero({ pillars = {}, previews = {} }) {
 
       {/* Náhled fotky se drží v pravém sloupci a mění se podle najetí */}
       <div className="relative mt-8 md:mt-12">
-        <div className="pointer-events-none absolute right-0 top-2 hidden xl:block w-[16%] max-w-[230px] aspect-[3/4] overflow-hidden">
+        <div className="pointer-events-none absolute right-0 top-2 hidden xl:block w-[15%] max-w-[200px] aspect-[3/4] overflow-hidden">
           {list.map((p, i) => {
             const src = p.image || previews[p.category];
             if (!src) return null;
@@ -45,7 +45,7 @@ export default function Hero({ pillars = {}, previews = {} }) {
                   hover === i ? "opacity-100" : "opacity-0"
                 }`}
               >
-                <Image src={src} alt="" fill sizes="230px" className="object-cover" />
+                <Image src={src} alt="" fill sizes="200px" className="object-cover" />
               </span>
             );
           })}
@@ -75,7 +75,7 @@ export default function Hero({ pillars = {}, previews = {} }) {
                 </span>
               </h2>
 
-              <p className="text-ink/55 dark:text-white/50 leading-[1.65] text-[14.5px] md:text-[15.5px] md:col-span-5 xl:col-span-4">
+              <p className="text-ink/55 dark:text-white/50 leading-[1.65] text-[14.5px] md:text-[15.5px] md:col-span-5 xl:col-span-3">
                 {p.text}
               </p>
             </TapeLink>
