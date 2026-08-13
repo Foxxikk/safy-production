@@ -90,7 +90,7 @@ export default function ContactForm() {
                   href="mailto:info@safyproduction.cz"
                   className="mt-8 inline-flex items-center gap-3 group"
                 >
-                  <span className="text-[17px] border-b border-brand pb-0.5">
+                  <span className="text-[17px] border-b border-white/40 pb-0.5">
                     info@safyproduction.cz
                   </span>
                   <span className="inline-flex h-9 w-9 items-center justify-center border border-white/25 group-hover:bg-white group-hover:text-ink transition-colors">
@@ -205,7 +205,7 @@ export default function ContactForm() {
           <div className="mt-12 md:mt-16 grid gap-6 md:gap-8 border-t border-white/10 pt-8 md:pt-10 md:grid-cols-4 text-white/45 text-[13.5px] md:text-[14.5px]">
             <div>
               <Image src="/images/logos/safy-white.svg" alt="šafy" width={86} height={34} />
-              <p className="mt-3 text-[12px] text-brand">[ŠAFY BX]</p>
+              <p className="mt-3 text-[12px] text-white/40">[ŠAFY BX]</p>
             </div>
             <div>
               <p className="text-white mb-1.5">Šafy production s.r.o.</p>

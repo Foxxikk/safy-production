@@ -24,7 +24,7 @@ export function ArrowPill({ tone = "dark", className = "", label = "" }) {
   const style =
     tone === "light"
       ? "border-white/25 text-white group-hover:bg-white group-hover:text-ink"
-      : "border-ink/20 dark:border-white/25 text-ink dark:text-white group-hover:bg-ink dark:group-hover:bg-brand group-hover:text-white dark:group-hover:text-ink";
+      : "border-ink/20 dark:border-white/25 text-ink dark:text-white group-hover:bg-ink dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-ink";
   return (
     <span
       aria-label={label}

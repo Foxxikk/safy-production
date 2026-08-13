@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useLang } from "./LangContext";
 import { useTheme } from "./ThemeContext";
 import { TapeLink } from "./TapeTransition";
@@ -12,15 +11,13 @@ export default function BxHeader() {
   return (
     <header className="sticky top-0 z-40 bg-white/85 dark:bg-dark/85 backdrop-blur-md">
       <div className="mx-auto w-full max-w-[1440px] px-4 md:px-10 h-16 md:h-[72px] flex items-center justify-between">
-        <TapeLink href="/safy-bx" aria-label="Šafy production" className="flex items-center gap-2.5">
-          <Image
-            src={theme === "dark" ? "/images/logos/safy-white.svg" : "/images/logos/safy-logo.svg"}
-            alt="šafy"
-            width={74}
-            height={29}
-            priority
-          />
-          <span className="text-[11px] md:text-[12px] text-ink/45 dark:text-white/45">[BX]</span>
+        {/* Bez loga — velké logo je hned pod hlavičkou v úvodu */}
+        <TapeLink
+          href="/safy-bx"
+          aria-label="ŠAFY BX"
+          className="text-[12px] tracking-[0.2em] text-ink/50 dark:text-white/50 hover:text-ink dark:hover:text-white transition-colors"
+        >
+          [ŠAFY BX]
         </TapeLink>
 
         <div className="flex items-center gap-3 md:gap-5">
@@ -62,7 +59,7 @@ export default function BxHeader() {
 
           <a
             href="#contact"
-            className="group inline-flex items-center gap-2 bg-ink dark:bg-brand text-white dark:text-ink pl-4 md:pl-5 pr-1.5 py-1.5 text-[13px] md:text-[14px] hover:bg-brand hover:text-ink dark:hover:bg-white transition-colors"
+            className="group inline-flex items-center gap-2 bg-ink dark:bg-white text-white dark:text-ink pl-4 md:pl-5 pr-1.5 py-1.5 text-[13px] md:text-[14px] hover:bg-brand hover:text-ink transition-colors"
           >
             {lang === "cs" ? "Poptávka" : "Enquiry"}
             <span className="inline-flex h-7 w-7 items-center justify-center bg-white dark:bg-ink text-ink dark:text-white group-hover:bg-ink group-hover:text-white dark:group-hover:bg-ink transition-colors">

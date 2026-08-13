@@ -36,7 +36,7 @@ export default function Portfolio({ cases = [], categories = {} }) {
                 onClick={() => setActive(key)}
                 className={`shrink-0 border px-3.5 py-2 text-[13px] md:text-[13.5px] transition-colors ${
                   active === key
-                    ? "border-ink dark:border-brand bg-ink dark:bg-brand text-white dark:text-ink"
+                    ? "border-ink dark:border-white bg-ink dark:bg-white text-white dark:text-ink"
                     : "border-ink/15 dark:border-white/20 text-ink/55 dark:text-white/50 hover:border-ink/40 dark:hover:border-white/50"
                 }`}
               >
@@ -70,7 +70,7 @@ export default function Portfolio({ cases = [], categories = {} }) {
                   <p className="text-[11px] uppercase tracking-[0.14em] text-ink/35 dark:text-white/35">
                     {cats[c.category]}
                   </p>
-                  <h3 className="mt-1.5 text-[16px] md:text-[18px] font-medium leading-snug group-hover:text-brand transition-colors dark:text-white">
+                  <h3 className="mt-1.5 text-[16px] md:text-[18px] font-medium leading-snug group-hover:text-ink/55 dark:group-hover:text-white/60 transition-colors dark:text-white">
                     {data.title}
                   </h3>
                   <p className="mt-0.5 text-ink/45 dark:text-white/40 text-[13.5px] md:text-[14px]">

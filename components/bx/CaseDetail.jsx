@@ -87,7 +87,7 @@ export default function CaseDetail({ item, prev, next, categories = {} }) {
             {facts.map((f, i) => (
               <Reveal key={f.label} delay={i * 0.06}>
                 <div className="border-t border-black/10 dark:border-white/15 pt-4">
-                  <div className="display-xl text-[clamp(1.5rem,3.4vw,2.6rem)] leading-none tracking-[-0.02em] text-brand">
+                  <div className="display-xl text-[clamp(1.5rem,3.4vw,2.6rem)] leading-none tracking-[-0.02em] dark:text-white">
                     {f.value}
                   </div>
                   <p className="mt-2.5 text-ink/50 dark:text-white/45 text-[13.5px] md:text-[14px] leading-snug">
