@@ -4,9 +4,62 @@ import { useState } from "react";
 import { Button, Card, Field, IconButton, TextArea, TextInput } from "./ui";
 import { IconClose, IconPlus } from "./Icons";
 
+const slugify = (s) =>
+  (s || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
+/** Seznam textových položek s přidáváním a mazáním — odstavce, odrážky. */
+function ListEditor({ label, items, onChange, placeholder, multiline = false }) {
+  const Input = multiline ? TextArea : TextInput;
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-[12.5px] font-medium text-ink/60">{label}</span>
+        <Button size="sm" icon={IconPlus} onClick={() => onChange([...items, ""])}>
+          Přidat
+        </Button>
+      </div>
+      {items.length === 0 ? (
+        <p className="text-[13px] text-ink/35">Zatím prázdné.</p>
+      ) : (
+        <div className="space-y-2">
+          {items.map((v, i) => (
+            <div key={i} className="flex gap-2">
+              <span className="w-4 pt-3 text-[12px] text-ink/25 tabular-nums shrink-0">{i + 1}</span>
+              <div className="flex-1 min-w-0">
+                <Input
+                  rows={multiline ? 3 : undefined}
+                  placeholder={placeholder}
+                  value={v}
+                  onChange={(e) => {
+                    const n = [...items];
+                    n[i] = e.target.value;
+                    onChange(n);
+                  }}
+                />
+              </div>
+              <IconButton
+                icon={IconClose}
+                label="Smazat"
+                danger
+                onClick={() => onChange(items.filter((_, n) => n !== i))}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 /** Editace textů, které nejsou vázané na konkrétní referenci. */
 export default function TextsEditor({ data, update }) {
   const [lang, setLang] = useState("cs");
+  const [open, setOpen] = useState(null);
   const LANG = lang.toUpperCase();
 
   const pillars = data.pillars?.[lang] || [];
@@ -56,9 +109,15 @@ export default function TextsEditor({ data, update }) {
       <div className="space-y-5">
         <Card
           title={`Co děláme — pilíře (${LANG})`}
-          description="Čtyři body hned na začátku stránky."
+          description="Čtyři body na začátku stránky. Každý má i vlastní podstránku."
           action={
-            <Button size="sm" icon={IconPlus} onClick={() => setPillars([...pillars, { title: "", text: "" }])}>
+            <Button
+              size="sm"
+              icon={IconPlus}
+              onClick={() =>
+                setPillars([...pillars, { title: "", text: "", slug: "", lead: "", body: [], bullets: [], published: true }])
+              }
+            >
               Pilíř
             </Button>
           }
@@ -66,58 +125,119 @@ export default function TextsEditor({ data, update }) {
           {pillars.length === 0 ? (
             <p className="text-[13.5px] text-ink/40">Zatím žádný pilíř.</p>
           ) : (
-            <div className="space-y-3">
-              {pillars.map((p, i) => (
-                <div key={i} className="grid gap-2 md:grid-cols-[auto_1fr_2fr_auto] md:items-start">
-                  <div className="flex items-center gap-1 md:pt-2.5">
-                    <span className="text-[12px] text-ink/25 tabular-nums w-5">0{i + 1}</span>
-                    <span className="hidden md:flex flex-col text-ink/25">
-                      <button
-                        onClick={() => movePillar(i, i - 1)}
-                        disabled={i === 0}
-                        title="Posunout nahoru"
-                        className="hover:text-ink disabled:opacity-25 leading-none text-[11px]"
-                      >
-                        ▲
-                      </button>
-                      <button
-                        onClick={() => movePillar(i, i + 1)}
-                        disabled={i === pillars.length - 1}
-                        title="Posunout dolů"
-                        className="hover:text-ink disabled:opacity-25 leading-none text-[11px]"
-                      >
-                        ▼
-                      </button>
-                    </span>
+            <div className="divide-y divide-ink/[0.07] -my-2">
+              {pillars.map((p, i) => {
+                const set = (patch) => {
+                  const n = [...pillars];
+                  n[i] = { ...n[i], ...patch };
+                  setPillars(n);
+                };
+                const isOpen = open === i;
+                return (
+                  <div key={i} className="py-3">
+                    <div className="grid gap-2 md:grid-cols-[auto_1fr_2fr_auto] md:items-start">
+                      <div className="flex items-center gap-1 md:pt-2.5">
+                        <span className="text-[12px] text-ink/25 tabular-nums w-5">0{i + 1}</span>
+                        <span className="hidden md:flex flex-col text-ink/25">
+                          <button
+                            onClick={() => movePillar(i, i - 1)}
+                            disabled={i === 0}
+                            title="Posunout nahoru"
+                            className="hover:text-ink disabled:opacity-25 leading-none text-[11px]"
+                          >
+                            ▲
+                          </button>
+                          <button
+                            onClick={() => movePillar(i, i + 1)}
+                            disabled={i === pillars.length - 1}
+                            title="Posunout dolů"
+                            className="hover:text-ink disabled:opacity-25 leading-none text-[11px]"
+                          >
+                            ▼
+                          </button>
+                        </span>
+                      </div>
+                      <TextInput
+                        placeholder="Název pilíře"
+                        value={p.title || ""}
+                        onChange={(e) => set({ title: e.target.value })}
+                      />
+                      <TextArea
+                        rows={2}
+                        placeholder="Krátký popis na úvodní stránce"
+                        value={p.text || ""}
+                        onChange={(e) => set({ text: e.target.value })}
+                      />
+                      <IconButton
+                        icon={IconClose}
+                        label="Smazat pilíř"
+                        danger
+                        className="md:mt-1"
+                        onClick={() => setPillars(pillars.filter((_, n) => n !== i))}
+                      />
+                    </div>
+
+                    <button
+                      onClick={() => setOpen(isOpen ? null : i)}
+                      className="mt-2 ml-7 text-[12.5px] text-ink/50 hover:text-ink transition-colors"
+                    >
+                      {isOpen ? "Skrýt podstránku ▲" : "Upravit podstránku ▼"}
+                      {p.slug && <span className="text-ink/30"> · /safy-bx/co-delame/{p.slug}</span>}
+                    </button>
+
+                    {isOpen && (
+                      <div className="mt-3 ml-7 border-l-2 border-ink/10 pl-4 space-y-4">
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          <Field label="Adresa podstránky" hint="Nechte prázdné a pilíř nebude proklikávací.">
+                            <TextInput
+                              value={p.slug || ""}
+                              placeholder="kreativni-strategie"
+                              onChange={(e) => set({ slug: slugify(e.target.value) })}
+                            />
+                          </Field>
+                          <Field label="Kategorie referencí" hint="Určuje, které projekty se pod textem ukážou.">
+                            <select
+                              value={p.category || ""}
+                              onChange={(e) => set({ category: e.target.value })}
+                              className="w-full border border-ink/15 bg-white px-3 py-2.5 text-[14.5px] outline-none focus:border-ink"
+                            >
+                              <option value="">— žádná —</option>
+                              {Object.entries(data.categories?.cs || {}).map(([k, v]) => (
+                                <option key={k} value={k}>
+                                  {v}
+                                </option>
+                              ))}
+                            </select>
+                          </Field>
+                        </div>
+
+                        <Field label="Výrazná věta pod nadpisem">
+                          <TextArea
+                            rows={2}
+                            value={p.lead || ""}
+                            onChange={(e) => set({ lead: e.target.value })}
+                          />
+                        </Field>
+
+                        <ListEditor
+                          label="Odstavce"
+                          placeholder="Text odstavce"
+                          multiline
+                          items={p.body || []}
+                          onChange={(body) => set({ body })}
+                        />
+
+                        <ListEditor
+                          label="Odrážky „Konkrétně“"
+                          placeholder="Např. 3D vizualizace a půdorysy"
+                          items={p.bullets || []}
+                          onChange={(bullets) => set({ bullets })}
+                        />
+                      </div>
+                    )}
                   </div>
-                  <TextInput
-                    placeholder="Název pilíře"
-                    value={p.title}
-                    onChange={(e) => {
-                      const n = [...pillars];
-                      n[i] = { ...n[i], title: e.target.value };
-                      setPillars(n);
-                    }}
-                  />
-                  <TextArea
-                    rows={2}
-                    placeholder="Krátký popis"
-                    value={p.text}
-                    onChange={(e) => {
-                      const n = [...pillars];
-                      n[i] = { ...n[i], text: e.target.value };
-                      setPillars(n);
-                    }}
-                  />
-                  <IconButton
-                    icon={IconClose}
-                    label="Smazat pilíř"
-                    danger
-                    className="md:mt-1"
-                    onClick={() => setPillars(pillars.filter((_, n) => n !== i))}
-                  />
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </Card>
