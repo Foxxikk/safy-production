@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    remotePatterns: [{ protocol: "https", hostname: "*.public.blob.vercel-storage.com" }],
     // Obrázky jsou předpřipravené webp ve správné velikosti — servírujeme je
     // přímo ze /public bez Vercel image optimizeru (rychlejší, bez limitů/cold-startu).
     unoptimized: true,

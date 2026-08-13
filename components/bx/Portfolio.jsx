@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { cases, categories } from "@/lib/bx";
+
 import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
 import Section, { Label } from "./Section";
 import { TapeLink } from "./TapeTransition";
 
-export default function Portfolio() {
+export default function Portfolio({ cases = [], categories = {} }) {
   const { lang, t } = useLang();
   const [active, setActive] = useState("all");
 
@@ -56,7 +56,7 @@ export default function Portfolio() {
                 <div className="relative aspect-[4/3] overflow-hidden bg-ink/5 dark:bg-white/5">
                   {/* Bez přeškálování — scale u velkých fotek působilo cukání */}
                   <Image
-                    src={`/images/bx/${c.slug}/01.webp`}
+                    src={c.images?.[0] || "/images/bx/red-bull-energy-zone/01.webp"}
                     alt={data.title}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1280px) 46vw, 31vw"

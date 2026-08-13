@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { categories, caseStats } from "@/lib/bx";
+
 import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
 import Lightbox from "./Lightbox";
@@ -13,15 +13,13 @@ import { TapeLink } from "./TapeTransition";
 // způsobovalo cukání. Reakci na hover řeší jen jemné ztmavení (viz overlay níže).
 const IMG_HOVER = "object-cover";
 
-export default function CaseDetail({ item, prev, next }) {
+export default function CaseDetail({ item, prev, next, categories = {} }) {
   const { lang, t } = useLang();
   const [open, setOpen] = useState(null);
 
   const data = item[lang];
-  const facts = caseStats[item.slug]?.[lang] || [];
-  const pad = (i) => String(i).padStart(2, "0");
-  const all = [];
-  for (let i = 1; i <= item.images; i++) all.push(`/images/bx/${item.slug}/${pad(i)}.webp`);
+  const facts = item.facts?.[lang] || [];
+  const all = item.images || [];
   const gallery = all.slice(1);
 
   return (
@@ -41,7 +39,7 @@ export default function CaseDetail({ item, prev, next }) {
           onClick={() => setOpen(0)}
           className="relative block w-full h-[46vh] min-h-[260px] max-h-[560px] md:h-[62vh] overflow-hidden bg-ink/5 cursor-zoom-in group"
         >
-          <Image src={all[0]} alt={data.title} fill sizes="100vw" className={IMG_HOVER} priority />
+          {all[0] && <Image src={all[0]} alt={data.title} fill sizes="100vw" className={IMG_HOVER} priority />}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 p-4 md:p-8 text-left">
             <Label tone="light">{categories[lang][item.category]}</Label>
@@ -159,7 +157,7 @@ export default function CaseDetail({ item, prev, next }) {
             <div className="flex items-center gap-4 min-w-0">
               <span className="relative h-12 w-16 md:h-16 md:w-24 shrink-0 overflow-hidden bg-ink/5">
                 <Image
-                  src={`/images/bx/${p.slug}/01.webp`}
+                  src={p.images?.[0] || ""}
                   alt=""
                   fill
                   sizes="96px"

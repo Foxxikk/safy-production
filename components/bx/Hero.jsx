@@ -1,13 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { bxIntro, pillars, stats } from "@/lib/bx";
+
 import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
 import Section, { Container, Label } from "./Section";
 
-export default function Hero() {
+export default function Hero({ intro }) {
   const { lang, t } = useLang();
+  const bxIntro = intro || {};
 
   return (
     <>
@@ -60,7 +61,7 @@ export default function Hero() {
               <Reveal delay={0.18}>
                 <Label>{lang === "cs" ? "Kdo jsme" : "Who we are"}</Label>
                 <p className="mt-4 text-ink/65 dark:text-white/55 leading-[1.75] text-[15px] md:text-[16px]">
-                  {bxIntro[lang]}
+                  {bxIntro[lang] || ""}
                 </p>
               </Reveal>
             </div>
@@ -73,7 +74,7 @@ export default function Hero() {
 }
 
 /** Co děláme + čísla — zobrazuje se AŽ pod referencemi. */
-export function About() {
+export function About({ pillars = {}, stats = {} }) {
   const { lang, t } = useLang();
 
   return (
@@ -85,7 +86,7 @@ export function About() {
         </Reveal>
 
         <div className="mt-7 md:mt-10">
-          {pillars[lang].map((p, i) => (
+          {(pillars[lang] || []).map((p, i) => (
             <Reveal key={p.title} delay={i * 0.05}>
               <div className="grid items-start gap-2 md:gap-8 border-t border-black/10 dark:border-white/15 py-6 md:py-8 md:grid-cols-12">
                 <span className="text-[12px] md:text-[13px] text-ink/30 dark:text-white/30 md:col-span-1">
@@ -110,7 +111,7 @@ export function About() {
           <Label>{t.statsTitle}</Label>
         </Reveal>
         <div className="mt-7 md:mt-10 grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-4 md:gap-x-8">
-          {stats[lang].map((s, i) => (
+          {(stats[lang] || []).map((s, i) => (
             <Reveal key={s.label} delay={i * 0.06}>
               <div className="display-xl text-[clamp(1.9rem,4.4vw,3.6rem)] leading-none whitespace-nowrap tracking-[-0.02em] dark:text-white">
                 {s.value}
