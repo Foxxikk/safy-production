@@ -5,7 +5,7 @@ import Image from "next/image";
 
 import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
-import Section, { Label } from "./Section";
+import Section from "./Section";
 import { TapeLink } from "./TapeTransition";
 
 export default function Portfolio({ cases = [], categories = {} }) {
@@ -19,7 +19,6 @@ export default function Portfolio({ cases = [], categories = {} }) {
   return (
     <Section id="work" className="pt-6 md:pt-10">
       <Reveal>
-        <Label>{t.selectedWork}</Label>
         <h2 className="mt-4 md:mt-6 display-xl text-[clamp(2.2rem,7vw,5rem)] leading-[0.92] tracking-[-0.02em] dark:text-white">
           {lang === "cs" ? "Vybrané" : "Selected"}{" "}
           <span className="text-ink/30 dark:text-white/30">

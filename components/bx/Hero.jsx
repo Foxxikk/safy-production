@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 
 import { useLang } from "./LangContext";
@@ -9,79 +8,82 @@ import Section, { Label } from "./Section";
 import { TapeLink } from "./TapeTransition";
 
 /**
- * Stránka začíná tím, co děláme. Každý pilíř je proklik na vlastní stránku
- * a při najetí ukáže náhled fotky z projektů dané oblasti.
+ * Úvod stránky: krátké představení divize a pod ním čtyři pilíře
+ * vedle sebe jako oddělené dlaždice. Každá je proklik na vlastní stránku.
  */
-export default function Hero({ pillars = {}, previews = {} }) {
+export default function Hero({ intro = {}, pillars = {}, previews = {} }) {
   const { lang } = useLang();
-  const [hover, setHover] = useState(null);
-
   const list = (pillars[lang] || []).filter((p) => p.published !== false);
 
   return (
-    <Section className="pt-10 md:pt-16 pb-4 md:pb-8">
-      <Reveal>
-        <p className="text-[12px] md:text-[13px] uppercase tracking-[0.24em] text-ink/45 dark:text-white/45">
-          Brand experience marketing
-        </p>
-      </Reveal>
+    <Section className="pt-10 md:pt-14 pb-4 md:pb-8">
+      {/* O divizi */}
+      {intro[lang] && (
+        <Reveal>
+          <p className="text-[12px] md:text-[13px] uppercase tracking-[0.24em] text-ink/45 dark:text-white/45">
+            Brand experience marketing
+          </p>
+          <p className="mt-5 md:mt-7 text-[clamp(1.15rem,2.3vw,1.75rem)] leading-[1.35] tracking-[-0.01em] font-medium max-w-[46ch] dark:text-white">
+            {intro[lang]}
+          </p>
+        </Reveal>
+      )}
 
-      <Reveal delay={0.05}>
-        <h1 className="mt-4 md:mt-6 display-xl text-[clamp(2rem,5.5vw,4.2rem)] leading-[0.98] tracking-[-0.02em] dark:text-white">
-          {lang === "cs" ? "Co děláme" : "What we do"}
-        </h1>
-      </Reveal>
+      {/* Co děláme — čtyři dlaždice vedle sebe */}
+      <div className="mt-14 md:mt-20">
+        <Reveal>
+          <h2 className="display-xl text-[clamp(1.6rem,3.6vw,2.8rem)] leading-[1] tracking-[-0.02em] dark:text-white">
+            {lang === "cs" ? "Co děláme" : "What we do"}
+          </h2>
+        </Reveal>
 
-      {/* Náhled fotky se drží v pravém sloupci a mění se podle najetí */}
-      <div className="relative mt-8 md:mt-12">
-        <div className="pointer-events-none absolute right-0 top-2 hidden xl:block w-[15%] max-w-[200px] aspect-[3/4] overflow-hidden">
+        <div className="mt-7 md:mt-10 grid gap-px bg-black/10 dark:bg-white/15 border border-black/10 dark:border-white/15 sm:grid-cols-2 lg:grid-cols-4">
           {list.map((p, i) => {
             const src = p.image || previews[p.category];
-            if (!src) return null;
             return (
-              <span
-                key={p.slug || i}
-                className={`absolute inset-0 transition-opacity duration-500 ${
-                  hover === i ? "opacity-100" : "opacity-0"
-                }`}
-              >
-                <Image src={src} alt="" fill sizes="200px" className="object-cover" />
-              </span>
+              <Reveal key={p.slug || i} delay={i * 0.06}>
+                <TapeLink
+                  href={p.slug ? `/safy-bx/co-delame/${p.slug}` : "/safy-bx"}
+                  className="group flex h-full flex-col bg-white dark:bg-dark p-5 md:p-6 transition-colors hover:bg-ink/[0.02] dark:hover:bg-white/[0.04]"
+                >
+                  {src && (
+                    <span className="relative block aspect-[4/3] overflow-hidden bg-ink/5 dark:bg-white/5 mb-5">
+                      <Image
+                        src={src}
+                        alt=""
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 24vw"
+                        className="object-cover"
+                      />
+                    </span>
+                  )}
+
+                  <span className="text-[11px] text-ink/30 dark:text-white/30 tabular-nums">
+                    0{i + 1}
+                  </span>
+
+                  <h3 className="mt-2 text-[17px] md:text-[19px] font-medium leading-[1.2] dark:text-white">
+                    {p.title}
+                  </h3>
+
+                  <p className="mt-2.5 text-ink/55 dark:text-white/50 leading-[1.55] text-[14px]">
+                    {p.text}
+                  </p>
+
+                  <span className="mt-auto pt-5 inline-flex items-center gap-2 text-[13px] text-ink/40 dark:text-white/40 group-hover:text-ink dark:group-hover:text-white transition-colors">
+                    {lang === "cs" ? "Více" : "More"}
+                    <span
+                      aria-hidden
+                      className="group-hover:translate-x-1 transition-transform duration-300"
+                    >
+                      →
+                    </span>
+                  </span>
+                </TapeLink>
+              </Reveal>
             );
           })}
         </div>
-
-        {list.map((p, i) => (
-          <Reveal key={p.slug || i} delay={i * 0.05}>
-            <TapeLink
-              href={p.slug ? `/safy-bx/co-delame/${p.slug}` : "/safy-bx"}
-              onMouseEnter={() => setHover(i)}
-              onMouseLeave={() => setHover(null)}
-              className="group grid items-start gap-2 md:gap-8 border-t border-black/10 dark:border-white/15 py-6 md:py-8 md:grid-cols-12 transition-colors"
-            >
-              <span className="text-[12px] md:text-[13px] text-ink/30 dark:text-white/30 md:col-span-1 tabular-nums">
-                0{i + 1}
-              </span>
-
-              <h2 className="flex items-center gap-3 text-[clamp(1.2rem,2.6vw,2rem)] font-medium leading-[1.15] md:col-span-6 dark:text-white">
-                <span className="group-hover:translate-x-1 transition-transform duration-300">
-                  {p.title}
-                </span>
-                <span
-                  aria-hidden
-                  className="text-ink/25 dark:text-white/25 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
-                >
-                  →
-                </span>
-              </h2>
-
-              <p className="text-ink/55 dark:text-white/50 leading-[1.65] text-[14.5px] md:text-[15.5px] md:col-span-5 xl:col-span-3">
-                {p.text}
-              </p>
-            </TapeLink>
-          </Reveal>
-        ))}
-        <div className="border-t border-black/10 dark:border-white/15" />
       </div>
     </Section>
   );

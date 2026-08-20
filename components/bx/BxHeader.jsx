@@ -15,7 +15,7 @@ export default function BxHeader() {
         {/* Logo v hlavičce — jediný výskyt na stránce */}
         <TapeLink href="/safy-bx" aria-label="ŠAFY BX" className="flex items-end gap-2">
           <Image
-            src="/images/logos/safy-logo.svg"
+            src="/images/logos/safy-black.svg"
             alt="šafy"
             width={340}
             height={132}

@@ -12,14 +12,9 @@ const types = {
   en: ["Festival zone", "Pop-up / retail", "Fabrication & build", "3D & graphics", "Other"],
 };
 
-const budgets = {
-  cs: ["do 500 000 Kč", "500 000 – 1 500 000 Kč", "1 500 000 Kč+", "zatím nevím"],
-  en: ["up to 500k CZK", "500k – 1.5M CZK", "1.5M CZK+", "not sure yet"],
-};
-
 const isEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim());
 
-export default function ContactForm({ intro = {}, settings = {} }) {
+export default function ContactForm({ settings = {} }) {
   const { lang, t } = useLang();
   const [form, setForm] = useState({
     name: "",
@@ -27,7 +22,6 @@ export default function ContactForm({ intro = {}, settings = {} }) {
     email: "",
     phone: "",
     type: "",
-    budget: "",
     message: "",
     website: "", // honeypot
   });
@@ -104,7 +98,7 @@ export default function ContactForm({ intro = {}, settings = {} }) {
               </Reveal>
             </div>
 
-            {/* Formulář — světlá karta, ať je v tmavé sekci vidět */}
+            {/* Formulář */}
             <div className="md:col-span-6 md:col-start-7">
               <Reveal delay={0.08}>
                 {state === "sent" ? (
@@ -188,22 +182,6 @@ export default function ContactForm({ intro = {}, settings = {} }) {
                           ))}
                         </select>
                       </div>
-                      <div>
-                        <label className={labelCls} htmlFor="bx-budget">
-                          {t.formBudget}
-                        </label>
-                        <select
-                          id="bx-budget"
-                          className={field}
-                          value={form.budget}
-                          onChange={set("budget")}
-                        >
-                          <option value="">—</option>
-                          {budgets[lang].map((x) => (
-                            <option key={x}>{x}</option>
-                          ))}
-                        </select>
-                      </div>
                       <div className="sm:col-span-2">
                         <label className={labelCls} htmlFor="bx-msg">
                           {t.formMessage}
@@ -236,22 +214,6 @@ export default function ContactForm({ intro = {}, settings = {} }) {
               </Reveal>
             </div>
           </div>
-
-          {/* O divizi — popisný text patří sem dolů, ne na začátek stránky */}
-          {intro[lang] && (
-            <div className="mt-14 md:mt-20 border-t border-white/10 pt-8 md:pt-10">
-              <Reveal>
-                <div className="grid gap-4 md:gap-10 md:grid-cols-12">
-                  <div className="md:col-span-3">
-                    <Label tone="light">{lang === "cs" ? "O divizi" : "About the division"}</Label>
-                  </div>
-                  <p className="md:col-span-9 text-white/55 leading-[1.7] text-[14.5px] md:text-[16px] max-w-[78ch]">
-                    {intro[lang]}
-                  </p>
-                </div>
-              </Reveal>
-            </div>
-          )}
 
           {/* Patička uvnitř černého bloku */}
           <div className="mt-12 md:mt-16 grid gap-6 md:gap-8 border-t border-white/10 pt-8 md:pt-10 md:grid-cols-4 text-white/45 text-[13.5px] md:text-[14.5px]">
