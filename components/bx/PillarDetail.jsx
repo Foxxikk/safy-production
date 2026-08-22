@@ -4,7 +4,8 @@ import Image from "next/image";
 
 import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
-import Section, { Container, Label, ArrowPill } from "./Section";
+import Section, { Container, Label } from "./Section";
+import Doodle from "./Doodle";
 import { TapeLink } from "./TapeTransition";
 
 /**
@@ -135,7 +136,7 @@ export default function PillarDetail({ pillar, prev, next, cases = [], categorie
       )}
 
       {/* Předchozí / další pilíř */}
-      <Container className="mt-2 md:mt-6">
+      <Container className="mt-12 md:mt-20">
         {[
           [prevP, lang === "cs" ? "Předchozí" : "Previous"],
           [nextP, lang === "cs" ? "Další" : "Next"],
@@ -145,7 +146,7 @@ export default function PillarDetail({ pillar, prev, next, cases = [], categorie
             <TapeLink
               key={x.slug}
               href={`/safy-bx/co-delame/${x.slug}`}
-              className="group flex items-center justify-between gap-4 border-t border-black/10 dark:border-white/15 py-5 md:py-7"
+              className="group flex items-center justify-between gap-6 border-t border-black/10 dark:border-white/15 py-7 md:py-10"
             >
               <span className="min-w-0">
                 <span className="block text-[11px] text-ink/35 dark:text-white/35">[{lbl}]</span>
@@ -153,7 +154,10 @@ export default function PillarDetail({ pillar, prev, next, cases = [], categorie
                   {x.title}
                 </span>
               </span>
-              <ArrowPill label={x.title} />
+              <Doodle
+                name="sipka"
+                className="w-[34px] h-[13px] shrink-0 text-ink/30 dark:text-white/30 group-hover:text-ink dark:group-hover:text-white group-hover:translate-x-1.5 transition-all duration-300"
+              />
             </TapeLink>
           ))}
         <div className="border-t border-black/10 dark:border-white/15" />

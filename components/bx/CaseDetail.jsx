@@ -6,7 +6,8 @@ import Image from "next/image";
 import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
 import Lightbox from "./Lightbox";
-import { Container, Label, ArrowPill } from "./Section";
+import { Container, Label } from "./Section";
+import Doodle from "./Doodle";
 import { TapeLink } from "./TapeTransition";
 
 // Fotky se při hoveru NEpřeškálovávají — jakékoli scale u velkých fotek
@@ -58,8 +59,8 @@ export default function CaseDetail({ item, prev, next, categories = {} }) {
       </div>
 
       {/* Text */}
-      <Container className="py-10 md:py-16">
-        <div className="grid gap-6 md:gap-10 md:grid-cols-12">
+      <Container className="py-14 md:py-24">
+        <div className="grid gap-8 md:gap-12 md:grid-cols-12">
           <div className="md:col-span-6">
             <Reveal>
               <p className="text-[clamp(1.15rem,2.3vw,1.75rem)] leading-[1.32] tracking-[-0.01em] font-medium max-w-[26ch] dark:text-white">
@@ -81,7 +82,7 @@ export default function CaseDetail({ item, prev, next, categories = {} }) {
 
       {/* Čísla k projektu */}
       {facts.length > 0 && (
-        <Container className="pb-12 md:pb-16">
+        <Container className="pb-16 md:pb-24">
           <Reveal>
             <Label>{lang === "cs" ? "Projekt v číslech" : "Project in numbers"}</Label>
           </Reveal>
@@ -109,7 +110,7 @@ export default function CaseDetail({ item, prev, next, categories = {} }) {
       {/* Galerie — mobil vodorovné listování, desktop mřížka */}
       {gallery.length > 0 && (
         <>
-          <Container className="pb-3 flex items-center justify-between">
+          <Container className="pb-5 flex items-center justify-between">
             <Label>{lang === "cs" ? "Galerie" : "Gallery"}</Label>
             <span className="text-[12px] text-ink/30 dark:text-white/30 md:hidden">
               {lang === "cs" ? "táhni →" : "swipe →"}
@@ -131,7 +132,7 @@ export default function CaseDetail({ item, prev, next, categories = {} }) {
           </div>
 
           <div className="hidden md:block px-5">
-            <div className="grid gap-3 md:grid-cols-2">
+            <div className="grid gap-4 md:gap-5 md:grid-cols-2">
               {gallery.map((img, i) => (
                 <Reveal key={img} delay={(i % 2) * 0.06} className={i % 3 === 0 ? "md:col-span-2" : ""}>
                   <button
@@ -150,7 +151,7 @@ export default function CaseDetail({ item, prev, next, categories = {} }) {
       )}
 
       {/* Prev / Next */}
-      <Container className="mt-10 md:mt-14">
+      <Container className="mt-16 md:mt-24">
         {[
           [prev, t.prev],
           [next, t.next],
@@ -158,26 +159,29 @@ export default function CaseDetail({ item, prev, next, categories = {} }) {
           <TapeLink
             key={p.slug}
             href={`/safy-bx/${p.slug}`}
-            className="group flex items-center justify-between gap-4 border-t border-black/10 dark:border-white/15 py-4 md:py-6"
+            className="group flex items-center justify-between gap-6 border-t border-black/10 dark:border-white/15 py-7 md:py-10"
           >
-            <div className="flex items-center gap-4 min-w-0">
-              <span className="relative h-12 w-16 md:h-16 md:w-24 shrink-0 overflow-hidden bg-ink/5">
+            <div className="flex items-center gap-5 md:gap-7 min-w-0">
+              <span className="relative h-14 w-20 md:h-20 md:w-28 shrink-0 overflow-hidden bg-ink/5">
                 <Image
                   src={p.images?.[0] || ""}
                   alt=""
                   fill
-                  sizes="96px"
+                  sizes="112px"
                   className="object-cover"
                 />
               </span>
               <span className="min-w-0">
                 <span className="block text-[11px] text-ink/35 dark:text-white/35">[{lbl}]</span>
-                <span className="block mt-0.5 text-[clamp(1rem,2.2vw,1.6rem)] font-medium truncate group-hover:text-ink/55 dark:group-hover:text-white/60 transition-colors dark:text-white">
+                <span className="block mt-1 text-[clamp(1rem,2.2vw,1.6rem)] font-medium truncate group-hover:text-ink/55 dark:group-hover:text-white/60 transition-colors dark:text-white">
                   {p[lang].title}
                 </span>
               </span>
             </div>
-            <ArrowPill label={p[lang].title} />
+            <Doodle
+              name="sipka"
+              className="w-[34px] h-[13px] shrink-0 text-ink/30 dark:text-white/30 group-hover:text-ink dark:group-hover:text-white group-hover:translate-x-1.5 transition-all duration-300"
+            />
           </TapeLink>
         ))}
         <div className="border-t border-black/10 dark:border-white/15" />
