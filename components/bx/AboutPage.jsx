@@ -1,10 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 
 import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
 import Section, { Container } from "./Section";
+import { clientLogos } from "@/lib/bx";
 import { TapeLink } from "./TapeTransition";
 
 /** Stránka „O nás“ — kdo jsme, jak pracujeme a co si na tom zakládáme. */
@@ -103,6 +105,32 @@ export default function AboutPage({ about = {}, stats = {}, settings = {} }) {
           </div>
         </Section>
       )}
+
+      {/* Značky, pro které stavíme */}
+      <Section className="pt-16 md:pt-24 pb-0">
+        <Reveal>
+          <h2 className="display-xl text-[clamp(1.4rem,2.8vw,2.1rem)] leading-[1.05] tracking-[-0.02em] dark:text-white">
+            {t.clientsTitle}
+          </h2>
+        </Reveal>
+
+        {/* Loga jsou tmavá na průhledném pozadí, v tmavém režimu je proto obracíme */}
+        <div className="mt-8 md:mt-10 grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 border-t border-l border-black/[0.08] dark:border-white/10">
+          {clientLogos.map((b, i) => (
+            <Reveal key={b} delay={(i % 6) * 0.04}>
+              <div className="flex h-20 md:h-24 items-center justify-center border-b border-r border-black/[0.08] dark:border-white/10 px-4">
+                <Image
+                  src={`/images/brands/${b}.png`}
+                  alt={b.replace(/[-_]/g, " ")}
+                  width={110}
+                  height={55}
+                  className="max-h-8 md:max-h-9 w-auto object-contain opacity-45 grayscale dark:invert transition-opacity hover:opacity-80"
+                />
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </Section>
 
       {/* Odkaz na hlavní web */}
       <Section className="pt-12 md:pt-16 pb-0">
