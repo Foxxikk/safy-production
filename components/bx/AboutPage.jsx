@@ -114,17 +114,18 @@ export default function AboutPage({ about = {}, stats = {}, settings = {} }) {
           </h2>
         </Reveal>
 
-        {/* Loga jsou tmavá na průhledném pozadí, v tmavém režimu je proto obracíme */}
-        <div className="mt-8 md:mt-10 grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 border-t border-l border-black/[0.08] dark:border-white/10">
+        {/* Bez rámečků — poslední řádek není plný a mřížka s linkami by působila useknutě.
+            Loga jsou tmavá na průhledném pozadí, v tmavém režimu je proto obracíme. */}
+        <div className="mt-8 md:mt-12 grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-x-6 gap-y-10 md:gap-x-10 md:gap-y-14 items-center">
           {clientLogos.map((b, i) => (
             <Reveal key={b} delay={(i % 6) * 0.04}>
-              <div className="flex h-20 md:h-24 items-center justify-center border-b border-r border-black/[0.08] dark:border-white/10 px-4">
+              <div className="flex items-center justify-center">
                 <Image
                   src={`/images/brands/${b}.png`}
                   alt={b.replace(/[-_]/g, " ")}
                   width={110}
                   height={55}
-                  className="max-h-8 md:max-h-9 w-auto object-contain opacity-45 grayscale dark:invert transition-opacity hover:opacity-80"
+                  className="max-h-9 md:max-h-11 w-auto object-contain grayscale opacity-55 dark:invert dark:opacity-70 hover:opacity-90 dark:hover:opacity-100 transition-opacity"
                 />
               </div>
             </Reveal>
