@@ -38,7 +38,7 @@ export default function Hero({ intro = {}, pillars = {}, previews = {} }) {
           </h2>
         </Reveal>
 
-        <div className="mt-7 md:mt-9 grid gap-x-4 gap-y-9 md:gap-x-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-7 md:mt-9 grid grid-cols-2 gap-x-3 gap-y-7 md:gap-x-5 md:gap-y-9 lg:grid-cols-4">
           {list.map((p, i) => {
             const src = p.image || previews[p.category];
             return (
@@ -60,7 +60,7 @@ export default function Hero({ intro = {}, pillars = {}, previews = {} }) {
                     </span>
                   )}
 
-                  <h3 className="mt-3.5 flex items-center gap-2.5 text-[16px] md:text-[17px] font-medium leading-[1.25] group-hover:text-ink/55 dark:group-hover:text-white/60 transition-colors dark:text-white">
+                  <h3 className="mt-3 flex items-center gap-2 text-[14.5px] md:text-[17px] font-medium leading-[1.25] group-hover:text-ink/55 dark:group-hover:text-white/60 transition-colors dark:text-white">
                     {p.title}
                     <Doodle
                       name="sipka"
@@ -68,7 +68,7 @@ export default function Hero({ intro = {}, pillars = {}, previews = {} }) {
                     />
                   </h3>
 
-                  <p className="mt-1.5 text-ink/45 dark:text-white/40 leading-[1.5] text-[13.5px]">
+                  <p className="mt-1.5 text-ink/45 dark:text-white/40 leading-[1.5] text-[12.5px] md:text-[13.5px]">
                     {p.text}
                   </p>
                 </TapeLink>

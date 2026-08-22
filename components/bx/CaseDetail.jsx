@@ -35,7 +35,7 @@ export default function CaseDetail({ item, prev, next, categories = {} }) {
       </Container>
 
       {/* Cover — odsazený od krajů, ostré rohy */}
-      <div className="px-3 md:px-5">
+      <div className="px-0 md:px-5">
         <button
           onClick={() => setOpen(0)}
           className="relative block w-full h-[46vh] min-h-[260px] max-h-[560px] md:h-[62vh] overflow-hidden bg-ink/5 cursor-zoom-in group"
@@ -44,8 +44,8 @@ export default function CaseDetail({ item, prev, next, categories = {} }) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
           {/* Text v hlavičce drží stejné odsazení jako obsah pod fotkou.
               Záporný okraj ruší odsazení coveru, aby se Container centroval stejně. */}
-          <div className="absolute inset-x-0 bottom-0 pb-5 md:pb-9 text-left">
-            <div className="-mx-3 md:-mx-5">
+          <div className="absolute inset-x-0 bottom-0 pb-6 md:pb-9 text-left">
+            <div className="mx-0 md:-mx-5">
               <Container>
                 <Label tone="light">{categories[lang][item.category]}</Label>
                 <h1 className="mt-2.5 display-xl text-white text-[clamp(1.9rem,6vw,4.6rem)] leading-[0.95] tracking-[-0.02em] max-w-[20ch]">

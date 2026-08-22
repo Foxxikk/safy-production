@@ -63,20 +63,20 @@ export default function ContactForm({ settings = {} }) {
 
   return (
     <section id="contact" className="relative pt-16 md:pt-24 overflow-x-clip">
-      {/* Páska Šafy — nahnutá, přesahuje světlou i tmavou sekci */}
-      <div className="pointer-events-none absolute inset-x-0 top-1 md:top-4 z-20">
-        <Image
-          src="/images/tapes/tape-green.svg"
-          alt=""
-          aria-hidden
-          width={2400}
-          height={75}
-          className="w-[124%] max-w-none -ml-[12%] -rotate-[2.5deg]"
-        />
-      </div>
-
-      <div className="px-3 md:px-5">
-        <div className="bg-dark dark:bg-black text-white pt-20 md:pt-28">
+      <div className="px-0 md:px-5">
+        {/* Tmavý blok je vztažný bod pásky — ta pak sedí na jeho horní hraně
+            stejně na mobilu i na desktopu. */}
+        <div className="relative bg-dark dark:bg-black text-white pt-20 md:pt-28">
+          <div className="pointer-events-none absolute inset-x-0 top-0 -translate-y-1/2 z-20 overflow-x-clip">
+            <Image
+              src="/images/tapes/tape-green.svg"
+              alt=""
+              aria-hidden
+              width={2400}
+              height={75}
+              className="w-[210%] md:w-[124%] max-w-none -ml-[55%] md:-ml-[12%] -rotate-[3deg] md:-rotate-[2.5deg]"
+            />
+          </div>
         <Container className="py-11 md:py-18">
           <div className="grid gap-10 md:gap-14 md:grid-cols-12">
             {/* Levá strana — velký claim */}

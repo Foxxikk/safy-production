@@ -7,6 +7,7 @@ import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
 import Section from "./Section";
 import Doodle from "./Doodle";
+import Carousel from "./Carousel";
 import { TapeLink } from "./TapeTransition";
 
 export default function Portfolio({ cases = [], categories = {} }) {
@@ -44,45 +45,61 @@ export default function Portfolio({ cases = [], categories = {} }) {
         </div>
       </Reveal>
 
-      <div className="mt-7 md:mt-9 grid gap-x-4 gap-y-9 md:gap-x-5 md:gap-y-9 sm:grid-cols-2 xl:grid-cols-3">
-        {shown.map((c, i) => {
-          const data = c[lang];
-          return (
-            <Reveal key={c.slug} delay={(i % 2) * 0.06}>
-              <TapeLink href={`/safy-bx/${c.slug}`} className="group block">
-                <div className="relative aspect-[4/3] overflow-hidden bg-ink/5 dark:bg-white/5">
-                  {/* Bez přeškálování — scale u velkých fotek působilo cukání */}
-                  <Image
-                    src={c.images?.[0] || "/images/bx/red-bull-energy-zone/01.webp"}
-                    alt={data.title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1280px) 46vw, 31vw"
-                    className="object-cover"
-                  />
-                  {/* Jemné ztmavení — žádné štítky ani tlačítka přes fotku */}
-                  <span className="absolute inset-0 bg-ink/0 group-hover:bg-ink/10 transition-colors duration-500" />
-                </div>
+      {/* Mobil — carousel, který se sám posouvá; jakmile do něj sáhne návštěvník, počká. */}
+      <div className="sm:hidden mt-7">
+        <Carousel count={shown.length}>
+          {shown.map((c) => (
+            <div key={c.slug} className="w-[82%] shrink-0 snap-center">
+              <ProjectCard item={c} lang={lang} cats={cats} sizes="82vw" />
+            </div>
+          ))}
+        </Carousel>
+      </div>
 
-                <div className="mt-3 md:mt-4">
-                  <p className="text-[11px] uppercase tracking-[0.14em] text-ink/35 dark:text-white/35">
-                    {cats[c.category]}
-                  </p>
-                  <h3 className="mt-1.5 flex items-center gap-2.5 text-[16px] md:text-[18px] font-medium leading-snug group-hover:text-ink/55 dark:group-hover:text-white/60 transition-colors dark:text-white">
-                    {data.title}
-                    <Doodle
-                      name="sipka"
-                      className="w-[24px] h-[9px] shrink-0 text-ink/30 dark:text-white/30 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
-                    />
-                  </h3>
-                  <p className="mt-0.5 text-ink/45 dark:text-white/40 text-[13.5px] md:text-[14px]">
-                    {data.subtitle}
-                  </p>
-                </div>
-              </TapeLink>
-            </Reveal>
-          );
-        })}
+      {/* Tablet a výš — klasická mřížka */}
+      <div className="hidden sm:grid mt-9 gap-x-4 gap-y-9 md:gap-x-5 sm:grid-cols-2 xl:grid-cols-3">
+        {shown.map((c, i) => (
+          <Reveal key={c.slug} delay={(i % 2) * 0.06}>
+            <ProjectCard item={c} lang={lang} cats={cats} sizes="(max-width: 1280px) 46vw, 31vw" />
+          </Reveal>
+        ))}
       </div>
     </Section>
+  );
+}
+
+/** Jedna reference — stejná dlaždice v mřížce i v carouselu. */
+function ProjectCard({ item, lang, cats, sizes }) {
+  const data = item[lang];
+  return (
+    <TapeLink href={`/safy-bx/${item.slug}`} className="group block">
+      <div className="relative aspect-[4/3] overflow-hidden bg-ink/5 dark:bg-white/5">
+        {/* Bez přeškálování — scale u velkých fotek působilo cukání */}
+        <Image
+          src={item.images?.[0] || "/images/bx/red-bull-energy-zone/01.webp"}
+          alt={data.title}
+          fill
+          sizes={sizes}
+          className="object-cover"
+        />
+        <span className="absolute inset-0 bg-ink/0 group-hover:bg-ink/10 transition-colors duration-500" />
+      </div>
+
+      <div className="mt-3 md:mt-4">
+        <p className="text-[11px] uppercase tracking-[0.14em] text-ink/35 dark:text-white/35">
+          {cats[item.category]}
+        </p>
+        <h3 className="mt-1.5 flex items-center gap-2.5 text-[16px] md:text-[18px] font-medium leading-snug group-hover:text-ink/55 dark:group-hover:text-white/60 transition-colors dark:text-white">
+          {data.title}
+          <Doodle
+            name="sipka"
+            className="w-[24px] h-[9px] shrink-0 text-ink/30 dark:text-white/30 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
+          />
+        </h3>
+        <p className="mt-0.5 text-ink/45 dark:text-white/40 text-[13.5px] md:text-[14px]">
+          {data.subtitle}
+        </p>
+      </div>
+    </TapeLink>
   );
 }
