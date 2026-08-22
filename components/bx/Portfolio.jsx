@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
 import Section from "./Section";
+import Doodle from "./Doodle";
 import { TapeLink } from "./TapeTransition";
 
 export default function Portfolio({ cases = [], categories = {} }) {
@@ -21,8 +22,15 @@ export default function Portfolio({ cases = [], categories = {} }) {
       <Reveal>
         <h2 className="mt-4 md:mt-6 display-xl text-[clamp(2.2rem,7vw,5rem)] leading-[0.92] tracking-[-0.02em] dark:text-white">
           {lang === "cs" ? "Vybrané" : "Selected"}{" "}
-          <span className="text-ink/30 dark:text-white/30">
-            {lang === "cs" ? "projekty" : "work"}
+          <span className="relative inline-block">
+            <span className="text-ink/30 dark:text-white/30">
+              {lang === "cs" ? "projekty" : "work"}
+            </span>
+            {/* ručně kreslené zakroužkování z brandu */}
+            <Doodle
+              name="zakrouzkovani"
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[122%] h-[150%] text-ink/25 dark:text-white/25"
+            />
           </span>
         </h2>
 

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
 import Section, { Label } from "./Section";
+import Doodle from "./Doodle";
 import { TapeLink } from "./TapeTransition";
 
 /**
@@ -32,8 +33,12 @@ export default function Hero({ intro = {}, pillars = {}, previews = {} }) {
       {/* Co děláme — čtyři dlaždice vedle sebe */}
       <div className="mt-14 md:mt-20">
         <Reveal>
-          <h2 className="display-xl text-[clamp(1.6rem,3.6vw,2.8rem)] leading-[1] tracking-[-0.02em] dark:text-white">
+          <h2 className="relative inline-block display-xl text-[clamp(1.6rem,3.6vw,2.8rem)] leading-[1] tracking-[-0.02em] dark:text-white">
             {lang === "cs" ? "Co děláme" : "What we do"}
+            <Doodle
+              name="podtrzeni-4"
+              className="absolute -bottom-3 left-0 w-full h-[10px] text-ink/70 dark:text-white/60"
+            />
           </h2>
         </Reveal>
 
@@ -70,14 +75,12 @@ export default function Hero({ intro = {}, pillars = {}, previews = {} }) {
                     {p.text}
                   </p>
 
-                  <span className="mt-auto pt-5 inline-flex items-center gap-2 text-[13px] text-ink/40 dark:text-white/40 group-hover:text-ink dark:group-hover:text-white transition-colors">
+                  <span className="mt-auto pt-5 inline-flex items-center gap-2.5 text-[13px] text-ink/40 dark:text-white/40 group-hover:text-ink dark:group-hover:text-white transition-colors">
                     {lang === "cs" ? "Více" : "More"}
-                    <span
-                      aria-hidden
-                      className="group-hover:translate-x-1 transition-transform duration-300"
-                    >
-                      →
-                    </span>
+                    <Doodle
+                      name="sipka"
+                      className="w-[26px] h-[10px] group-hover:translate-x-1 transition-transform duration-300"
+                    />
                   </span>
                 </TapeLink>
               </Reveal>
@@ -88,6 +91,9 @@ export default function Hero({ intro = {}, pillars = {}, previews = {} }) {
     </Section>
   );
 }
+
+/** Ke každému číslu jeden kreslený prvek z brandu. */
+const STAT_DOODLES = ["blesk", "hvezda", "koruna", "srdce"];
 
 /** Čísla za námi — pod referencemi. */
 export function About({ stats = {} }) {
@@ -101,6 +107,10 @@ export function About({ stats = {} }) {
       <div className="mt-7 md:mt-10 grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-4 md:gap-x-8">
         {(stats[lang] || []).map((s, i) => (
           <Reveal key={s.label} delay={i * 0.06}>
+            <Doodle
+              name={STAT_DOODLES[i % STAT_DOODLES.length]}
+              className="h-6 w-6 mb-3 text-ink/35 dark:text-white/35"
+            />
             <div className="display-xl text-[clamp(1.9rem,4.4vw,3.6rem)] leading-none whitespace-nowrap tracking-[-0.02em] dark:text-white">
               {s.value}
             </div>

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
 import { Container, Label } from "./Section";
+import Doodle from "./Doodle";
 
 const types = {
   cs: ["Festivalová zóna", "Pop-up / retail", "Výroba a stavba", "3D a grafika", "Jiné"],
@@ -86,6 +87,7 @@ export default function ContactForm({ settings = {} }) {
                 <h2 className="mt-5 text-[clamp(1.7rem,4.4vw,3.2rem)] font-medium leading-[1.08] tracking-[-0.015em]">
                   {t.ctaTitle}
                 </h2>
+                <Doodle name="podtrzeni-3" className="mt-3 h-[9px] w-[110px] text-white/45" />
                 <p className="mt-6 text-white/50 leading-relaxed max-w-[34ch] text-[15.5px]">
                   {t.ctaText}
                 </p>
