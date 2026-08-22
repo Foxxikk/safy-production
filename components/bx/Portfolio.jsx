@@ -5,7 +5,7 @@ import Image from "next/image";
 
 import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
-import Section from "./Section";
+import Section, { Label } from "./Section";
 import Doodle from "./Doodle";
 import { TapeLink } from "./TapeTransition";
 
@@ -20,34 +20,31 @@ export default function Portfolio({ cases = [], categories = {} }) {
   return (
     <Section id="work" className="pt-2 md:pt-4">
       <Reveal>
-        <h2 className="display-xl text-[clamp(1.9rem,5vw,3.4rem)] leading-[0.95] tracking-[-0.02em] dark:text-white">
-          {lang === "cs" ? "Vybrané" : "Selected"}{" "}
-          <span className="text-ink/30 dark:text-white/30">
-            {lang === "cs" ? "projekty" : "work"}
-          </span>
-        </h2>
+        <div className="flex flex-wrap items-baseline justify-between gap-y-4 gap-x-8">
+          <Label>{lang === "cs" ? "Reference" : "Work"}</Label>
 
-        {/* Filtry — vodorovný scroll na mobilu, ostré hrany */}
-        <div className="mt-5 md:mt-6 -mx-4 px-4 md:mx-0 md:px-0 overflow-x-auto no-scrollbar">
-          <div className="flex gap-2 w-max md:w-auto md:flex-wrap">
-            {[["all", t.all], ...used.map((k) => [k, cats[k]])].map(([key, label]) => (
-              <button
-                key={key}
-                onClick={() => setActive(key)}
-                className={`shrink-0 border px-3.5 py-2 text-[13px] md:text-[13.5px] transition-colors ${
-                  active === key
-                    ? "border-ink dark:border-white bg-ink dark:bg-white text-white dark:text-ink"
-                    : "border-ink/15 dark:border-white/20 text-ink/55 dark:text-white/50 hover:border-ink/40 dark:hover:border-white/50"
-                }`}
-              >
-                {label}
-              </button>
-            ))}
+          {/* Filtry — jen text, bez rámečků; na mobilu se dají posouvat do strany */}
+          <div className="-mx-4 px-4 md:mx-0 md:px-0 overflow-x-auto no-scrollbar">
+            <div className="flex gap-5 md:gap-6 w-max md:w-auto md:flex-wrap">
+              {[["all", t.all], ...used.map((k) => [k, cats[k]])].map(([key, label]) => (
+                <button
+                  key={key}
+                  onClick={() => setActive(key)}
+                  className={`shrink-0 pb-1 text-[13px] md:text-[13.5px] border-b transition-colors ${
+                    active === key
+                      ? "border-ink dark:border-white text-ink dark:text-white"
+                      : "border-transparent text-ink/40 dark:text-white/40 hover:text-ink dark:hover:text-white"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </Reveal>
 
-      <div className="mt-6 md:mt-8 grid gap-x-4 gap-y-7 md:gap-x-5 md:gap-y-9 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="mt-7 md:mt-9 grid gap-x-4 gap-y-9 md:gap-x-5 md:gap-y-9 sm:grid-cols-2 xl:grid-cols-3">
         {shown.map((c, i) => {
           const data = c[lang];
           return (
