@@ -12,23 +12,24 @@ export default function BxHeader() {
   return (
     <header className="sticky top-0 z-40 bg-white/85 dark:bg-dark/85 backdrop-blur-md">
       <div className="mx-auto w-full max-w-[1440px] px-4 md:px-10 h-16 md:h-[72px] flex items-center justify-between">
-        {/* Logo ŠAFY BX — světlá varianta se přepne v tmavém režimu */}
-        <TapeLink href="/safy-bx" aria-label="ŠAFY BX" className="block">
+        {/* Logo ŠAFY BX — obě varianty leží přes sebe a přepínají se průhledností.
+            Přepínání přes hidden/block se s naší dark variantou nechovalo spolehlivě. */}
+        <TapeLink href="/safy-bx" aria-label="ŠAFY BX" className="relative block h-9 md:h-11 aspect-[227/108]">
           <Image
             src="/images/logos/safy-bx-dark.svg"
             alt="ŠAFY BX"
-            width={227}
-            height={108}
+            fill
             priority
-            className="h-9 md:h-11 w-auto dark:hidden"
+            sizes="120px"
+            className="object-contain opacity-100 dark:opacity-0 transition-opacity"
           />
           <Image
             src="/images/logos/safy-bx-white.svg"
             alt=""
             aria-hidden
-            width={227}
-            height={108}
-            className="h-9 md:h-11 w-auto hidden dark:block"
+            fill
+            sizes="120px"
+            className="object-contain opacity-0 dark:opacity-100 transition-opacity"
           />
         </TapeLink>
 
