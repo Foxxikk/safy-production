@@ -41,14 +41,17 @@ export default function CaseDetail({ item, prev, next, categories = {} }) {
         >
           {all[0] && <Image src={all[0]} alt={data.title} fill sizes="100vw" className={IMG_HOVER} priority />}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
-          {/* Text v hlavičce drží stejné odsazení jako obsah pod fotkou */}
+          {/* Text v hlavičce drží stejné odsazení jako obsah pod fotkou.
+              Záporný okraj ruší odsazení coveru, aby se Container centroval stejně. */}
           <div className="absolute inset-x-0 bottom-0 pb-5 md:pb-9 text-left">
-            <div className="mx-auto w-full max-w-[1440px] px-1 md:px-5">
-              <Label tone="light">{categories[lang][item.category]}</Label>
-              <h1 className="mt-2.5 display-xl text-white text-[clamp(1.9rem,6vw,4.6rem)] leading-[0.95] tracking-[-0.02em] max-w-[20ch]">
-                {data.title}
-              </h1>
-              <p className="mt-2 text-white/65 text-[14px] md:text-lg">{data.subtitle}</p>
+            <div className="-mx-3 md:-mx-5">
+              <Container>
+                <Label tone="light">{categories[lang][item.category]}</Label>
+                <h1 className="mt-2.5 display-xl text-white text-[clamp(1.9rem,6vw,4.6rem)] leading-[0.95] tracking-[-0.02em] max-w-[20ch]">
+                  {data.title}
+                </h1>
+                <p className="mt-2 text-white/65 text-[14px] md:text-lg">{data.subtitle}</p>
+              </Container>
             </div>
           </div>
         </button>
