@@ -6,7 +6,6 @@ import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
 import Section, { Container, Label, ArrowPill } from "./Section";
 import { TapeLink } from "./TapeTransition";
-import Doodle from "./Doodle";
 
 /**
  * Detail jednoho pilíře „Co děláme“.
@@ -40,12 +39,8 @@ export default function PillarDetail({ pillar, prev, next, cases = [], categorie
             </span>
             <Label>{lang === "cs" ? "Co děláme" : "What we do"}</Label>
           </div>
-          <h1 className="relative inline-block mt-4 md:mt-6 display-xl text-[clamp(2rem,5.5vw,4.2rem)] leading-[0.98] tracking-[-0.02em] dark:text-white">
+          <h1 className="mt-4 md:mt-6 display-xl text-[clamp(2rem,5.5vw,4.2rem)] leading-[0.98] tracking-[-0.02em] dark:text-white">
             {p.title}
-            <Doodle
-              name="podtrzeni-1"
-              className="absolute -bottom-4 left-0 w-full h-[11px] text-ink/60 dark:text-white/50"
-            />
           </h1>
         </Reveal>
 

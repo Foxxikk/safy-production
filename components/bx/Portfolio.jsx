@@ -18,24 +18,17 @@ export default function Portfolio({ cases = [], categories = {} }) {
   const shown = active === "all" ? cases : cases.filter((c) => c.category === active);
 
   return (
-    <Section id="work" className="pt-6 md:pt-10">
+    <Section id="work" className="pt-2 md:pt-4">
       <Reveal>
-        <h2 className="mt-4 md:mt-6 display-xl text-[clamp(2.2rem,7vw,5rem)] leading-[0.92] tracking-[-0.02em] dark:text-white">
+        <h2 className="display-xl text-[clamp(1.9rem,5vw,3.4rem)] leading-[0.95] tracking-[-0.02em] dark:text-white">
           {lang === "cs" ? "Vybrané" : "Selected"}{" "}
-          <span className="relative inline-block">
-            <span className="text-ink/30 dark:text-white/30">
-              {lang === "cs" ? "projekty" : "work"}
-            </span>
-            {/* ručně kreslené zakroužkování z brandu */}
-            <Doodle
-              name="zakrouzkovani"
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[122%] h-[150%] text-ink/25 dark:text-white/25"
-            />
+          <span className="text-ink/30 dark:text-white/30">
+            {lang === "cs" ? "projekty" : "work"}
           </span>
         </h2>
 
         {/* Filtry — vodorovný scroll na mobilu, ostré hrany */}
-        <div className="mt-6 md:mt-8 -mx-4 px-4 md:mx-0 md:px-0 overflow-x-auto no-scrollbar">
+        <div className="mt-5 md:mt-6 -mx-4 px-4 md:mx-0 md:px-0 overflow-x-auto no-scrollbar">
           <div className="flex gap-2 w-max md:w-auto md:flex-wrap">
             {[["all", t.all], ...used.map((k) => [k, cats[k]])].map(([key, label]) => (
               <button
@@ -54,7 +47,7 @@ export default function Portfolio({ cases = [], categories = {} }) {
         </div>
       </Reveal>
 
-      <div className="mt-8 md:mt-12 grid gap-x-4 gap-y-8 md:gap-x-5 md:gap-y-10 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="mt-6 md:mt-8 grid gap-x-4 gap-y-7 md:gap-x-5 md:gap-y-9 sm:grid-cols-2 xl:grid-cols-3">
         {shown.map((c, i) => {
           const data = c[lang];
           return (
@@ -77,8 +70,12 @@ export default function Portfolio({ cases = [], categories = {} }) {
                   <p className="text-[11px] uppercase tracking-[0.14em] text-ink/35 dark:text-white/35">
                     {cats[c.category]}
                   </p>
-                  <h3 className="mt-1.5 text-[16px] md:text-[18px] font-medium leading-snug group-hover:text-ink/55 dark:group-hover:text-white/60 transition-colors dark:text-white">
+                  <h3 className="mt-1.5 flex items-center gap-2.5 text-[16px] md:text-[18px] font-medium leading-snug group-hover:text-ink/55 dark:group-hover:text-white/60 transition-colors dark:text-white">
                     {data.title}
+                    <Doodle
+                      name="sipka"
+                      className="w-[24px] h-[9px] shrink-0 text-ink/30 dark:text-white/30 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
+                    />
                   </h3>
                   <p className="mt-0.5 text-ink/45 dark:text-white/40 text-[13.5px] md:text-[14px]">
                     {data.subtitle}
