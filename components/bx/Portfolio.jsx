@@ -5,7 +5,7 @@ import Image from "next/image";
 
 import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
-import Section, { Label } from "./Section";
+import Section from "./Section";
 import Doodle from "./Doodle";
 import { TapeLink } from "./TapeTransition";
 
@@ -18,10 +18,10 @@ export default function Portfolio({ cases = [], categories = {} }) {
   const shown = active === "all" ? cases : cases.filter((c) => c.category === active);
 
   return (
-    <Section id="work" className="pt-2 md:pt-4">
+    <Section id="work" className="pt-16 md:pt-24 pb-0">
       <Reveal>
         <div className="flex flex-wrap items-baseline justify-between gap-y-4 gap-x-8">
-          <Label>{lang === "cs" ? "Reference" : "Work"}</Label>
+          <h2 className="display-xl text-[clamp(1.4rem,2.8vw,2.1rem)] leading-[1.05] tracking-[-0.02em] dark:text-white">{lang === "cs" ? "Reference" : "Work"}</h2>
 
           {/* Filtry — jen text, bez rámečků; na mobilu se dají posouvat do strany */}
           <div className="-mx-4 px-4 md:mx-0 md:px-0 overflow-x-auto no-scrollbar">

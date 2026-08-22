@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
-import Section, { Label } from "./Section";
+import Section from "./Section";
 import Doodle from "./Doodle";
 import { TapeLink } from "./TapeTransition";
 
@@ -17,7 +17,7 @@ export default function Hero({ intro = {}, pillars = {}, previews = {} }) {
   const list = (pillars[lang] || []).filter((p) => p.published !== false);
 
   return (
-    <Section className="pt-8 md:pt-10 pb-2 md:pb-4">
+    <Section className="pt-8 md:pt-12 pb-0">
       {/* O divizi */}
       {intro[lang] && (
         <Reveal>
@@ -31,12 +31,14 @@ export default function Hero({ intro = {}, pillars = {}, previews = {} }) {
       )}
 
       {/* Co děláme */}
-      <div className="mt-12 md:mt-16">
+      <div className="mt-16 md:mt-24">
         <Reveal>
-          <Label>{lang === "cs" ? "Co děláme" : "What we do"}</Label>
+          <h2 className="display-xl text-[clamp(1.4rem,2.8vw,2.1rem)] leading-[1.05] tracking-[-0.02em] dark:text-white">
+            {lang === "cs" ? "Co děláme" : "What we do"}
+          </h2>
         </Reveal>
 
-        <div className="mt-6 md:mt-8 grid gap-x-4 gap-y-9 md:gap-x-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-7 md:mt-9 grid gap-x-4 gap-y-9 md:gap-x-5 sm:grid-cols-2 lg:grid-cols-4">
           {list.map((p, i) => {
             const src = p.image || previews[p.category];
             return (
@@ -84,11 +86,11 @@ export function About({ stats = {} }) {
   const { lang, t } = useLang();
 
   return (
-    <Section className="pt-2 md:pt-6">
+    <Section className="pt-16 md:pt-24 pb-4 md:pb-8">
       <Reveal>
-        <Label>{t.statsTitle}</Label>
+        <h2 className="display-xl text-[clamp(1.4rem,2.8vw,2.1rem)] leading-[1.05] tracking-[-0.02em] dark:text-white">{t.statsTitle}</h2>
       </Reveal>
-      <div className="mt-7 md:mt-10 grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-4 md:gap-x-8">
+      <div className="mt-7 md:mt-9 grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-4 md:gap-x-8">
         {(stats[lang] || []).map((s, i) => (
           <Reveal key={s.label} delay={i * 0.06}>
             <div className="display-xl text-[clamp(1.9rem,4.4vw,3.6rem)] leading-none whitespace-nowrap tracking-[-0.02em] dark:text-white">
