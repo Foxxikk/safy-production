@@ -12,19 +12,24 @@ export default function BxHeader() {
   return (
     <header className="sticky top-0 z-40 bg-white/85 dark:bg-dark/85 backdrop-blur-md">
       <div className="mx-auto w-full max-w-[1440px] px-4 md:px-10 h-16 md:h-[72px] flex items-center justify-between">
-        {/* Logo v hlavičce — jediný výskyt na stránce */}
-        <TapeLink href="/safy-bx" aria-label="ŠAFY BX" className="flex items-end gap-2">
+        {/* Logo ŠAFY BX — světlá varianta se přepne v tmavém režimu */}
+        <TapeLink href="/safy-bx" aria-label="ŠAFY BX" className="block">
           <Image
-            src="/images/logos/safy-black.svg"
-            alt="šafy"
-            width={340}
-            height={132}
+            src="/images/logos/safy-bx-dark.svg"
+            alt="ŠAFY BX"
+            width={227}
+            height={108}
             priority
-            className="w-[92px] md:w-[112px] h-auto dark:invert"
+            className="h-9 md:h-11 w-auto dark:hidden"
           />
-          <span className="display-xl text-[19px] md:text-[23px] leading-[1] tracking-[-0.02em] text-ink dark:text-white pb-[3px]">
-            BX
-          </span>
+          <Image
+            src="/images/logos/safy-bx-white.svg"
+            alt=""
+            aria-hidden
+            width={227}
+            height={108}
+            className="h-9 md:h-11 w-auto hidden dark:block"
+          />
         </TapeLink>
 
         <div className="flex items-center gap-3 md:gap-5">
