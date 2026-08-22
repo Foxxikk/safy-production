@@ -115,7 +115,8 @@ export default function AboutPage({ about = {}, stats = {}, settings = {} }) {
         </Reveal>
 
         {/* Bez rámečků — poslední řádek není plný a mřížka s linkami by působila useknutě.
-            Loga jsou tmavá na průhledném pozadí, v tmavém režimu je proto obracíme. */}
+            Loga jsou v souborech světle šedá (kolem 46 % jasu), takže by se sama o sobě
+            ztrácela. Ztmavíme je filtrem; v tmavém režimu je po ztmavení ještě obrátíme. */}
         <div className="mt-8 md:mt-12 grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-x-6 gap-y-10 md:gap-x-10 md:gap-y-14 items-center">
           {clientLogos.map((b, i) => (
             <Reveal key={b} delay={(i % 6) * 0.04}>
@@ -125,7 +126,7 @@ export default function AboutPage({ about = {}, stats = {}, settings = {} }) {
                   alt={b.replace(/[-_]/g, " ")}
                   width={110}
                   height={55}
-                  className="max-h-9 md:max-h-11 w-auto object-contain grayscale opacity-55 dark:invert dark:opacity-70 hover:opacity-90 dark:hover:opacity-100 transition-opacity"
+                  className="max-h-9 md:max-h-11 w-auto object-contain [filter:brightness(0.28)] dark:[filter:brightness(0.3)_invert(1)] opacity-80 hover:opacity-100 transition-opacity"
                 />
               </div>
             </Reveal>
