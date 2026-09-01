@@ -29,7 +29,7 @@ export default async function BxLandingPage() {
   return (
     <div className="bg-white dark:bg-dark text-ink dark:text-white min-h-screen">
       <BxHeader />
-      <Hero intro={data.intro} pillars={data.pillars} previews={previews} />
+      <Hero claim={data.claim} intro={data.intro} pillars={data.pillars} previews={previews} />
       <Portfolio cases={cases} categories={data.categories} />
       {data.settings?.showStats !== false && <About stats={data.stats} />}
       <ContactForm settings={data.settings} />

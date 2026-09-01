@@ -108,6 +108,38 @@ export default function TextsEditor({ data, update }) {
 
       <div className="space-y-5">
         <Card
+          title={`Hlavní claim (${LANG})`}
+          description="Velký nadpis na začátku stránky. Dva řádky."
+        >
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="První řádek">
+              <TextInput
+                value={data.claim?.[lang]?.line1 ?? ""}
+                onChange={(e) =>
+                  update((d) => {
+                    d.claim = d.claim || {};
+                    d.claim[lang] = { ...(d.claim[lang] || {}), line1: e.target.value };
+                    return d;
+                  })
+                }
+              />
+            </Field>
+            <Field label="Druhý řádek" hint="Podtržený barevnou linkou.">
+              <TextInput
+                value={data.claim?.[lang]?.line2 ?? ""}
+                onChange={(e) =>
+                  update((d) => {
+                    d.claim = d.claim || {};
+                    d.claim[lang] = { ...(d.claim[lang] || {}), line2: e.target.value };
+                    return d;
+                  })
+                }
+              />
+            </Field>
+          </div>
+        </Card>
+
+        <Card
           title={`Co děláme — pilíře (${LANG})`}
           description="Čtyři body na začátku stránky. Každý má i vlastní podstránku."
           action={

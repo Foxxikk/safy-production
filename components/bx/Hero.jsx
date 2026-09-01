@@ -9,36 +9,66 @@ import Doodle from "./Doodle";
 import { TapeLink } from "./TapeTransition";
 
 /**
- * Úvod stránky: stručné představení divize a čtyři pilíře.
- * Držíme se vzdušného výrazu — žádné rámečky ani boxy, jen fotky a prostor.
+ * Úvod stránky: mohutný claim, pod ním představení divize a čtyři pilíře.
+ * Typografie nese hlavní váhu, grafika ji jen doplňuje.
  */
-export default function Hero({ intro = {}, pillars = {}, previews = {} }) {
+export default function Hero({ claim = {}, intro = {}, pillars = {}, previews = {} }) {
   const { lang } = useLang();
   const list = (pillars[lang] || []).filter((p) => p.published !== false);
+  const c = claim[lang] || claim.cs || {};
 
   return (
-    <Section className="pt-8 md:pt-12 pb-0">
-      {/* O divizi */}
+    <Section className="pt-6 md:pt-10 pb-0">
+      {/* Claim — hlavní vizuální prvek stránky */}
+      {(c.line1 || c.line2) && (
+        <div className="relative">
+          <Reveal>
+            <p className="text-[11px] md:text-[12px] uppercase tracking-[0.24em] text-ink/40 dark:text-white/40">
+              Brand experience marketing
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.05}>
+            <h1 className="mt-5 md:mt-7 display-xl text-[clamp(2.6rem,9vw,7.5rem)] leading-[0.88] tracking-[-0.035em] uppercase dark:text-white">
+              <span className="block">{c.line1}</span>
+              <span className="relative inline-block">
+                {c.line2}
+                {/* Páska podtrhává druhý řádek a přesahuje mimo mřížku */}
+                <Doodle
+                  name="podtrzeni-1"
+                  className="absolute -bottom-[0.12em] left-0 w-[104%] h-[0.1em] text-brand"
+                />
+              </span>
+            </h1>
+          </Reveal>
+        </div>
+      )}
+
+      {/* O divizi — vedle claimu, ne pod ním */}
       {intro[lang] && (
-        <Reveal>
-          <p className="text-[11px] md:text-[12px] uppercase tracking-[0.24em] text-ink/40 dark:text-white/40">
-            Brand experience marketing
-          </p>
-          <p className="mt-4 text-[15px] md:text-[16px] leading-[1.65] text-ink/60 dark:text-white/55 max-w-[68ch]">
-            {intro[lang]}
-          </p>
+        <Reveal delay={0.1}>
+          <div className="mt-10 md:mt-14 grid md:grid-cols-12 gap-6">
+            <div className="md:col-span-5 lg:col-span-4 md:col-start-7 lg:col-start-8">
+              <p className="text-[15px] md:text-[16px] leading-[1.65] text-ink/60 dark:text-white/55">
+                {intro[lang]}
+              </p>
+            </div>
+          </div>
         </Reveal>
       )}
 
       {/* Co děláme */}
       <div className="mt-16 md:mt-24">
         <Reveal>
-          <h2 className="display-xl text-[clamp(1.4rem,2.8vw,2.1rem)] leading-[1.05] tracking-[-0.02em] dark:text-white">
-            {lang === "cs" ? "Co děláme" : "What we do"}
-          </h2>
+          <div className="flex items-baseline gap-4 border-t border-black/10 dark:border-white/15 pt-5">
+            <span className="text-[12px] text-ink/30 dark:text-white/30 tabular-nums">01</span>
+            <h2 className="display-xl text-[clamp(1.6rem,3.4vw,2.6rem)] leading-[1.05] tracking-[-0.02em] uppercase dark:text-white">
+              {lang === "cs" ? "Co děláme" : "What we do"}
+            </h2>
+          </div>
         </Reveal>
 
-        <div className="mt-7 md:mt-9 grid grid-cols-2 gap-x-3 gap-y-7 md:gap-x-5 md:gap-y-9 lg:grid-cols-4">
+        <div className="mt-7 md:mt-10 grid grid-cols-2 gap-x-3 gap-y-8 md:gap-x-5 md:gap-y-10 lg:grid-cols-4">
           {list.map((p, i) => {
             const src = p.image || previews[p.category];
             return (
@@ -53,10 +83,13 @@ export default function Hero({ intro = {}, pillars = {}, previews = {} }) {
                         src={src}
                         alt=""
                         fill
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 24vw"
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 24vw"
                         className="object-cover"
                       />
                       <span className="absolute inset-0 bg-ink/0 group-hover:bg-ink/10 transition-colors duration-500" />
+                      <span className="absolute left-0 top-0 bg-white dark:bg-dark px-2 py-1 text-[11px] tabular-nums text-ink/50 dark:text-white/50">
+                        0{i + 1}
+                      </span>
                     </span>
                   )}
 
@@ -88,12 +121,17 @@ export function About({ stats = {} }) {
   return (
     <Section className="pt-16 md:pt-24 pb-4 md:pb-8">
       <Reveal>
-        <h2 className="display-xl text-[clamp(1.4rem,2.8vw,2.1rem)] leading-[1.05] tracking-[-0.02em] dark:text-white">{t.statsTitle}</h2>
+        <div className="flex items-baseline gap-4 border-t border-black/10 dark:border-white/15 pt-5">
+          <span className="text-[12px] text-ink/30 dark:text-white/30 tabular-nums">03</span>
+          <h2 className="display-xl text-[clamp(1.6rem,3.4vw,2.6rem)] leading-[1.05] tracking-[-0.02em] uppercase dark:text-white">
+            {t.statsTitle}
+          </h2>
+        </div>
       </Reveal>
-      <div className="mt-7 md:mt-9 grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-4 md:gap-x-8">
+      <div className="mt-8 md:mt-12 grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4 md:gap-x-8">
         {(stats[lang] || []).map((s, i) => (
           <Reveal key={s.label} delay={i * 0.06}>
-            <div className="display-xl text-[clamp(1.9rem,4.4vw,3.6rem)] leading-none whitespace-nowrap tracking-[-0.02em] dark:text-white">
+            <div className="display-xl text-[clamp(2.4rem,6vw,4.6rem)] leading-none whitespace-nowrap tracking-[-0.03em] dark:text-white">
               {s.value}
             </div>
             <p className="mt-2 md:mt-3 text-ink/45 dark:text-white/40 text-[13px] md:text-[14px] leading-snug">
