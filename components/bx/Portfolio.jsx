@@ -23,7 +23,7 @@ export default function Portfolio({ cases = [], categories = {} }) {
       {/* Obří slovo v pozadí, které přetéká přes okraj mřížky */}
       <span
         aria-hidden
-        className="pointer-events-none absolute -top-2 md:-top-6 -right-[6%] hidden md:block select-none display-xl uppercase text-[16vw] leading-none tracking-[-0.04em] text-brand/[0.13] dark:text-brand/[0.10]"
+        className="pointer-events-none absolute top-8 md:top-10 -right-[8%] hidden md:block select-none display-xl uppercase text-[11vw] leading-[0.8] tracking-[-0.04em] text-brand/[0.14] dark:text-brand/[0.12]"
       >
         {lang === "cs" ? "projekty" : "work"}
       </span>
