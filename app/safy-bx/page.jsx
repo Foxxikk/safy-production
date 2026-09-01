@@ -35,6 +35,8 @@ export default async function BxLandingPage() {
         stats={data.settings?.showStats !== false ? data.stats : {}}
         pillars={data.pillars}
         previews={previews}
+        heroImage={all[0]?.images?.[0] || null}
+        caseCount={all.length}
       />
       <Portfolio cases={cases} categories={data.categories} />
       <ContactForm settings={data.settings} />
