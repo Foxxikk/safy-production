@@ -4,55 +4,87 @@ import Image from "next/image";
 
 import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
-import Section from "./Section";
+import Section, { ArrowCircle } from "./Section";
 import Doodle from "./Doodle";
 import { TapeLink } from "./TapeTransition";
 
+
 /**
- * Úvod stránky: mohutný claim, pod ním představení divize a čtyři pilíře.
- * Typografie nese hlavní váhu, grafika ji jen doplňuje.
+ * Úvod stránky: mohutný claim, zvýrazněný nadtitulek, čísla v řádku pod ním
+ * a čtyři pilíře. Typografie nese hlavní váhu, barva funguje jako akcent.
  */
-export default function Hero({ claim = {}, intro = {}, pillars = {}, previews = {} }) {
+export default function Hero({ claim = {}, intro = {}, stats = {}, pillars = {}, previews = {} }) {
   const { lang } = useLang();
   const list = (pillars[lang] || []).filter((p) => p.published !== false);
   const c = claim[lang] || claim.cs || {};
+  const numbers = stats[lang] || [];
 
   return (
     <Section className="pt-6 md:pt-10 pb-0">
-      {/* Claim — hlavní vizuální prvek stránky */}
+      {/* Claim */}
       {(c.line1 || c.line2) && (
         <div className="relative">
           <Reveal>
-            <p className="text-[11px] md:text-[12px] uppercase tracking-[0.24em] text-ink/40 dark:text-white/40">
+            {/* Zvýrazněný nadtitulek — barva jako podklad textu, ne jako plocha */}
+            <span className="inline-block bg-brand px-3 py-1 text-[11px] md:text-[12px] uppercase tracking-[0.22em] text-ink">
               Brand experience marketing
-            </p>
+            </span>
           </Reveal>
 
           <Reveal delay={0.05}>
-            <h1 className="mt-5 md:mt-7 display-xl text-[clamp(2.6rem,9vw,7.5rem)] leading-[0.88] tracking-[-0.035em] uppercase dark:text-white">
-              <span className="block">{c.line1}</span>
-              <span className="relative inline-block">
-                {c.line2}
-                {/* Páska podtrhává druhý řádek a přesahuje mimo mřížku */}
-                <Doodle
-                  name="podtrzeni-1"
-                  className="absolute -bottom-[0.12em] left-0 w-[104%] h-[0.1em] text-brand"
-                />
-              </span>
-            </h1>
+            <div className="mt-5 md:mt-7 flex items-end gap-6 md:gap-10">
+              <h1 className="display-xl text-[clamp(2.6rem,9vw,7.5rem)] leading-[0.86] tracking-[-0.035em] uppercase dark:text-white">
+                <span className="block">{c.line1}</span>
+                <span className="relative inline-block">
+                  {c.line2}
+                  <Doodle
+                    name="podtrzeni-1"
+                    className="absolute -bottom-[0.1em] left-0 w-[104%] h-[0.09em] text-brand"
+                  />
+                </span>
+              </h1>
+
+              {/* Proklik na reference — kruhový detail podle referenčního webu */}
+              <a href="#work" className="group hidden md:block pb-3">
+                <ArrowCircle size="lg" />
+              </a>
+            </div>
           </Reveal>
         </div>
       )}
 
-      {/* O divizi — vedle claimu, ne pod ním */}
+      {/* Text o divizi vpravo, vedle prázdného pole vlevo */}
       {intro[lang] && (
         <Reveal delay={0.1}>
-          <div className="mt-10 md:mt-14 grid md:grid-cols-12 gap-6">
+          <div className="mt-8 md:mt-12 grid md:grid-cols-12 gap-6">
             <div className="md:col-span-5 lg:col-span-4 md:col-start-7 lg:col-start-8">
               <p className="text-[15px] md:text-[16px] leading-[1.65] text-ink/60 dark:text-white/55">
                 {intro[lang]}
               </p>
             </div>
+          </div>
+        </Reveal>
+      )}
+
+      {/* Čísla hned pod claimem, oddělená svislými linkami */}
+      {numbers.length > 0 && (
+        <Reveal delay={0.14}>
+          <div className="mt-10 md:mt-14 grid grid-cols-2 md:grid-cols-4 border-t border-black/10 dark:border-white/15">
+            {numbers.map((s, i) => (
+              <div
+                key={s.label}
+                className={`py-5 md:py-7 md:px-6 first:md:pl-0 ${
+                  i % 2 === 1 ? "pl-5 border-l border-black/10 dark:border-white/15" : ""
+                } md:border-l md:first:border-l-0 md:border-black/10 md:dark:border-white/15`}
+              >
+                <div className="display-xl text-[clamp(1.6rem,3.4vw,2.6rem)] leading-none tracking-[-0.03em] dark:text-white">
+                  {s.value}
+                </div>
+                <p className="mt-2 text-[12px] md:text-[12.5px] uppercase tracking-[0.12em] text-ink/40 dark:text-white/40 leading-snug">
+                  {s.label}
+                </p>
+              </div>
+            ))}
           </div>
         </Reveal>
       )}
@@ -65,6 +97,7 @@ export default function Hero({ claim = {}, intro = {}, pillars = {}, previews = 
             <h2 className="display-xl text-[clamp(1.6rem,3.4vw,2.6rem)] leading-[1.05] tracking-[-0.02em] uppercase dark:text-white">
               {lang === "cs" ? "Co děláme" : "What we do"}
             </h2>
+            <span className="ml-1 h-2 w-2 rounded-full bg-brand" aria-hidden />
           </div>
         </Reveal>
 
@@ -87,7 +120,7 @@ export default function Hero({ claim = {}, intro = {}, pillars = {}, previews = 
                         className="object-cover"
                       />
                       <span className="absolute inset-0 bg-ink/0 group-hover:bg-ink/10 transition-colors duration-500" />
-                      <span className="absolute left-0 top-0 bg-white dark:bg-dark px-2 py-1 text-[11px] tabular-nums text-ink/50 dark:text-white/50">
+                      <span className="absolute left-0 top-0 bg-brand px-2 py-1 text-[11px] tabular-nums text-ink">
                         0{i + 1}
                       </span>
                     </span>
@@ -109,36 +142,6 @@ export default function Hero({ claim = {}, intro = {}, pillars = {}, previews = 
             );
           })}
         </div>
-      </div>
-    </Section>
-  );
-}
-
-/** Čísla za námi — pod referencemi. */
-export function About({ stats = {} }) {
-  const { lang, t } = useLang();
-
-  return (
-    <Section className="pt-16 md:pt-24 pb-4 md:pb-8">
-      <Reveal>
-        <div className="flex items-baseline gap-4 border-t border-black/10 dark:border-white/15 pt-5">
-          <span className="text-[12px] text-ink/30 dark:text-white/30 tabular-nums">03</span>
-          <h2 className="display-xl text-[clamp(1.6rem,3.4vw,2.6rem)] leading-[1.05] tracking-[-0.02em] uppercase dark:text-white">
-            {t.statsTitle}
-          </h2>
-        </div>
-      </Reveal>
-      <div className="mt-8 md:mt-12 grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4 md:gap-x-8">
-        {(stats[lang] || []).map((s, i) => (
-          <Reveal key={s.label} delay={i * 0.06}>
-            <div className="display-xl text-[clamp(2.4rem,6vw,4.6rem)] leading-none whitespace-nowrap tracking-[-0.03em] dark:text-white">
-              {s.value}
-            </div>
-            <p className="mt-2 md:mt-3 text-ink/45 dark:text-white/40 text-[13px] md:text-[14px] leading-snug">
-              {s.label}
-            </p>
-          </Reveal>
-        ))}
       </div>
     </Section>
   );

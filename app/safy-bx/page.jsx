@@ -1,5 +1,5 @@
 import BxHeader from "@/components/bx/BxHeader";
-import Hero, { About } from "@/components/bx/Hero";
+import Hero from "@/components/bx/Hero";
 import Portfolio from "@/components/bx/Portfolio";
 import ContactForm from "@/components/bx/ContactForm";
 import { getSiteData, publishedCases } from "@/lib/bxStore";
@@ -29,9 +29,14 @@ export default async function BxLandingPage() {
   return (
     <div className="bg-white dark:bg-dark text-ink dark:text-white min-h-screen">
       <BxHeader />
-      <Hero claim={data.claim} intro={data.intro} pillars={data.pillars} previews={previews} />
+      <Hero
+        claim={data.claim}
+        intro={data.intro}
+        stats={data.settings?.showStats !== false ? data.stats : {}}
+        pillars={data.pillars}
+        previews={previews}
+      />
       <Portfolio cases={cases} categories={data.categories} />
-      {data.settings?.showStats !== false && <About stats={data.stats} />}
       <ContactForm settings={data.settings} />
     </div>
   );

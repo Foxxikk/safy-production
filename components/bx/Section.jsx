@@ -35,6 +35,19 @@ export function ArrowPill({ tone = "dark", className = "", label = "" }) {
   );
 }
 
+/** Kruhové tlačítko se šipkou — opakující se detail v celém webu. */
+export function ArrowCircle({ className = "", size = "md" }) {
+  const s = size === "lg" ? "h-14 w-14 md:h-20 md:w-20 text-[18px] md:text-[22px]" : "h-11 w-11 text-[15px]";
+  return (
+    <span
+      aria-hidden
+      className={`inline-flex ${s} shrink-0 items-center justify-center rounded-full bg-ink text-white dark:bg-white dark:text-ink transition-transform duration-300 group-hover:rotate-45 ${className}`}
+    >
+      ↗
+    </span>
+  );
+}
+
 export default function Section({ children, className = "", id }) {
   return (
     <section id={id} className={`py-12 md:py-20 ${className}`}>

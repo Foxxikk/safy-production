@@ -19,18 +19,27 @@ export default function Portfolio({ cases = [], categories = {} }) {
   const shown = active === "all" ? cases : cases.filter((c) => c.category === active);
 
   return (
-    <Section id="work" className="pt-16 md:pt-24 pb-0">
+    <Section id="work" className="relative pt-16 md:pt-24 pb-0 overflow-x-clip">
+      {/* Obří slovo v pozadí, které přetéká přes okraj mřížky */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -top-2 md:-top-6 -right-[6%] hidden md:block select-none display-xl uppercase text-[16vw] leading-none tracking-[-0.04em] text-brand/[0.13] dark:text-brand/[0.10]"
+      >
+        {lang === "cs" ? "projekty" : "work"}
+      </span>
+
       <Reveal>
-        <div className="flex flex-wrap items-baseline justify-between gap-y-4 gap-x-8 border-t border-black/10 dark:border-white/15 pt-5">
+        <div className="relative flex flex-wrap items-baseline justify-between gap-y-4 gap-x-8 border-t border-black/10 dark:border-white/15 pt-5">
           <div className="flex items-baseline gap-4">
             <span className="text-[12px] text-ink/30 dark:text-white/30 tabular-nums">02</span>
             <h2 className="display-xl text-[clamp(1.6rem,3.4vw,2.6rem)] leading-[1.05] tracking-[-0.02em] uppercase dark:text-white">
               {lang === "cs" ? "Reference" : "Work"}
             </h2>
+            <span className="ml-1 h-2 w-2 rounded-full bg-brand" aria-hidden />
           </div>
 
           {/* Filtry — jen text, bez rámečků; na mobilu se dají posouvat do strany */}
-          <div className="-mx-4 px-4 md:mx-0 md:px-0 overflow-x-auto no-scrollbar">
+          <div className="relative -mx-4 px-4 md:mx-0 md:px-0 overflow-x-auto no-scrollbar">
             <div className="flex gap-5 md:gap-6 w-max md:w-auto md:flex-wrap">
               {[["all", t.all], ...used.map((k) => [k, cats[k]])].map(([key, label]) => (
                 <button
@@ -51,7 +60,7 @@ export default function Portfolio({ cases = [], categories = {} }) {
       </Reveal>
 
       {/* Mobil — carousel, který se sám posouvá; jakmile do něj sáhne návštěvník, počká. */}
-      <div className="sm:hidden mt-7">
+      <div className="relative sm:hidden mt-7">
         <Carousel count={shown.length}>
           {shown.map((c) => (
             <div key={c.slug} className="w-[82%] shrink-0 snap-center">
@@ -62,7 +71,7 @@ export default function Portfolio({ cases = [], categories = {} }) {
       </div>
 
       {/* Tablet a výš — nepravidelná mřížka: první dva projekty dostanou víc místa */}
-      <div className="hidden sm:grid mt-10 gap-x-4 gap-y-12 md:gap-x-5 md:gap-y-16 grid-cols-2 xl:grid-cols-6">
+      <div className="relative hidden sm:grid mt-10 gap-x-4 gap-y-12 md:gap-x-5 md:gap-y-16 grid-cols-2 xl:grid-cols-6">
         {shown.map((c, i) => {
           // první dva přes půl šířky, zbytek po třetinách
           const wide = i < 2;

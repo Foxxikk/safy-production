@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useLang } from "./LangContext";
 import Reveal from "./Reveal";
-import { Container, Label } from "./Section";
+import { Container, Label, ArrowCircle } from "./Section";
 
 const types = {
   cs: ["Festivalová zóna", "Pop-up / retail", "Výroba a stavba", "3D a grafika", "Jiné"],
@@ -82,18 +82,18 @@ export default function ContactForm({ settings = {} }) {
             {/* Levá strana — velký claim */}
             <div className="md:col-span-5">
               <Reveal>
-                <Label tone="light">{lang === "cs" ? "Kontakt" : "Contact"}</Label>
-                <h2 className="mt-5 text-[clamp(1.7rem,4.4vw,3.2rem)] font-medium leading-[1.08] tracking-[-0.015em]">
+                <span className="inline-block bg-brand px-3 py-1 text-[11px] uppercase tracking-[0.22em] text-ink">
+                  {lang === "cs" ? "Kontakt" : "Contact"}
+                </span>
+                <h2 className="mt-6 display-xl text-[clamp(2rem,5vw,3.8rem)] leading-[0.95] tracking-[-0.03em] uppercase">
                   {t.ctaTitle}
                 </h2>
                 <p className="mt-6 text-white/50 leading-relaxed max-w-[34ch] text-[15.5px]">
                   {t.ctaText}
                 </p>
-                <a href={`mailto:${email}`} className="mt-8 inline-flex items-center gap-3 group">
-                  <span className="text-[17px] border-b border-white/40 pb-0.5">{email}</span>
-                  <span className="inline-flex h-9 w-9 items-center justify-center border border-white/25 group-hover:bg-white group-hover:text-ink transition-colors">
-                    →
-                  </span>
+                <a href={`mailto:${email}`} className="mt-8 inline-flex items-center gap-4 group">
+                  <span className="text-[17px] md:text-[19px] border-b border-white/40 pb-0.5">{email}</span>
+                  <ArrowCircle className="!bg-white !text-ink" />
                 </a>
               </Reveal>
             </div>
