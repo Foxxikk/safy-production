@@ -66,7 +66,7 @@ export default function ContactForm({ settings = {}, compact = false }) {
   return (
     <section
       id="contact"
-      className={`relative overflow-x-clip ${compact ? "pt-10 md:pt-14" : "pt-16 md:pt-24"}`}
+      className={`relative overflow-x-clip ${compact ? "pt-20 md:pt-24" : "pt-16 md:pt-24"}`}
     >
       <div className="px-0 md:px-5">
         {/* Tmavý blok je vztažný bod pásky — ta pak sedí na jeho horní hraně

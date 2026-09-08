@@ -24,7 +24,7 @@ export default function StatementScreen({
 
         <Container className="relative flex h-full items-center">
           <div className="flex w-full items-end gap-6 pt-14 md:pt-16">
-            <p className="max-w-[26ch] md:max-w-[44ch] lg:max-w-[50ch] text-[clamp(1.25rem,2.85vw,2.5rem)] font-bold leading-[1.4] tracking-[-0.02em]">
+            <p className="max-w-[26ch] md:max-w-[44ch] lg:max-w-[50ch] text-[clamp(1.15rem,5vw,1.7rem)] md:text-[clamp(1.6rem,2.85vw,2.5rem)] font-bold leading-[1.4] tracking-[-0.02em]">
               {sentences.map((s, i) => (
                 <Sentence key={i} text={s} highlight={highlight} on={i <= step} />
               ))}
