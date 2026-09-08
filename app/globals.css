@@ -52,6 +52,55 @@ body {
   transition: background-color 0.35s ease, border-color 0.35s ease, color 0.25s ease;
 }
 
+/* ——— Scrollovací verze úvodní stránky (safy-bx/v2) ——— */
+
+/* Posuvník, ve kterém scroll zaskakuje po celých obrazovkách.
+   scroll-snap-stop: always znamená, že jedno gesto = jedna obrazovka
+   a nedá se přes sekci „proletět". */
+.bx-snap {
+  scroll-snap-type: y mandatory;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.bx-screen {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+@keyframes bx-nudge {
+  0%,
+  100% {
+    transform: translateY(-1px);
+  }
+  50% {
+    transform: translateY(2px);
+  }
+}
+.bx-nudge {
+  animation: bx-nudge 1.8s ease-in-out infinite;
+}
+
+@keyframes bx-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.bx-turn {
+  animation: bx-turn 14s linear infinite;
+}
+
+/* Komu vadí pohyb, ten dostane obyčejné plynulé scrollování */
+@media (prefers-reduced-motion: reduce) {
+  .bx-snap {
+    scroll-snap-type: none;
+  }
+  .bx-nudge,
+  .bx-turn {
+    animation: none;
+  }
+}
+
 /* Skrytí posuvníku u horizontálních galerií */
 .no-scrollbar {
   scrollbar-width: none;
