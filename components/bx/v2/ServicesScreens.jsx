@@ -7,7 +7,10 @@ import { TapeLink } from "../TapeTransition";
 import { ArrowSquare, Dots, ScrollHint, Steps } from "./ScrollBits";
 
 /** Ručně kreslený prvek u každého pilíře — pořadí odpovídá pořadí pilířů. */
-const MARKS = ["podtrzeni-2", "koruna", "zakrouzkovani", "hvezda"];
+const MARKS = ["zakrouzkovani", "koruna", "podtrzeni-2", "hvezda"];
+
+/** Šířku prvku dopočítáme z jeho poměru stran, ať mají všechny podobnou výšku. */
+const markWidth = (ratio) => `${Math.min(38, 16 * ratio)}%`;
 
 /**
  * Služby (pilíře) — přilepená sekce přes tolik obrazovek, kolik je pilířů.
@@ -32,7 +35,7 @@ export default function ServicesScreens({ pillars = [], previews = {}, step = 0,
                 {pillars.map((p) => (
                   <h2
                     key={p.slug || p.title}
-                    className="display-xl uppercase leading-[1.02] tracking-[-0.02em] text-[clamp(1.3rem,2.6vw,2.5rem)]"
+                    className="display-xl uppercase leading-[1.02] tracking-[-0.02em] text-[clamp(1.3rem,2.95vw,2.8rem)]"
                   >
                     {p.title}
                   </h2>
@@ -118,8 +121,8 @@ function PhotoStack({ images, active, pillar, className = "" }) {
           aria-hidden
           className="absolute inset-0 overflow-hidden"
           style={{
-            transform: `translateY(-${k * 5.5}%) scaleX(${1 - k * 0.08})`,
-            opacity: 0.85 - (k - 1) * 0.3,
+            transform: `translateY(-${k * 7}%) scaleX(${1 - k * 0.07})`,
+            opacity: 0.9 - (k - 1) * 0.35,
             zIndex: 3 - k,
           }}
         >
@@ -145,7 +148,7 @@ function PhotoStack({ images, active, pillar, className = "" }) {
       <Doodle
         name={mark}
         className="absolute bottom-[7%] left-[-11%] z-[7] text-brand"
-        style={{ width: ratio > 3 ? "26%" : "14%", aspectRatio: `${ratio}` }}
+        style={{ width: markWidth(ratio), aspectRatio: `${ratio}` }}
       />
     </span>
   );

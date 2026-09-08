@@ -42,7 +42,7 @@ export default function V2Header({ tone = "dark", onContact }) {
           {i > 0 && <span className="mx-1.5 opacity-40">/</span>}
           <button
             onClick={() => setLang(l)}
-            className={`transition-colors ${lang === l ? "text-brand" : ""}`}
+            className={`uppercase transition-colors ${lang === l ? "text-brand" : ""}`}
           >
             {l}
           </button>
@@ -88,12 +88,14 @@ export default function V2Header({ tone = "dark", onContact }) {
 
           <button
             onClick={onContact}
-            className={`group relative font-bold transition-colors ${strong}`}
+            className={`group relative font-bold uppercase transition-colors ${strong}`}
           >
             {lang === "cs" ? "Kontakt" : "Contact"}
+            {/* Poměr stran necháváme na SVG — pevná výška by podtržení zkrátila */}
             <Doodle
               name="podtrzeni-3"
-              className="absolute -bottom-[7px] left-0 h-[5px] w-[106%] text-brand"
+              className="absolute -bottom-[8px] left-0 w-[108%] text-brand"
+              style={{ aspectRatio: "91 / 14" }}
             />
           </button>
 

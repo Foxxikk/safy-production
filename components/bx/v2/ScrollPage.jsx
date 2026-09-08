@@ -29,6 +29,7 @@ export default function ScrollPage({ data = {}, cases = [], previews = {}, heroI
   const { lang } = useLang();
   const scroller = useRef(null);
   const [index, setIndex] = useState(0);
+  const [under, setUnder] = useState(0); // obrazovka, která je právě pod hlavičkou
 
   const pillars = useMemo(
     () => (data.pillars?.[lang] || []).filter((p) => p.published !== false),
@@ -62,7 +63,12 @@ export default function ScrollPage({ data = {}, cases = [], previews = {}, heroI
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
         const h = el.clientHeight || 1;
-        setIndex(Math.max(0, Math.min(total - 1, Math.round(el.scrollTop / h))));
+        const clamp = (v) => Math.max(0, Math.min(total - 1, v));
+        setIndex(clamp(Math.round(el.scrollTop / h)));
+        // Barva hlavičky se musí přepnout hned, jak se pod ni nasune další
+        // sekce — ne až v polovině přechodu, jinak bílý text chvíli svítí
+        // na světlém podkladu.
+        setUnder(clamp(Math.floor((el.scrollTop + 70) / h)));
       });
     };
     el.addEventListener("scroll", onScroll, { passive: true });
@@ -81,9 +87,9 @@ export default function ScrollPage({ data = {}, cases = [], previews = {}, heroI
 
   const next = useCallback(() => goTo(index + 1), [goTo, index]);
 
-  // Barva hlavičky se řídí podkladem právě zobrazené obrazovky
+  // Tmavé sekce (fotka v úvodu, služby) chtějí bílou hlavičku
   const tone =
-    index === 0 || (index >= start.services && index < start.work) ? "light" : "dark";
+    under === 0 || (under >= start.services && under < start.work) ? "light" : "dark";
 
   return (
     <>
@@ -127,7 +133,7 @@ export default function ScrollPage({ data = {}, cases = [], previews = {}, heroI
         />
 
         <section className="bx-screen min-h-[100svh] bg-[#f1f1ef]">
-          <ContactForm settings={data.settings} />
+          <ContactForm settings={data.settings} compact />
         </section>
       </div>
     </>

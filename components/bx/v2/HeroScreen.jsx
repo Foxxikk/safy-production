@@ -40,9 +40,12 @@ export default function HeroScreen({ image, words = [], hint, onNext }) {
           <span className="block text-brand">{accent}</span>
           <span className="relative inline-block">
             {last}
+            {/* Šířku dává slovo, výšku dopočítá poměr stran SVG —
+                s pevnou výškou by se podtržení zkrátilo doprostřed. */}
             <Doodle
               name="podtrzeni-1"
-              className="absolute -bottom-[0.05em] left-0 w-[103%] h-[0.075em] text-brand"
+              className="absolute -bottom-[0.09em] left-0 w-[103%] text-brand"
+              style={{ aspectRatio: "277 / 15" }}
             />
           </span>
         </h1>

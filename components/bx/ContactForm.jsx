@@ -14,7 +14,9 @@ const types = {
 
 const isEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim());
 
-export default function ContactForm({ settings = {} }) {
+// Na scrollovací verzi má formulář vyjít na jednu obrazovku, proto se dá
+// zapnout sevřenější varianta odsazení. Obsah i chování zůstávají stejné.
+export default function ContactForm({ settings = {}, compact = false }) {
   const { lang, t } = useLang();
   const [form, setForm] = useState({
     name: "",
@@ -62,11 +64,18 @@ export default function ContactForm({ settings = {} }) {
   const labelCls = "block text-[12.5px] text-white/55 mb-1.5";
 
   return (
-    <section id="contact" className="relative pt-16 md:pt-24 overflow-x-clip">
+    <section
+      id="contact"
+      className={`relative overflow-x-clip ${compact ? "pt-10 md:pt-14" : "pt-16 md:pt-24"}`}
+    >
       <div className="px-0 md:px-5">
         {/* Tmavý blok je vztažný bod pásky — ta pak sedí na jeho horní hraně
             stejně na mobilu i na desktopu. */}
-        <div className="relative bg-dark dark:bg-black text-white pt-20 md:pt-28">
+        <div
+          className={`relative bg-dark dark:bg-black text-white ${
+            compact ? "pt-14 md:pt-16" : "pt-20 md:pt-28"
+          }`}
+        >
           <div className="pointer-events-none absolute inset-x-0 top-0 -translate-y-1/2 z-20 overflow-x-clip">
             <Image
               src="/images/tapes/tape-green.svg"
@@ -77,8 +86,10 @@ export default function ContactForm({ settings = {} }) {
               className="w-[210%] md:w-[124%] max-w-none -ml-[55%] md:-ml-[12%] -rotate-[3deg] md:-rotate-[2.5deg]"
             />
           </div>
-        <Container className="py-11 md:py-18">
-          <div className="grid gap-10 md:gap-14 md:grid-cols-12">
+        <Container className={compact ? "py-7 md:py-10" : "py-11 md:py-18"}>
+          <div
+            className={`grid md:grid-cols-12 ${compact ? "gap-7 md:gap-10" : "gap-10 md:gap-14"}`}
+          >
             {/* Levá strana — velký claim */}
             <div className="md:col-span-5">
               <Reveal>
@@ -216,7 +227,11 @@ export default function ContactForm({ settings = {} }) {
           </div>
 
           {/* Patička uvnitř černého bloku */}
-          <div className="mt-12 md:mt-16 grid gap-6 md:gap-8 border-t border-white/10 pt-8 md:pt-10 md:grid-cols-4 text-white/45 text-[13.5px] md:text-[14.5px]">
+          <div
+            className={`grid gap-6 md:gap-8 border-t border-white/10 md:grid-cols-4 text-white/45 text-[13.5px] md:text-[14.5px] ${
+              compact ? "mt-8 md:mt-10 pt-6" : "mt-12 md:mt-16 pt-8 md:pt-10"
+            }`}
+          >
             <div>
               <Image src="/images/logos/safy-white.svg" alt="šafy" width={86} height={34} />
               <p className="mt-3 text-[12px] text-white/40">[ŠAFY BX]</p>
