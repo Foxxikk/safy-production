@@ -93,7 +93,11 @@ export default function ScrollPage({ data = {}, cases = [], previews = {}, heroI
 
   return (
     <>
-      <V2Header tone={tone} onContact={() => goTo(start.contact)} />
+      <V2Header
+        tone={tone}
+        hidden={under >= start.contact}
+        onContact={() => goTo(start.contact)}
+      />
 
       <div
         ref={scroller}

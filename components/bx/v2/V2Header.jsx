@@ -13,7 +13,7 @@ import { TapeLink } from "../TapeTransition";
  *
  * `tone` = "light" znamená světlý obsah (bílé texty) na tmavém podkladu.
  */
-export default function V2Header({ tone = "dark", onContact }) {
+export default function V2Header({ tone = "dark", hidden = false, onContact }) {
   const { lang, setLang } = useLang();
   const [open, setOpen] = useState(false);
 
@@ -52,7 +52,13 @@ export default function V2Header({ tone = "dark", onContact }) {
   );
 
   return (
-    <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
+    // Na kontaktní obrazovce hlavičku schováme — přes zelenou pásku by byla
+    // nečitelná a všechny odkazy jsou i v patičce pod formulářem.
+    <header
+      className={`pointer-events-none fixed inset-x-0 top-0 z-50 transition-opacity duration-300 ${
+        hidden ? "opacity-0" : "opacity-100"
+      }`}
+    >
       <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between px-4 py-4 md:px-10 md:py-6">
         <TapeLink
           href="/safy-bx/v2"
