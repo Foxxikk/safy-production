@@ -9,7 +9,7 @@ import HeroScreen from "./HeroScreen";
 import ServicesScreens from "./ServicesScreens";
 import StatementScreen from "./StatementScreen";
 import V2Header from "./V2Header";
-import WorkScreens from "./WorkScreens";
+import WorkCarousel from "./WorkCarousel";
 
 const HINT = "Scroll to continue";
 
@@ -42,14 +42,16 @@ export default function ScrollPage({ data = {}, cases = [], previews = {}, heroI
     [data.intro, lang]
   );
 
-  const work = useMemo(() => cases.slice(0, 8), [cases]);
+  // Carousel unese všechny reference — nezabírá víc místa, jen víc teček.
+  const work = cases;
 
   const start = useMemo(() => {
     const statement = 1;
     const services = statement + Math.max(1, sentences.length);
     const workAt = services + pillars.length;
-    return { statement, services, work: workAt, contact: workAt + work.length };
-  }, [sentences.length, pillars.length, work.length]);
+    // Reference jsou jedna obrazovka — projíždí si je carousel sám za sebe.
+    return { statement, services, work: workAt, contact: workAt + 1 };
+  }, [sentences.length, pillars.length]);
 
   const total = start.contact + 1;
 
@@ -126,12 +128,11 @@ export default function ScrollPage({ data = {}, cases = [], previews = {}, heroI
           onNext={next}
         />
 
-        <WorkScreens
+        <WorkCarousel
           cases={work}
           categories={data.categories?.[lang] || {}}
           lang={lang}
           title={lang === "cs" ? "Vybrané projekty" : "Selected work"}
-          step={Math.max(0, index - start.work)}
           hint={HINT}
           onNext={next}
         />
