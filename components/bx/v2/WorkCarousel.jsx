@@ -25,23 +25,49 @@ export default function WorkCarousel({
   onNext,
 }) {
   const track = useRef(null);
+  const anim = useRef(0);
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(true);
 
-  /** Posun na kartu — vystředí ji v pásu. */
+  /**
+   * Posun na kartu — vystředí ji v pásu.
+   *
+   * Prohlížeč umí `behavior: "smooth"` sám, jenže na pásu se zapnutým
+   * zaskakováním ho tiše zahodí a nic se nehne. Posun si proto odanimujeme
+   * ručně a zaskakování na tu chvíli vypneme, ať si nelezou do zelí.
+   */
   const scrollTo = useCallback((n, smooth = true) => {
     const el = track.current;
     const child = el?.children?.[n];
     if (!el || !child) return;
-    el.scrollTo({
-      left: child.offsetLeft - (el.clientWidth - child.clientWidth) / 2,
-      behavior: smooth ? "smooth" : "auto",
-    });
+
+    const to = child.offsetLeft - (el.clientWidth - child.clientWidth) / 2;
+    cancelAnimationFrame(anim.current);
+
+    if (!smooth) {
+      el.scrollLeft = to;
+      return;
+    }
+
+    const from = el.scrollLeft;
+    const dist = to - from;
+    if (!dist) return;
+
+    const started = performance.now();
+    el.style.scrollSnapType = "none";
+    const step = (now) => {
+      const p = Math.min(1, (now - started) / 650);
+      el.scrollLeft = from + dist * (1 - Math.pow(1 - p, 3));
+      if (p < 1) anim.current = requestAnimationFrame(step);
+      else el.style.scrollSnapType = "";
+    };
+    anim.current = requestAnimationFrame(step);
   }, []);
 
   // Komu vadí pohyb, tomu carousel nespouštíme
   useEffect(() => {
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) setPlaying(false);
+    return () => cancelAnimationFrame(anim.current);
   }, []);
 
   // Automatické projíždění
@@ -105,8 +131,11 @@ export default function WorkCarousel({
         <div
           ref={track}
           onPointerDown={() => setPlaying(false)}
-          onWheel={() => setPlaying(false)}
           onTouchStart={() => setPlaying(false)}
+          // Svislé kolečko je scrollování stránky, ne sáhnutí do carouselu
+          onWheel={(e) => {
+            if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) setPlaying(false);
+          }}
           className="no-scrollbar relative flex snap-x snap-mandatory gap-3 overflow-x-auto md:gap-5 [--ch:min(56svh,94vw)] md:[--ch:min(52svh,44vw)]"
           style={{ paddingInline: "calc(50% - var(--ch) * 0.375)" }}
         >
