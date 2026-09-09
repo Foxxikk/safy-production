@@ -25,8 +25,6 @@ export default function WorkCarousel({
   onNext,
 }) {
   const track = useRef(null);
-  const programmatic = useRef(false);
-  const guard = useRef(null);
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(true);
 
@@ -35,23 +33,15 @@ export default function WorkCarousel({
     const el = track.current;
     const child = el?.children?.[n];
     if (!el || !child) return;
-    programmatic.current = true;
-    clearTimeout(guard.current);
     el.scrollTo({
       left: child.offsetLeft - (el.clientWidth - child.clientWidth) / 2,
       behavior: smooth ? "smooth" : "auto",
     });
-    // Vlastní plynulý posun taky spouští scroll události — chvíli je ignorujeme,
-    // ať si je nespleteme se sáhnutím návštěvníka.
-    guard.current = setTimeout(() => {
-      programmatic.current = false;
-    }, 700);
   }, []);
 
   // Komu vadí pohyb, tomu carousel nespouštíme
   useEffect(() => {
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) setPlaying(false);
-    return () => clearTimeout(guard.current);
   }, []);
 
   // Automatické projíždění
@@ -68,13 +58,14 @@ export default function WorkCarousel({
     return () => clearInterval(id);
   }, [playing, cases.length, scrollTo]);
 
-  // Sledujeme, na které kartě pás právě stojí
+  // Sledujeme, na které kartě pás právě stojí.
+  // Projíždění nezastavujeme podle scroll událostí — ty spouští i vlastní
+  // posun. Zastaví ho až doopravdy sáhnutí (níž na pásu).
   useEffect(() => {
     const el = track.current;
     if (!el) return;
     let raf = 0;
     const onScroll = () => {
-      if (!programmatic.current) setPlaying(false);
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
         const mid = el.scrollLeft + el.clientWidth / 2;
@@ -113,6 +104,9 @@ export default function WorkCarousel({
         {/* Výšku karty drží proměnná, ať z ní jde dopočítat i odsazení pásu */}
         <div
           ref={track}
+          onPointerDown={() => setPlaying(false)}
+          onWheel={() => setPlaying(false)}
+          onTouchStart={() => setPlaying(false)}
           className="no-scrollbar relative flex snap-x snap-mandatory gap-3 overflow-x-auto md:gap-5 [--ch:min(56svh,94vw)] md:[--ch:min(52svh,44vw)]"
           style={{ paddingInline: "calc(50% - var(--ch) * 0.375)" }}
         >
@@ -132,6 +126,9 @@ export default function WorkCarousel({
                     alt={data.title || ""}
                     fill
                     sizes="(max-width: 768px) 72vw, 30vw"
+                    // Prvních pár karet načteme rovnou, ať do nich carousel
+                    // nenajede dřív, než se stihnou stáhnout
+                    loading={i < 4 ? "eager" : "lazy"}
                     className="object-cover"
                   />
                   {/* Karty po stranách ustupují do pozadí, střed drží pozornost */}
