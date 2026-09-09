@@ -166,7 +166,7 @@ export default function WorkCarousel({
 
         {/* Ovládání pod pásem — tečky a pauza, jako u velkých značek */}
         <div className="flex items-center justify-center gap-2.5">
-          <div className="flex items-center gap-2 rounded-full bg-ink/[0.06] px-3.5 py-2.5">
+          <div className="flex items-center gap-2.5 rounded-full bg-ink/[0.06] px-4 py-3">
             {cases.map((c, i) => (
               <button
                 key={c.slug}
@@ -177,8 +177,8 @@ export default function WorkCarousel({
                 }}
                 aria-label={`${i + 1}. reference`}
                 aria-current={i === index}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  i === index ? "w-6 bg-ink/70" : "w-1.5 bg-ink/25 hover:bg-ink/45"
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  i === index ? "w-7 bg-ink/70" : "w-2 bg-ink/25 hover:bg-ink/45"
                 }`}
               />
             ))}
@@ -187,7 +187,7 @@ export default function WorkCarousel({
           <button
             onClick={() => setPlaying((v) => !v)}
             aria-label={playing ? "Pozastavit" : "Přehrát"}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-ink/[0.06] text-ink/70 transition-colors hover:bg-ink/[0.12] hover:text-ink"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-ink/[0.06] text-ink/70 transition-colors hover:bg-ink/[0.12] hover:text-ink"
           >
             {playing ? (
               <svg width="11" height="12" viewBox="0 0 12 14" fill="currentColor">

@@ -137,7 +137,8 @@ export default function ScrollPage({ data = {}, cases = [], previews = {}, heroI
           onNext={next}
         />
 
-        <section className="bx-screen min-h-[100svh] bg-[#f1f1ef]">
+        {/* overflow-hidden drží pásku uvnitř — jinak vykukuje do sekce nad ní */}
+        <section className="bx-screen min-h-[100svh] overflow-hidden bg-[#f1f1ef]">
           <ContactForm settings={data.settings} compact />
         </section>
       </div>
