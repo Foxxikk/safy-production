@@ -74,6 +74,9 @@ export default function WorkCarousel({
   useEffect(() => {
     if (!playing || cases.length < 2) return;
     const id = setInterval(() => {
+      // Na skryté kartě prohlížeč zastaví animace, ale časovač běží dál —
+      // bez téhle pojistky by se rozešel ukazatel s tím, co je vidět.
+      if (document.hidden) return;
       setIndex((n) => {
         const next = (n + 1) % cases.length;
         // Skok z poslední na první uděláme bez animace, ať pás neproletí zpátky
