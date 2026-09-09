@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
+import { thumb } from "@/lib/bxThumb";
 import { Container } from "../Section";
 import { TapeLink } from "../TapeTransition";
 import { ArrowSquare, Dots, ScrollHint } from "./ScrollBits";
@@ -154,7 +155,7 @@ export default function WorkCarousel({
               >
                 <span className="relative block h-full w-full overflow-hidden bg-ink/5">
                   <Image
-                    src={c.images?.[0] || ""}
+                    src={thumb(c.images?.[0] || "")}
                     alt={data.title || ""}
                     fill
                     sizes="(max-width: 768px) 72vw, 30vw"

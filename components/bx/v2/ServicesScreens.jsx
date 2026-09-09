@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 
+import { thumb } from "@/lib/bxThumb";
 import Doodle, { DOODLE_RATIO } from "../Doodle";
 import { TapeLink } from "../TapeTransition";
 import { ArrowSquare, Dots, ScrollHint, Steps } from "./ScrollBits";
@@ -19,7 +20,7 @@ const markWidth = (ratio) => `${Math.min(38, 16 * ratio)}%`;
 export default function ServicesScreens({ pillars = [], previews = {}, step = 0, hint, onNext }) {
   if (!pillars.length) return null;
 
-  const images = pillars.map((p) => p.image || previews[p.category] || "");
+  const images = pillars.map((p) => thumb(p.image || previews[p.category] || ""));
   const active = Math.min(step, pillars.length - 1);
 
   return (
@@ -126,7 +127,15 @@ function PhotoStack({ images, active, pillar, className = "" }) {
             zIndex: 3 - k,
           }}
         >
-          <Layer images={images} index={(active + k) % n} sizes="45vw" />
+          {/* Z karet v pozadí je vidět jen úzký proužek, takže tady stačí
+              jediná fotka — prolínat všechny by znamenalo dekódovat je navíc. */}
+          <Image
+            src={images[(active + k) % n]}
+            alt=""
+            fill
+            sizes="45vw"
+            className="object-cover grayscale"
+          />
         </span>
       ))}
 
