@@ -6,17 +6,34 @@ import { officeSK, social } from "@/lib/bxV3";
 import Tapes from "./Tapes";
 
 const ACCENT = "#79D97C";
+const INK = "#373736";
 
-/** Patička „Pojďme něco postavit" — pásky na tečkovaném pruhu a pak tmavý blok. */
+/**
+ * Patička „Pojďme něco postavit".
+ *
+ * Oproti návrhu je sevřenější a plní celou šířku — claim a e-mail vedle
+ * adres, logo jako pás přes celý blok. Původně zbývalo vpravo i dole hodně
+ * prázdna a patička působila nedodělaně.
+ */
 export default function Contact({ t, settings = {}, words = [] }) {
   const email = settings.email || "info@safyproduction.cz";
 
+  const columns = [
+    {
+      label: "Praha",
+      lines: [
+        settings.company || "Šafy production s.r.o.",
+        settings.address || "Údolní 212/1, 147 00 Praha 4",
+      ],
+    },
+    { label: officeSK.city, lines: [officeSK.company, officeSK.address] },
+  ];
+
   return (
     <footer id="kontakt" className="relative overflow-hidden bg-ink text-white">
-      {/* Předěl před patičkou — stejné pásky jako mezi sekcemi */}
-      <Tapes words={words} className="bx3-dots" brand />
+      <Tapes words={words} top={INK} bottom={INK} brand />
 
-      <div className="mx-auto w-full max-w-[1440px] px-5 pb-14 pt-16 md:px-12 md:pt-[72px]">
+      <div className="mx-auto w-full max-w-[1440px] px-5 pb-12 pt-4 md:px-12">
         <p className="bx3-mono m-0 mb-5 text-[13px]" style={{ color: ACCENT }}>
           {t.contactLabel}
         </p>
@@ -30,71 +47,81 @@ export default function Contact({ t, settings = {}, words = [] }) {
           {t.contactTitle[1]} <span className="bx3-hl">{t.contactTitle[2]}</span>
         </h2>
 
-        <a
-          href={`mailto:${email}`}
-          className="mt-10 inline-block font-bold text-white md:mt-11"
-          style={{
-            fontSize: "clamp(20px, 3vw, 40px)",
-            textDecoration: "underline",
-            textDecorationColor: ACCENT,
-            textUnderlineOffset: 10,
-            textDecorationThickness: 4,
-          }}
-        >
-          {email}
-        </a>
-
-        <div
-          className="mt-16 flex flex-wrap gap-10 border-t pt-7 text-[16px] font-light leading-relaxed md:mt-[88px] md:gap-12"
-          style={{ borderColor: "#5A5A58", color: "#E6E6E6" }}
-        >
-          <div className="flex-1 basis-[220px]">
-            <div className="bx3-mono mb-2 text-[12px]" style={{ color: "#C6C6C6" }}>
-              Praha
-            </div>
-            {settings.company || "Šafy production s.r.o."}
-            <br />
-            {settings.address || "Údolní 212/1, 147 00 Praha 4"}
-          </div>
-
-          <div className="flex-1 basis-[220px]">
-            <div className="bx3-mono mb-2 text-[12px]" style={{ color: "#C6C6C6" }}>
-              {officeSK.city}
-            </div>
-            {officeSK.company}
-            <br />
-            {officeSK.address}
-          </div>
-
-          <div className="flex flex-1 basis-[220px] flex-col gap-1">
-            <div className="bx3-mono mb-1 text-[12px]" style={{ color: "#C6C6C6" }}>
-              {t.follow}
-            </div>
-            {social.map((s) => (
-              <a
-                key={s.label}
-                href={s.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white hover:text-brand"
+        {/* E-mail vlevo, adresy vpravo — jinak zůstávala polovina šířky prázdná */}
+        <div className="mt-12 grid gap-10 border-t border-[#5A5A58] pt-10 md:mt-16 md:grid-cols-12 md:gap-12">
+          <div className="md:col-span-5">
+            <a
+              href={`mailto:${email}`}
+              className="group inline-flex items-center gap-4 font-bold text-white"
+              style={{ fontSize: "clamp(20px, 2.6vw, 38px)" }}
+            >
+              <span
+                style={{
+                  textDecoration: "underline",
+                  textDecorationColor: ACCENT,
+                  textUnderlineOffset: 10,
+                  textDecorationThickness: 4,
+                }}
               >
-                {s.label}
-              </a>
+                {email}
+              </span>
+              <span
+                aria-hidden
+                className="inline-flex h-11 w-11 shrink-0 items-center justify-center bg-brand text-ink transition-transform duration-300 group-hover:translate-x-1"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.4"
+                >
+                  <path d="M5 12h14M13 5l7 7-7 7" />
+                </svg>
+              </span>
+            </a>
+          </div>
+
+          <div className="grid gap-8 text-[16px] font-light leading-relaxed text-[#E6E6E6] sm:grid-cols-3 md:col-span-7">
+            {columns.map((c) => (
+              <div key={c.label}>
+                <div className="bx3-mono mb-2 text-[12px] text-[#C6C6C6]">{c.label}</div>
+                {c.lines.map((l) => (
+                  <div key={l}>{l}</div>
+                ))}
+              </div>
             ))}
+
+            <div className="flex flex-col gap-1">
+              <div className="bx3-mono mb-1 text-[12px] text-[#C6C6C6]">{t.follow}</div>
+              {social.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-brand"
+                >
+                  {s.label}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="mt-16 flex flex-wrap items-end justify-between gap-6 md:mt-[88px]">
+        {/* Logo jako pás přes celou šířku, copyright na stejné lince */}
+        <div className="mt-14 border-t border-[#5A5A58] pt-10 md:mt-20">
           <Image
             src="/images/logos/safy-white.svg"
             alt="šafy"
-            width={720}
-            height={260}
-            className="block h-auto w-[min(720px,100%)]"
+            width={1440}
+            height={520}
+            className="block h-auto w-full"
           />
-          <span className="bx3-mono text-[12px]" style={{ color: "#C6C6C6" }}>
+          <p className="bx3-mono mt-6 text-right text-[12px] text-[#C6C6C6]">
             © {new Date().getFullYear()} — We are šafy
-          </span>
+          </p>
         </div>
       </div>
     </footer>

@@ -3,7 +3,7 @@
 import Image from "next/image";
 
 import { thumb } from "@/lib/bxThumb";
-import { cellFor } from "@/lib/bxV3";
+import { cellFor, tileColor } from "@/lib/bxV3";
 import { TapeLink } from "../TapeTransition";
 import useTilt from "./useTilt";
 
@@ -55,6 +55,7 @@ function RefCard({ c, i, lang, category }) {
   const { span, h } = cellFor(i);
   const stat = c.facts?.[lang]?.[0]?.value || c.facts?.cs?.[0]?.value || "";
   const n = String(i + 1).padStart(2, "0");
+  const color = c.color || tileColor(c.slug, i);
 
   // Čím širší dlaždice, tím větší číslo — aby drželo poměr k ploše
   const statSize =
@@ -65,9 +66,11 @@ function RefCard({ c, i, lang, category }) {
       href={`/safy-bx/v3/${c.slug}`}
       className="bx3-ref"
       aria-label={`${data.title} — ${data.subtitle || ""}`}
-      style={{ gridColumn: `span ${span}`, height: h, background: "#1F1F1E" }}
+      style={{ gridColumn: `span ${span}`, height: h, background: color }}
       {...tilt}
     >
+      {/* Fotka se dolů ztrácí do barvy projektu — text pak leží na čisté
+          ploše a nepotřebuje přes celou dlaždici ztmavovací závoj. */}
       <span className="bx3-cv absolute inset-0 block">
         {c.images?.[0] && (
           <Image
@@ -76,6 +79,12 @@ function RefCard({ c, i, lang, category }) {
             fill
             sizes={span >= 7 ? "60vw" : "33vw"}
             className="object-cover"
+            style={{
+              WebkitMaskImage:
+                "linear-gradient(180deg, #000 0%, #000 44%, rgba(0,0,0,0.35) 68%, transparent 82%)",
+              maskImage:
+                "linear-gradient(180deg, #000 0%, #000 44%, rgba(0,0,0,0.35) 68%, transparent 82%)",
+            }}
           />
         )}
       </span>
@@ -85,7 +94,7 @@ function RefCard({ c, i, lang, category }) {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(0deg, rgba(20,20,19,0.82) 0%, rgba(20,20,19,0.1) 55%, rgba(20,20,19,0.25) 100%)",
+            "linear-gradient(0deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 45%, rgba(0,0,0,0.22) 100%)",
         }}
       />
 

@@ -7,6 +7,7 @@ import { v3 } from "@/lib/bxV3";
 import { useLang } from "../LangContext";
 import { TapeLink } from "../TapeTransition";
 import Contact from "./Contact";
+import Stamp from "./Stamp";
 import V3Header from "./V3Header";
 
 /** Stejná paleta jako u karet na úvodu — detail navazuje na dlaždici, ze které se přišlo. */
@@ -218,6 +219,8 @@ export default function PillarDetailV3({
       </main>
 
       <Contact t={t} settings={settings} words={t.tape} />
+
+      <Stamp text={t.stamp} />
     </div>
   );
 }

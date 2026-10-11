@@ -1,17 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 /**
  * Kulaté razítko, které plave za kurzorem s mírným zpožděním.
- *
- * Na mobilu nedává smysl (není kurzor) a kdo má vypnuté animace, nedostane ho
- * vůbec. Schováváme ho taky, jakmile návštěvník opustí úvodní obrazovku —
- * přes reference a texty by jen zavazelo.
+ * Drží se po celém webu, na všech podstránkách. Na mobilu nedává smysl
+ * (není kurzor) a kdo má vypnuté animace, nedostane ho vůbec.
  */
-export default function Stamp({ text, heroRef }) {
+export default function Stamp({ text }) {
   const ref = useRef(null);
-  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     const el = ref.current;
@@ -48,17 +45,6 @@ export default function Stamp({ text, heroRef }) {
     };
   }, []);
 
-  // Razítko patří k úvodní obrazovce — níž už se jen plete do cesty
-  useEffect(() => {
-    const hero = heroRef?.current;
-    if (!hero || typeof IntersectionObserver === "undefined") return;
-    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), {
-      threshold: 0.15,
-    });
-    io.observe(hero);
-    return () => io.disconnect();
-  }, [heroRef]);
-
   return (
     <div
       ref={ref}
@@ -66,10 +52,7 @@ export default function Stamp({ text, heroRef }) {
       className="pointer-events-none fixed left-0 top-0 z-30 hidden h-[240px] w-[240px] will-change-transform md:block"
       style={{ transform: "translate3d(-400px,-400px,0)" }}
     >
-      <div
-        className="absolute inset-0 transition-opacity duration-500"
-        style={{ opacity: visible ? 1 : 0 }}
-      >
+      <div className="absolute inset-0">
         <div
           className="absolute inset-0 rounded-full"
           style={{ background: "#79D97C", boxShadow: "6px 6px 0 #1F1F1E" }}

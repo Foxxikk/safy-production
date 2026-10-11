@@ -1,9 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-
-import Stamp from "./Stamp";
 
 const ACCENT = "#79D97C";
 
@@ -21,7 +19,6 @@ function lead(text = "", max = 2) {
  * slovem a razítko plovoucí za kurzorem.
  */
 export default function Hero({ t, intro = "", image, video }) {
-  const heroRef = useRef(null);
   const [wi, setWi] = useState(0);
 
   // Slovo v claimu se mění samo; kdo má vypnuté animace, uvidí první z nich
@@ -36,7 +33,6 @@ export default function Hero({ t, intro = "", image, video }) {
 
   return (
     <section
-      ref={heroRef}
       className="relative flex items-end overflow-hidden text-white"
       style={{ minHeight: "max(720px, calc(100svh - 84px))" }}
     >
@@ -229,8 +225,6 @@ export default function Hero({ t, intro = "", image, video }) {
         </span>
         <span className="text-[11px]">{t.scroll}</span>
       </a>
-
-      <Stamp text={t.stamp} heroRef={heroRef} />
     </section>
   );
 }

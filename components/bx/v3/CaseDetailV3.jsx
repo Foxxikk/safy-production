@@ -9,6 +9,7 @@ import { useLang } from "../LangContext";
 import Lightbox from "../Lightbox";
 import { TapeLink } from "../TapeTransition";
 import Contact from "./Contact";
+import Stamp from "./Stamp";
 import V3Header from "./V3Header";
 
 /** Rytmus galerie — stejný jako v návrhu, dokola se opakuje. */
@@ -216,6 +217,8 @@ export default function CaseDetailV3({ item, next, categories = {}, settings = {
       </main>
 
       <Contact t={t} settings={settings} words={t.tape} />
+
+      <Stamp text={t.stamp} />
 
       <Lightbox
         images={gallery}

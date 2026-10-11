@@ -6,8 +6,12 @@ import Contact from "./Contact";
 import Hero from "./Hero";
 import Pillars from "./Pillars";
 import RefGrid from "./RefGrid";
+import Stamp from "./Stamp";
 import Tapes from "./Tapes";
 import V3Header from "./V3Header";
+
+const INK = "#373736";
+const LIGHT = "#F0F0EF";
 
 /**
  * Úvodní stránka podle návrhu klientky.
@@ -30,19 +34,22 @@ export default function V3Page({ data = {}, cases = [], heroImage }) {
           video={data.settings?.heroVideo || ""}
         />
 
-        {/* Světlý tečkovaný blok: pásky + pilíře.
-            Páska stojí na každém předělu mezi sekcemi, ne jen tu a tam —
-            jinak působí jako náhodný prvek uprostřed stránky. */}
+        {/* Každý předěl mezi sekcemi nese pásky; pruh je plný, nahoře barva
+            sekce nad ním, dole pod ním. */}
+        <Tapes words={t.tape} top={INK} bottom={LIGHT} />
+
         <div className="bx3-dots overflow-hidden">
-          <Tapes words={t.tape} />
           <Pillars t={t} pillars={pillars} />
-          <Tapes words={t.tape} brand />
         </div>
+
+        <Tapes words={t.tape} top={LIGHT} bottom={INK} brand />
 
         <RefGrid t={t} cases={cases} categories={data.categories?.[lang] || {}} lang={lang} />
       </main>
 
       <Contact t={t} settings={data.settings} words={t.tape} />
+
+      <Stamp text={t.stamp} />
     </div>
   );
 }

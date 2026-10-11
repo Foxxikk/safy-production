@@ -1,21 +1,24 @@
 "use client";
 
 /**
- * Dvě překřížené jedoucí pásky na předělu mezi sekcemi.
+ * Předěl mezi dvěma sekcemi: dvě překřížené jedoucí pásky na švu.
  *
- * Pásky mají dělit sekce, ne se mezi nimi jen tak vznášet — proto je pruh
- * vysoký, pásky silné a mají mezi sebou odstup. V návrhu byly jen 18 px od
- * sebe, takže se po většině šířky překrývaly a texty si lezly do sebe;
- * teď se kříží jen u krajů, což vypadá zamýšleně.
+ * Pruh je plný — nahoře barva sekce nad ním, dole barva sekce pod ním.
+ * Když se mezi páskami prosvítalo pozadí stránky, působily jako prvek
+ * vznášející se uprostřed; takhle je z toho skutečné rozdělení.
  */
-export default function Tapes({ words = [], className = "", brand = false }) {
+export default function Tapes({ words = [], top = "#373736", bottom = "#F0F0EF", brand = false }) {
   // Na druhém a třetím předělu už obory nemá cenu opakovat — pásky tam
   // nesou jméno značky, každá jinou půlku, ať se text nezdvojuje.
   const line = brand ? Array.from({ length: 12 }, () => "We are šafy") : [...words, ...words];
   const safy = Array.from({ length: 12 });
 
   return (
-    <div aria-hidden className={`relative h-[300px] overflow-hidden md:h-[400px] ${className}`}>
+    <div aria-hidden className="relative h-[300px] overflow-hidden md:h-[400px]">
+      {/* Plocha sekce nad švem a pod ním */}
+      <div className="absolute inset-x-0 top-0 h-1/2" style={{ background: top }} />
+      <div className="absolute inset-x-0 bottom-0 h-1/2" style={{ background: bottom }} />
+
       {/* Tmavá páska s obory */}
       <div
         className="absolute -left-16 -right-16 top-[34px] z-[2] overflow-hidden bg-ink py-6 text-white md:top-[46px] md:py-8"
