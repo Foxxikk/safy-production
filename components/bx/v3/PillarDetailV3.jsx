@@ -101,7 +101,12 @@ export default function PillarDetailV3({
 
             {/* Odrážky „Konkrétně" v pruhu pod hlavičkou */}
             {bullets.length > 0 && (
-              <div className="grid grid-cols-1 border-t-[3px] border-ink bg-white md:grid-cols-3">
+              // Odrážek bývají tři i čtyři — sloupce se dopočítají, ať
+              // poslední buňka nezůstane sama na prázdném řádku
+              <div
+                className="grid grid-cols-1 border-t-[3px] border-ink bg-white"
+                style={{ gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))" }}
+              >
                 {bullets.map((b, i) => (
                   <div
                     key={b}

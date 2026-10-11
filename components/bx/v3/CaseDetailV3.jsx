@@ -123,7 +123,10 @@ export default function CaseDetailV3({ item, next, categories = {}, settings = {
 
             {/* Čísla projektu */}
             {facts.length > 0 && (
-              <div className="grid grid-cols-1 border-t-[3px] border-ink bg-white md:grid-cols-3">
+              <div
+                className="grid grid-cols-1 border-t-[3px] border-ink bg-white"
+                style={{ gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))" }}
+              >
                 {facts.map((f) => (
                   <div
                     key={f.label}
