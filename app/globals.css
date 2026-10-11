@@ -52,6 +52,241 @@ body {
   transition: background-color 0.35s ease, border-color 0.35s ease, color 0.25s ease;
 }
 
+/* ——— Návrh klientky (safy-bx/v3) ———
+   Hodnoty vychází z jejího exportu, aby se design nerozjel při převodu.
+   Vlastní třídy místo Tailwindu tam, kde jde o 3D otáčení a nekonečné pásky. */
+
+.bx3-dots {
+  background-color: #f0f0ef;
+  background-image: radial-gradient(rgba(55, 55, 54, 0.2) 1px, transparent 1.4px);
+  background-size: 16px 16px;
+  color: #373736;
+}
+
+.bx3-mono {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Zvýraznění textu zeleným podkladem — jako fixou přes řádek */
+.bx3-hl {
+  background: linear-gradient(to bottom, transparent 40%, #79d97c 40%, #79d97c 94%, transparent 94%);
+  padding: 0 0.12em;
+  color: #373736;
+}
+.bx3-hls {
+  background: linear-gradient(to bottom, transparent 55%, #79d97c 55%, #79d97c 92%, transparent 92%);
+  padding: 0 0.08em;
+}
+
+/* Nekonečně jedoucí páska */
+@keyframes bx3-marq {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.bx3-marq {
+  display: flex;
+  width: max-content;
+  animation: bx3-marq 34s linear infinite;
+}
+.bx3-marq.rev {
+  animation-direction: reverse;
+  animation-duration: 40s;
+}
+.bx3-marq.slow {
+  animation-duration: 50s;
+}
+
+@keyframes bx3-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.bx3-spin {
+  animation: bx3-spin 22s linear infinite;
+  transform-origin: 50% 50%;
+}
+
+@keyframes bx3-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+.bx3-bob {
+  animation: bx3-bob 2.2s ease-in-out infinite;
+}
+
+/* Karta pilíře — naklání se za kurzorem a otáčí se na text */
+.bx3-pwrap {
+  perspective: 1100px;
+}
+.bx3-pcard {
+  all: unset;
+  box-sizing: border-box;
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 420px;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.18s ease-out;
+}
+.bx3-pcard:focus-visible {
+  outline: 3px solid #373736;
+  outline-offset: 6px;
+}
+.bx3-pinner {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.75s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.bx3-pface {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 3px solid #373736;
+  box-shadow: 8px 8px 0 #373736;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  overflow: hidden;
+}
+.bx3-pback {
+  transform: rotateY(180deg);
+}
+.bx3-pcard:hover .bx3-pinner,
+.bx3-pcard:focus-visible .bx3-pinner {
+  transform: rotateY(180deg);
+}
+
+/* Měkký odlesk pod kurzorem */
+.bx3-glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at var(--gx, 50%) var(--gy, 50%),
+    rgba(255, 255, 255, 0.45),
+    rgba(255, 255, 255, 0) 55%
+  );
+  opacity: 0;
+  transition: opacity 0.3s;
+  mix-blend-mode: soft-light;
+}
+.bx3-pcard:hover .bx3-glare,
+.bx3-ref:hover .bx3-glare {
+  opacity: 1;
+}
+
+/* Dlaždice reference */
+.bx3-ref {
+  all: unset;
+  cursor: pointer;
+  display: block;
+  position: relative;
+  overflow: hidden;
+  outline: 1px dashed rgba(255, 255, 255, 0.35);
+  outline-offset: 7px;
+  transform: perspective(1200px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.2s ease-out;
+}
+.bx3-ref:focus-visible {
+  outline: 3px solid #79d97c;
+  outline-offset: 4px;
+}
+.bx3-ref .bx3-cv {
+  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.bx3-ref:hover .bx3-cv {
+  transform: scale(1.04);
+}
+.bx3-ref .bx3-go {
+  transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+}
+.bx3-ref:hover .bx3-go {
+  transform: translateX(6px);
+  background: #79d97c;
+  color: #373736;
+}
+
+/* Tlačítko s plným stínem */
+.bx3-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 22px;
+  border: 2px solid #373736;
+  background: #ffffff;
+  color: #373736;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 4px 4px 0 #373736;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.bx3-btn:hover {
+  background: #79d97c;
+  color: #373736;
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #373736;
+}
+.bx3-btn.g {
+  background: #79d97c;
+  border-color: #79d97c;
+  box-shadow: 4px 4px 0 #1f1f1e;
+}
+.bx3-btn.g:hover {
+  background: #ffffff;
+  border-color: #ffffff;
+}
+
+.bx3-navlink {
+  text-decoration: none;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+}
+.bx3-navlink:hover {
+  background: linear-gradient(to bottom, transparent 55%, #79d97c 55%);
+}
+
+/* Na úzkém displeji jde mřížka do jednoho sloupce — rozpětí z návrhu
+   by jinak dlaždice vytlačilo mimo obrazovku. */
+@media (max-width: 767px) {
+  .bx3-ref {
+    grid-column: auto !important;
+    height: 340px !important;
+  }
+  .bx3-pcard {
+    height: 360px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bx3-marq,
+  .bx3-spin,
+  .bx3-bob {
+    animation: none;
+  }
+}
+
 /* ——— Scrollovací verze úvodní stránky (safy-bx/v2) ——— */
 
 /* Posuvník, ve kterém scroll zaskakuje po celých obrazovkách.
