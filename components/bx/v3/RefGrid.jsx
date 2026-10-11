@@ -106,11 +106,13 @@ function RefCard({ c, i, lang, category }) {
             </span>
           )}
           <span className="mt-4 flex items-end justify-between gap-4">
+            {/* Názvy našich projektů jsou delší než v návrhu — necháme je
+                zalomit na dva řádky, ať se neuseknou v půlce slova. */}
             <span className="block min-w-0">
-              <span className="block truncate text-[18px] font-black uppercase md:text-[22px]">
+              <span className="block text-[18px] font-black uppercase leading-[1.1] md:text-[22px]">
                 {data.title}
               </span>
-              <span className="block truncate text-[14px] font-light md:text-[16px]">
+              <span className="mt-0.5 block truncate text-[14px] font-light md:text-[16px]">
                 {data.subtitle}
               </span>
             </span>
