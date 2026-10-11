@@ -30,16 +30,19 @@ export default function V3Page({ data = {}, cases = [], heroImage }) {
           video={data.settings?.heroVideo || ""}
         />
 
-        {/* Světlý tečkovaný blok: pásky + pilíře */}
+        {/* Světlý tečkovaný blok: pásky + pilíře.
+            Páska stojí na každém předělu mezi sekcemi, ne jen tu a tam —
+            jinak působí jako náhodný prvek uprostřed stránky. */}
         <div className="bx3-dots overflow-hidden">
           <Tapes words={t.tape} />
           <Pillars t={t} pillars={pillars} />
+          <Tapes words={t.tape} brand />
         </div>
 
         <RefGrid t={t} cases={cases} categories={data.categories?.[lang] || {}} lang={lang} />
       </main>
 
-      <Contact t={t} settings={data.settings} />
+      <Contact t={t} settings={data.settings} words={t.tape} />
     </div>
   );
 }

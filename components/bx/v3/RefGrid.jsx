@@ -62,7 +62,7 @@ function RefCard({ c, i, lang, category }) {
 
   return (
     <TapeLink
-      href={`/safy-bx/${c.slug}`}
+      href={`/safy-bx/v3/${c.slug}`}
       className="bx3-ref"
       aria-label={`${data.title} — ${data.subtitle || ""}`}
       style={{ gridColumn: `span ${span}`, height: h, background: "#1F1F1E" }}

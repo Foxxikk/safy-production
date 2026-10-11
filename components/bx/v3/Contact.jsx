@@ -3,48 +3,18 @@
 import Image from "next/image";
 
 import { officeSK, social } from "@/lib/bxV3";
+import Tapes from "./Tapes";
 
 const ACCENT = "#79D97C";
 
 /** Patička „Pojďme něco postavit" — pásky na tečkovaném pruhu a pak tmavý blok. */
-export default function Contact({ t, settings = {} }) {
+export default function Contact({ t, settings = {}, words = [] }) {
   const email = settings.email || "info@safyproduction.cz";
-  const tape = Array.from({ length: 14 });
 
   return (
     <footer id="kontakt" className="relative overflow-hidden bg-ink text-white">
-      {/* Překřížené pásky na světlém pruhu, který dole přechází do tmavé */}
-      <div aria-hidden className="bx3-dots relative h-[140px]">
-        <div
-          className="absolute -left-10 -right-10 top-[44px] overflow-hidden bg-brand py-2.5 text-ink"
-          style={{ transform: "rotate(1.8deg)" }}
-        >
-          <div className="bx3-marq slow">
-            {tape.map((_, i) => (
-              <span
-                key={i}
-                className="whitespace-nowrap px-5 text-[24px] font-black uppercase"
-              >
-                We are šafy ×
-              </span>
-            ))}
-          </div>
-        </div>
-        <div
-          className="absolute -left-10 -right-10 top-[62px] overflow-hidden py-[9px] text-white"
-          style={{ transform: "rotate(-2.4deg)", background: "#1F1F1E" }}
-        >
-          <div className="bx3-marq rev slow">
-            {tape.map((_, i) => (
-              <span key={i} className="whitespace-nowrap px-5 text-[18px] font-light">
-                Brand experience <b className="font-black">marketing</b>{" "}
-                <span style={{ color: ACCENT }}>×</span>
-              </span>
-            ))}
-          </div>
-        </div>
-        <div className="absolute inset-x-0 bottom-0 h-[34px] bg-ink" />
-      </div>
+      {/* Předěl před patičkou — stejné pásky jako mezi sekcemi */}
+      <Tapes words={words} className="bx3-dots" brand />
 
       <div className="mx-auto w-full max-w-[1440px] px-5 pb-14 pt-16 md:px-12 md:pt-[72px]">
         <p className="bx3-mono m-0 mb-5 text-[13px]" style={{ color: ACCENT }}>
@@ -57,16 +27,7 @@ export default function Contact({ t, settings = {} }) {
         >
           {t.contactTitle[0]}
           <br />
-          {t.contactTitle[1]}{" "}
-          <span
-            style={{
-              background: `linear-gradient(to bottom, transparent 40%, ${ACCENT} 40%, ${ACCENT} 94%, transparent 94%)`,
-              color: "#373736",
-              padding: "0 0.1em",
-            }}
-          >
-            {t.contactTitle[2]}
-          </span>
+          {t.contactTitle[1]} <span className="bx3-hl">{t.contactTitle[2]}</span>
         </h2>
 
         <a

@@ -95,24 +95,26 @@ export default function Hero({ t, intro = "", image, video }) {
         >
           <span className="block">{t.lead}</span>
 
-          {/* Okénko vysoké přesně na jeden řádek, uvnitř se posouvá seznam slov */}
-          <span className="block overflow-hidden" style={{ height: "0.98em" }}>
+          {/* Okénko na jeden řádek, uvnitř se posouvá seznam slov.
+              Zelená plocha kryje celé slovo i s přesahem — pruh přes část
+              řádku se na fotce ztrácel a písmena z něj koukala ven. */}
+          <span className="block overflow-hidden" style={{ height: "1.14em" }}>
             <span
               className="block"
               style={{
-                transform: `translateY(-${wi * 0.98}em)`,
+                transform: `translateY(-${wi * 1.14}em)`,
                 transition: "transform .7s cubic-bezier(.7,0,.2,1)",
               }}
             >
               {t.words.map((w) => (
-                <span key={w} className="block" style={{ height: "0.98em" }}>
+                <span key={w} className="block" style={{ height: "1.14em" }}>
                   <span
                     className="inline-block"
                     style={{
-                      padding: "0 0.12em",
-                      marginLeft: "-0.12em",
+                      padding: "0.08em 0.1em 0.12em",
+                      lineHeight: 0.9,
                       color: "#373736",
-                      background: `linear-gradient(to bottom, transparent 38%, ${ACCENT} 38%, ${ACCENT} 96%, transparent 96%)`,
+                      background: ACCENT,
                     }}
                   >
                     {w}

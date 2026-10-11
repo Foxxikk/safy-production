@@ -69,11 +69,17 @@ body {
   text-transform: uppercase;
 }
 
-/* Zvýraznění textu zeleným podkladem — jako fixou přes řádek */
+/* Zvýraznění velkých nadpisů.
+   Návrh používal pruh přes část řádku, jenže u display velikostí přes něj
+   písmena přetékají nahoru i dolů a nadpis vypadá uříznutě. Plocha proto
+   kryje celý text a přesahuje ho — čitelné i na fotce. */
 .bx3-hl {
-  background: linear-gradient(to bottom, transparent 40%, #79d97c 40%, #79d97c 94%, transparent 94%);
-  padding: 0 0.12em;
+  display: inline-block;
+  background: #79d97c;
   color: #373736;
+  padding: 0.1em 0.1em 0.16em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 .bx3-hls {
   background: linear-gradient(to bottom, transparent 55%, #79d97c 55%, #79d97c 92%, transparent 92%);
@@ -270,8 +276,12 @@ body {
 /* Na úzkém displeji jde mřížka do jednoho sloupce — rozpětí z návrhu
    by jinak dlaždice vytlačilo mimo obrazovku. */
 @media (max-width: 767px) {
-  .bx3-ref {
+  .bx3-ref,
+  .bx3-gcell {
     grid-column: auto !important;
+    height: 300px !important;
+  }
+  .bx3-ref {
     height: 340px !important;
   }
   .bx3-pcard {
