@@ -9,10 +9,9 @@
  * teď se kříží jen u krajů, což vypadá zamýšleně.
  */
 export default function Tapes({ words = [], className = "", brand = false }) {
-  // Před patičkou nese tmavá páska jen jméno divize, ať se obory neopakují
-  const line = brand
-    ? Array.from({ length: 12 }, () => "Brand experience marketing")
-    : [...words, ...words];
+  // Na druhém a třetím předělu už obory nemá cenu opakovat — pásky tam
+  // nesou jméno značky, každá jinou půlku, ať se text nezdvojuje.
+  const line = brand ? Array.from({ length: 12 }, () => "We are šafy") : [...words, ...words];
   const safy = Array.from({ length: 12 });
 
   return (
@@ -45,9 +44,18 @@ export default function Tapes({ words = [], className = "", brand = false }) {
               key={i}
               className="whitespace-nowrap px-6 text-[22px] font-black uppercase md:text-[27px]"
             >
-              We are šafy{" "}
-              <span className="font-light normal-case">| Brand experience</span>{" "}
-              <b className="font-bold normal-case">marketing</b> ×
+              {brand ? (
+                <>
+                  <span className="font-light normal-case">Brand experience</span>{" "}
+                  <b className="font-bold normal-case">marketing</b> ×
+                </>
+              ) : (
+                <>
+                  We are šafy{" "}
+                  <span className="font-light normal-case">| Brand experience</span>{" "}
+                  <b className="font-bold normal-case">marketing</b> ×
+                </>
+              )}
             </span>
           ))}
         </div>

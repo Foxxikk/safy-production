@@ -80,7 +80,7 @@ export default function CaseDetailV3({ item, next, categories = {}, settings = {
                 className="absolute inset-0"
                 style={{
                   background:
-                    "linear-gradient(0deg, rgba(20,20,19,0.92) 0%, rgba(20,20,19,0.6) 60%, rgba(20,20,19,0.55) 100%)",
+                    "linear-gradient(0deg, rgba(20,20,19,0.9) 0%, rgba(20,20,19,0.45) 55%, rgba(20,20,19,0.55) 100%)",
                 }}
               />
               <div className="relative p-7 md:p-[56px]">
