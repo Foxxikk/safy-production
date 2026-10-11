@@ -15,19 +15,19 @@ export default function Tapes({ words = [], className = "", brand = false }) {
   const safy = Array.from({ length: 12 });
 
   return (
-    <div aria-hidden className={`relative h-[230px] overflow-hidden md:h-[260px] ${className}`}>
+    <div aria-hidden className={`relative h-[300px] overflow-hidden md:h-[400px] ${className}`}>
       {/* Tmavá páska s obory */}
       <div
-        className="absolute -left-12 -right-12 top-[38px] z-[2] overflow-hidden bg-ink py-4 text-white md:py-5"
+        className="absolute -left-16 -right-16 top-[34px] z-[2] overflow-hidden bg-ink py-6 text-white md:top-[46px] md:py-8"
         style={{ transform: "rotate(-2.2deg)" }}
       >
         <div className="bx3-marq">
           {line.map((t, i) => (
             <span
               key={`${t}-${i}`}
-              className="whitespace-nowrap px-6 text-[24px] font-black uppercase tracking-[0.02em] md:text-[30px]"
+              className="whitespace-nowrap px-8 text-[32px] font-black uppercase tracking-[0.02em] md:text-[52px]"
             >
-              {t} <span className="pl-6 text-brand">×</span>
+              {t} <span className="pl-8 text-brand">×</span>
             </span>
           ))}
         </div>
@@ -35,14 +35,14 @@ export default function Tapes({ words = [], className = "", brand = false }) {
 
       {/* Zelená páska se jménem divize */}
       <div
-        className="absolute -left-12 -right-12 top-[132px] z-[1] overflow-hidden bg-brand py-3.5 text-ink md:top-[150px] md:py-4"
+        className="absolute -left-16 -right-16 top-[166px] z-[1] overflow-hidden bg-brand py-5 text-ink md:top-[214px] md:py-7"
         style={{ transform: "rotate(2.6deg)" }}
       >
         <div className="bx3-marq rev">
           {safy.map((_, i) => (
             <span
               key={i}
-              className="whitespace-nowrap px-6 text-[22px] font-black uppercase md:text-[27px]"
+              className="whitespace-nowrap px-8 text-[28px] font-black uppercase md:text-[46px]"
             >
               {brand ? (
                 <>

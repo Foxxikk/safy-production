@@ -60,8 +60,7 @@ function PillarCard({ p, i, flipLabel }) {
   const router = useRouter();
   const front = FRONTS[i % FRONTS.length];
   const back = BACKS[i % BACKS.length];
-  // Podstránky pilířů zatím zůstávají v původní grafice
-  const href = p.slug ? `/safy-bx/co-delame/${p.slug}` : null;
+  const href = p.slug ? `/safy-bx/v3/co-delame/${p.slug}` : null;
   const num = String(i + 1).padStart(2, "0");
 
   return (
