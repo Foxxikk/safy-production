@@ -6,7 +6,6 @@ import { officeSK, social } from "@/lib/bxV3";
 import Tapes from "./Tapes";
 
 const ACCENT = "#79D97C";
-const INK = "#373736";
 
 /**
  * Patička „Pojďme něco postavit".
@@ -31,7 +30,7 @@ export default function Contact({ t, settings = {}, words = [] }) {
 
   return (
     <footer id="kontakt" className="relative overflow-hidden bg-ink text-white">
-      <Tapes words={words} top={INK} bottom={INK} brand />
+      <Tapes words={words} brand />
 
       <div className="mx-auto w-full max-w-[1440px] px-5 pb-12 pt-4 md:px-12">
         <p className="bx3-mono m-0 mb-5 text-[13px]" style={{ color: ACCENT }}>

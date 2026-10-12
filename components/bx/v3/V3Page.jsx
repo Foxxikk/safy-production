@@ -10,8 +10,6 @@ import Stamp from "./Stamp";
 import Tapes from "./Tapes";
 import V3Header from "./V3Header";
 
-const INK = "#373736";
-const LIGHT = "#F0F0EF";
 
 /**
  * Úvodní stránka podle návrhu klientky.
@@ -34,15 +32,14 @@ export default function V3Page({ data = {}, cases = [], heroImage }) {
           video={data.settings?.heroVideo || ""}
         />
 
-        {/* Každý předěl mezi sekcemi nese pásky; pruh je plný, nahoře barva
-            sekce nad ním, dole pod ním. */}
-        <Tapes words={t.tape} top={INK} bottom={LIGHT} />
+        {/* Pás s páskami stojí na každém předělu mezi sekcemi */}
+        <Tapes words={t.tape} />
 
         <div className="bx3-dots overflow-hidden">
           <Pillars t={t} pillars={pillars} />
         </div>
 
-        <Tapes words={t.tape} top={LIGHT} bottom={INK} brand />
+        <Tapes words={t.tape} brand />
 
         <RefGrid t={t} cases={cases} categories={data.categories?.[lang] || {}} lang={lang} />
       </main>
