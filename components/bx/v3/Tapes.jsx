@@ -3,23 +3,19 @@
 /**
  * Předěl mezi dvěma sekcemi: dvě překřížené jedoucí pásky.
  *
- * Pruh má vlastní plnou plochu, ne průhled na tečkované pozadí stránky —
- * je to samostatný pás, ne mezera mezi sekcemi. Plocha je světlá, aby se
- * na ní obě pásky daly rozeznat; když měla nahoře barvu sekce nad sebou,
- * tmavá páska v ní zanikla a zbyl z toho jeden dvoubarevný blok.
+ * Pruh má vlastní plochu se stejnou tečkovanou mřížkou jako světlé sekce,
+ * takže na předěl navazuje. Plocha je světlá schválně — když měla nahoře
+ * barvu sekce nad sebou, tmavá páska v ní zanikla a zbyl z toho jeden
+ * dvoubarevný blok místo dvou přelepených pásek.
  */
-export default function Tapes({ words = [], bg = "#E8E8E5", brand = false }) {
+export default function Tapes({ words = [], brand = false }) {
   // Na druhém a třetím předělu už obory nemá cenu opakovat — pásky tam
   // nesou jméno značky, každá jinou půlku, ať se text nezdvojuje.
   const line = brand ? Array.from({ length: 12 }, () => "We are šafy") : [...words, ...words];
   const safy = Array.from({ length: 12 });
 
   return (
-    <div
-      aria-hidden
-      className="relative h-[320px] overflow-hidden md:h-[420px]"
-      style={{ background: bg }}
-    >
+    <div aria-hidden className="bx3-dots relative h-[320px] overflow-hidden md:h-[420px]">
       {/* Tmavá páska s obory */}
       <div
         className="absolute -left-16 -right-16 top-[46px] z-[2] overflow-hidden bg-ink py-6 text-white md:top-[70px] md:py-8"
