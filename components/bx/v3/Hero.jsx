@@ -20,6 +20,20 @@ function lead(text = "", max = 2) {
  */
 export default function Hero({ t, intro = "", image, video }) {
   const [wi, setWi] = useState(0);
+  const [playVideo, setPlayVideo] = useState(false);
+  const [ready, setReady] = useState(false);
+
+  /**
+   * Video pouštíme až po načtení stránky a jen tam, kde dává smysl.
+   * Na mobilu by to byly megabajty navíc za smyčku na pár centimetrech
+   * a komu systém hlásí „omezit pohyb", tomu zůstane fotka.
+   */
+  useEffect(() => {
+    if (!video) return;
+    const wide = window.matchMedia("(min-width: 768px)").matches;
+    const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setPlayVideo(wide && !calm);
+  }, [video]);
 
   // Slovo v claimu se mění samo; kdo má vypnuté animace, uvidí první z nich
   useEffect(() => {
@@ -36,29 +50,32 @@ export default function Hero({ t, intro = "", image, video }) {
       className="relative flex items-end overflow-hidden text-white"
       style={{ minHeight: "max(720px, calc(100svh - 84px))" }}
     >
-      {/* Místo pro showreel — dokud není, drží kompozici fotka */}
+      {/* Fotka drží kompozici od první vteřiny, smyčka se na ni prolne,
+          jakmile je připravená — nikdy tu není prázdná černá plocha. */}
       <div className="absolute inset-0 bg-[#2A2A29]">
-        {video ? (
+        {image && (
+          <Image
+            src={image}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center"
+          />
+        )}
+
+        {playVideo && (
           <video
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
+            style={{ opacity: ready ? 1 : 0 }}
             src={video}
-            poster={image}
             autoPlay
             muted
             loop
             playsInline
+            preload="auto"
+            onCanPlay={() => setReady(true)}
           />
-        ) : (
-          image && (
-            <Image
-              src={image}
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover object-center"
-            />
-          )
         )}
       </div>
 

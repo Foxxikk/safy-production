@@ -15,7 +15,7 @@ import V3Header from "./V3Header";
  * Úvodní stránka podle návrhu klientky.
  * Obsah i reference se berou z adminu, návrh dodává jen rozvržení a chování.
  */
-export default function V3Page({ data = {}, cases = [], heroImage }) {
+export default function V3Page({ data = {}, cases = [], heroImage, heroVideo }) {
   const { lang } = useLang();
   const t = v3[lang] || v3.cs;
   const pillars = (data.pillars?.[lang] || []).filter((p) => p.published !== false);
@@ -29,7 +29,7 @@ export default function V3Page({ data = {}, cases = [], heroImage }) {
           t={t}
           intro={data.intro?.[lang] || ""}
           image={heroImage}
-          video={data.settings?.heroVideo || ""}
+          video={heroVideo}
         />
 
         {/* Pás s páskami stojí na každém předělu mezi sekcemi */}

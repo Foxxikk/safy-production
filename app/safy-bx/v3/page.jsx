@@ -3,8 +3,11 @@ import { getSiteData, publishedCases } from "@/lib/bxStore";
 
 export const revalidate = 30;
 
-/** Úvodní fotka. Až bude showreel, stačí v nastavení doplnit heroVideo. */
+/** Úvodní fotka slouží i jako poster, než se načte smyčka. */
 const HERO_IMAGE = "/images/bx/iqos-pop-up-store/01.webp";
+
+/** Showreel na pozadí hera — překódovaný na 1600 px bez zvuku. */
+const HERO_VIDEO = "/videos/hero.mp4";
 
 export const metadata = {
   title: "ŠAFY BX — Brand experience marketing",
@@ -21,6 +24,7 @@ export default async function BxV3Page() {
       data={data}
       cases={cases}
       heroImage={data.settings?.heroImage || HERO_IMAGE}
+      heroVideo={data.settings?.heroVideo || HERO_VIDEO}
     />
   );
 }
