@@ -24,15 +24,12 @@ export default function Hero({ t, intro = "", image, video }) {
   const [ready, setReady] = useState(false);
 
   /**
-   * Video pouštíme až po načtení stránky a jen tam, kde dává smysl.
-   * Na mobilu by to byly megabajty navíc za smyčku na pár centimetrech
-   * a komu systém hlásí „omezit pohyb", tomu zůstane fotka.
+   * Smyčka běží i na mobilu. Jediný, kdo ji nedostane, je návštěvník
+   * s nastavením „omezit pohyb" — tomu zůstane fotka.
    */
   useEffect(() => {
     if (!video) return;
-    const wide = window.matchMedia("(min-width: 768px)").matches;
-    const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    setPlayVideo(wide && !calm);
+    setPlayVideo(!window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   }, [video]);
 
   // Slovo v claimu se mění samo; kdo má vypnuté animace, uvidí první z nich
