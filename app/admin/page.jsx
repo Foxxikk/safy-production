@@ -20,6 +20,6 @@ export default async function AdminPage() {
 
   if (!(await isAuthed())) return <LoginForm />;
 
-  const data = await getSiteData({ fresh: true });
+  const data = await getSiteData();
   return <AdminApp initialData={data} />;
 }

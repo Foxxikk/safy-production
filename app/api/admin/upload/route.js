@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { put } from "@vercel/blob";
 import { isAuthed } from "@/lib/adminAuth";
+import { saveMedia } from "@/lib/storage";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-/** Nahrání fotky do Blob storage. Vrací veřejnou URL. */
+/** Nahrání fotky do datového adresáře. Vrací cestu, pod kterou web fotku servíruje. */
 export async function POST(req) {
   if (!(await isAuthed())) {
     return NextResponse.json({ error: "Nepřihlášeno" }, { status: 401 });
@@ -30,11 +30,14 @@ export async function POST(req) {
     );
   }
 
-  const ext = (file.name?.split(".").pop() || "jpg").toLowerCase();
-  const blob = await put(`bx/${slug}/${Date.now()}.${ext}`, file, {
-    access: "public",
-    addRandomSuffix: true,
-  });
+  const ext = (file.name?.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const name = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext || "jpg"}`;
 
-  return NextResponse.json({ url: blob.url });
+  try {
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const url = await saveMedia(`${slug}/${name}`, buffer);
+    return NextResponse.json({ url });
+  } catch {
+    return NextResponse.json({ error: "Fotku se nepodařilo uložit." }, { status: 500 });
+  }
 }

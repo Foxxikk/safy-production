@@ -10,7 +10,7 @@ export async function GET() {
   if (!(await isAuthed())) {
     return NextResponse.json({ error: "Nepřihlášeno" }, { status: 401 });
   }
-  const data = await getSiteData({ fresh: true });
+  const data = await getSiteData();
   return NextResponse.json(data);
 }
 
