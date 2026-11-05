@@ -24,19 +24,48 @@ export async function POST(req) {
   if (!(await isAuthed())) {
     return NextResponse.json({ error: "Nepřihlášeno" }, { status: 401 });
   }
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+  const params = new URL(req.url).searchParams;
+  const force = params.get("force") === "1";
+  const from = params.get("from");
+
+  if (!process.env.BLOB_READ_WRITE_TOKEN && !from) {
     return NextResponse.json(
-      { error: "Chybí proměnná BLOB_READ_WRITE_TOKEN." },
+      {
+        error:
+          "Chybí proměnná BLOB_READ_WRITE_TOKEN. Bez ní jde přenést jen obsah webu — " +
+          "přidejte ?from=<veřejná adresa data.json>.",
+      },
       { status: 400 }
     );
   }
 
-  const force = new URL(req.url).searchParams.get("force") === "1";
   if (!force && (await readJson("bx/data.json"))) {
     return NextResponse.json(
       { error: "Obsah už na serveru je. Pro přepsání přidejte ?force=1." },
       { status: 409 }
     );
+  }
+
+  // Bez tokenu umíme jen obsah webu — ten leží na veřejné adrese.
+  // Poptávky a nahrané fotky se bez tokenu vyjmenovat nedají.
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    try {
+      const res = await fetch(from, { cache: "no-store" });
+      if (!res.ok) throw new Error(`stažení selhalo (${res.status})`);
+      await writeJson("bx/data.json", await res.json());
+      revalidatePath("/safy-bx");
+      revalidatePath("/safy-bx/v3");
+      revalidatePath("/safy-bx/[slug]", "page");
+      return NextResponse.json({
+        ok: true,
+        data: true,
+        leads: 0,
+        media: 0,
+        poznamka: "Bez tokenu se přenesl jen obsah webu, ne poptávky a nahrané fotky.",
+      });
+    } catch (e) {
+      return NextResponse.json({ error: e.message }, { status: 500 });
+    }
   }
 
   const report = { data: false, leads: 0, media: 0, chyby: [] };
