@@ -18,5 +18,12 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.10",
     "tailwindcss": "^4.1.10"
+  },
+  "comment-optionalDependencies": "Tailwind 4 staví CSS nativní binárkou pro konkrétní architekturu. Lockfile vznikl na ARM64, takže na x64 serveru binárka chyběla a build padal na 'Cannot find module lightningcss.linux-x64-gnu.node'. Vypsané varianty se instalují jen tam, kam patří — na ostatních architekturách je npm přeskočí.",
+  "optionalDependencies": {
+    "@tailwindcss/oxide-linux-x64-gnu": "4.3.2",
+    "@tailwindcss/oxide-linux-x64-musl": "4.3.2",
+    "lightningcss-linux-x64-gnu": "1.32.0",
+    "lightningcss-linux-x64-musl": "1.32.0"
   }
 }
