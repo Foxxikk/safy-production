@@ -3,11 +3,11 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Kulaté razítko, které plave za kurzorem s mírným zpožděním.
+ * Zelené kolečko (bez textu), které plave za kurzorem s mírným zpožděním.
  * Drží se po celém webu, na všech podstránkách. Na mobilu nedává smysl
  * (není kurzor) a kdo má vypnuté animace, nedostane ho vůbec.
  */
-export default function Stamp({ text }) {
+export default function Stamp() {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -57,30 +57,6 @@ export default function Stamp({ text }) {
           className="absolute inset-0 rounded-full"
           style={{ background: "#79D97C", boxShadow: "6px 6px 0 #1F1F1E" }}
         />
-        <svg className="bx3-spin absolute inset-0 h-full w-full" viewBox="0 0 240 240">
-          <defs>
-            <path
-              id="bx3-stamp-circle"
-              d="M120,120 m-92,0 a92,92 0 1,1 184,0 a92,92 0 1,1 -184,0"
-            />
-          </defs>
-          <text
-            style={{
-              font: "700 16px Roboto, sans-serif",
-              letterSpacing: "3px",
-              fill: "#373736",
-              textTransform: "uppercase",
-            }}
-          >
-            <textPath href="#bx3-stamp-circle">{text}</textPath>
-          </text>
-        </svg>
-        <div
-          className="absolute inset-0 flex items-center justify-center font-black"
-          style={{ color: "#373736", fontSize: 64, letterSpacing: "-0.04em" }}
-        >
-          Š
-        </div>
       </div>
     </div>
   );
