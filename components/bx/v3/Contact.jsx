@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 
 import { officeSK, social } from "@/lib/bxV3";
 import Tapes from "./Tapes";
@@ -11,7 +10,7 @@ const ACCENT = "#79D97C";
  * Patička „Pojďme něco postavit".
  *
  * Oproti návrhu je sevřenější a plní celou šířku — claim a e-mail vedle
- * adres, logo jako pás přes celý blok. Původně zbývalo vpravo i dole hodně
+ * adres, dole jen copyright. Původně zbývalo vpravo i dole hodně
  * prázdna a patička působila nedodělaně.
  */
 export default function Contact({ t, settings = {}, words = [] }) {
@@ -109,16 +108,9 @@ export default function Contact({ t, settings = {}, words = [] }) {
           </div>
         </div>
 
-        {/* Logo jako pás přes celou šířku, copyright na stejné lince */}
-        <div className="mt-14 border-t border-[#5A5A58] pt-10 md:mt-20">
-          <Image
-            src="/images/logos/safy-white.svg"
-            alt="šafy"
-            width={1440}
-            height={520}
-            className="block h-auto w-full"
-          />
-          <p className="bx3-mono mt-6 text-right text-[12px] text-[#C6C6C6]">
+        {/* Copyright na konci patičky */}
+        <div className="mt-14 border-t border-[#5A5A58] pt-6 md:mt-20">
+          <p className="bx3-mono m-0 text-right text-[12px] text-[#C6C6C6]">
             © {new Date().getFullYear()} — We are šafy
           </p>
         </div>
