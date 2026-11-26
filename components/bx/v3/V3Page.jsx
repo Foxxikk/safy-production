@@ -6,7 +6,6 @@ import Contact from "./Contact";
 import Hero from "./Hero";
 import Pillars from "./Pillars";
 import RefGrid from "./RefGrid";
-import Stamp from "./Stamp";
 import Tapes from "./Tapes";
 import V3Header from "./V3Header";
 
@@ -46,7 +45,6 @@ export default function V3Page({ data = {}, cases = [], heroImage, heroVideo }) 
 
       <Contact t={t} settings={data.settings} words={t.tape} />
 
-      <Stamp text={t.stamp} />
     </div>
   );
 }
